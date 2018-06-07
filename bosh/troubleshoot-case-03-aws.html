@@ -1,0 +1,155 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Case 3 AWS &#8212; my.sphinx  documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Case 4 AWS" href="troubleshoot-case-04-aws.html" />
+    <link rel="prev" title="OpenStack Case 2" href="troubleshoot-case-02-openstack.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="case-3-aws">
+<span id="case-3-aws"></span><h1>Case 3 AWS<a class="headerlink" href="#case-3-aws" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goal">
+<span id="goal"></span><h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<p>ssh log in into VM which is bosh created.</p>
+</div>
+<div class="section" id="problem">
+<span id="problem"></span><h2>Problem<a class="headerlink" href="#problem" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default"><div class="highlight"><pre><span></span>    $ bosh -e aws-us -d cf ssh diego-cell/fb512f76-xxxx
+    Using environment &#39;https://xx.xx.xx.xx:25555&#39; as client &#39;admin&#39;
+
+    Using deployment &#39;cf&#39;
+
+    Task 324. Done
+    Warning: Permanently added &#39;xx.xx.xx.xx&#39; (ECDSA) to the list of known hosts.
+    Unauthorized use is strictly prohibited. All access and activity
+    is subject to logging and monitoring.
+    Permission denied (publickey).
+    ssh_exchange_identification: Connection closed by remote host
+
+    Running SSH:
+    1 error(s) occurred:
+
+    * Running command: &#39;ssh -tt -o ServerAliveInterval=30 -o ForwardAgent=no -o PasswordAuthentication=no -o IdentitiesOnly=yes -o IdentityFile=/home/.../.bosh/tmp/ssh-priv-key263879026 -o StrictHostKeyChecking=yes -o UserKnownHostsFile=/home/.../.bosh/tmp/ssh-known-hosts663697449 -o ProxyCommand=ssh -tt -W %!h(MISSING):%!p(MISSING) -l vcap xx.xx.xx.xx -o ServerAliveInterval=30 -o ForwardAgent=no -o ClearAllForwardings=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null 10.0.16.14 -l bosh_a1da6765d1fc4866&#39;, stdout: &#39;&#39;, stderr: &#39;&#39;: exit status 255
+
+    Exit code 1
+</pre></div>
+</div>
+</div>
+<div class="section" id="solution">
+<span id="solution"></span><h2>Solution<a class="headerlink" href="#solution" title="Permalink to this headline">¶</a></h2>
+<p>Specifying a private key for the <code class="docutils literal"><span class="pre">bosh</span> <span class="pre">ssh</span></code> session via the <code class="docutils literal"><span class="pre">--gw-private-key</span></code> flag or the equivalent <code class="docutils literal"><span class="pre">BOSH_GW_PRIVATE_KEY</span></code> environment variable.</p>
+<p>If you created bosh environment using bbl, You can run <code class="docutils literal"><span class="pre">eval</span> <span class="pre">&quot;$(bbl</span> <span class="pre">print-env)&quot;</span></code> to get gateway and private key set, that should fix your <code class="docutils literal"><span class="pre">bosh</span> <span class="pre">ssh</span></code></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>    $ bbl ssh-key
+    -----BEGIN RSA PRIVATE KEY-----
+    MIIEowIBAAKCAQEA73eXEMQMAqgsYWSNcqPTZVPNIscX3Gljf2CPs9C5mI0KaV3ePXi+alPY6o3P
+    ...
+</pre></div>
+</div>
+</div>
+<div class="section" id="references">
+<span id="references"></span><h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>https://github.com/cloudfoundry/bosh-cli/issues/128</li>
+<li>https://cloudfoundry.slack.com/archives/C2DBC3YGZ/p1494894883740994</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Case 3 AWS</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#problem">Problem</a></li>
+<li><a class="reference internal" href="#solution">Solution</a></li>
+<li><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="troubleshoot-case-02-openstack.html" title="previous chapter">OpenStack Case 2</a></li>
+      <li>Next: <a href="troubleshoot-case-04-aws.html" title="next chapter">Case 4 AWS</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/bosh/troubleshoot-case-03-aws.md.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, me.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="../_sources/bosh/troubleshoot-case-03-aws.md.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

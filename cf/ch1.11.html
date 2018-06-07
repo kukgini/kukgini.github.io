@@ -1,0 +1,146 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Cloud Check 를 통한 vm 장애 복구 &#8212; my.sphinx  documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="bosh-init 시 Open Stack Nova Bug 관련" href="ch1.12.html" />
+    <link rel="prev" title="Router Register Log" href="ch1.10.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="cloud-check-vm">
+<h1>Cloud Check 를 통한 vm 장애 복구<a class="headerlink" href="#cloud-check-vm" title="Permalink to this headline">¶</a></h1>
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ bosh -e bosh-lite -d cf-warden-diego cck -a
+Using environment &#39;192.168.50.4&#39; as client &#39;admin&#39;
+
+Using deployment &#39;cf-warden-diego&#39;
+
+Task 589
+
+04:39:11 | Scanning 6 VMs: Checking VM states (00:00:11)
+04:39:22 | Scanning 6 VMs: 5 OK, 1 unresponsive, 0 missing, 0 unbound (00:00:00)
+04:39:22 | Scanning 1 persistent disks: Looking for inactive disks (00:00:00)
+04:39:22 | Scanning 1 persistent disks: 1 OK, 0 missing, 0 inactive, 0 mount-info mismatch (00:00:00)
+
+Started  Wed Apr 19 04:39:11 UTC 2017
+Finished Wed Apr 19 04:39:22 UTC 2017
+Duration 00:00:11
+
+Task 589 done
+
+#  Type                Description
+3  unresponsive_agent  cell_z1/0 (1f42b1d1-0a0c-4706-8dfc-ab9fd20fa935) (d0f2ed42-fb05-4039-7b36-5fac08166b50) is not responding
+
+1 problems
+
+Continue? [yN]: y
+
+Task 590
+04:39:42 | Applying problem resolutions: cell_z1/0 (1f42b1d1-0a0c-4706-8dfc-ab9fd20fa935) (d0f2ed42-fb05-4039-7b36-5fac08166b50) is not responding (unresponsive_agent 43): Skip for now (00:00:00)
+
+Started  Wed Apr 19 04:39:11 UTC 2017
+Finished Wed Apr 19 04:39:42 UTC 2017
+Duration 00:00:31
+
+Task 590 done
+
+Succeeded
+
+
+$ bosh -e bosh-lite -d cf-warden-diego vms
+
+access_z1/1b8e9ad7-668f-4035-bf32-dc21ef3732b7          running -       10.244.16.7     50cddbf1-2588-4997-7e3c-5e9be7130ba2    access_z1
+brain_z1/8ba74f5a-672b-4061-8771-e494c3094271           running -       10.244.16.3     227d1b5a-6350-4266-6ba5-51d55d0ecfde    brain_z1
+cc_bridge_z1/aa51c8f0-cc75-49e4-84e6-f350212745d5       running -       10.244.16.5     c03e273f-a246-4560-731f-109f2135cb56    cc_bridge_z1
+cell_z1/1f42b1d1-0a0c-4706-8dfc-ab9fd20fa935            running -       10.244.16.4     1fef8cf3-6734-426f-61de-c9872290b167    cell_z1
+database_z1/6f1bfe49-389d-440e-b93b-d6b3ed153040        running -       10.244.16.2     7e12a04b-da4f-41a9-7f3d-f2d05d4f2a06    database_z1
+route_emitter_z1/56a34b30-db5b-414f-a1ec-1172a12f7116   running -       10.244.16.6     a65819cf-f729-4dbe-66f7-be3b4f475d7c    route_emitter_z1
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="ch1.10.html" title="previous chapter">Router Register Log</a></li>
+      <li>Next: <a href="ch1.12.html" title="next chapter">bosh-init 시 Open Stack Nova Bug 관련</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/cf/ch1.11.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, me.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="../_sources/cf/ch1.11.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

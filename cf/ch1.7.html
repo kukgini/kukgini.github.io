@@ -1,0 +1,124 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>HowTo Simply TcpDump and get. &#8212; my.sphinx  documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Inside Cell" href="ch1.8.html" />
+    <link rel="prev" title="BOSH2 CLI 로 VM 에 로그인 하기" href="ch1.6.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="howto-simply-tcpdump-and-get">
+<h1>HowTo Simply TcpDump and get.<a class="headerlink" href="#howto-simply-tcpdump-and-get" title="Permalink to this headline">¶</a></h1>
+<p>Cloud Controller 와 Gorouter 간 SSL 통신 실패 원인 분석을 위해 TcpDump 를 수행할 때 사용되었음.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="nv">FILE</span><span class="o">=</span>pcap-5-router.pcap <span class="nv">IF</span><span class="o">=</span><span class="sb">`</span>ifconfig -s <span class="p">|</span> grep <span class="s2">&quot;^wc&quot;</span> <span class="p">|</span> awk <span class="s1">&#39;{ print $1}&#39;</span><span class="sb">`</span> <span class="nb">eval</span> <span class="s1">&#39;sudo ./tcpdump -i $IF -w $FILE&#39;</span>
+<span class="nv">FILE</span><span class="o">=</span>pcap-5-api.pcap <span class="nv">IF</span><span class="o">=</span><span class="sb">`</span>ifconfig -s <span class="p">|</span> grep <span class="s2">&quot;^wc&quot;</span> <span class="p">|</span> awk <span class="s1">&#39;{ print $1}&#39;</span><span class="sb">`</span> <span class="nb">eval</span> <span class="s1">&#39;sudo ./tcpdump -i $IF -w $FILE&#39;</span>
+<span class="nv">FILE</span><span class="o">=</span>pcap-5-haproxy.pcap <span class="nv">IF</span><span class="o">=</span><span class="sb">`</span>ifconfig -s <span class="p">|</span> grep <span class="s2">&quot;^wc&quot;</span> <span class="p">|</span> awk <span class="s1">&#39;{ print $1}&#39;</span><span class="sb">`</span> <span class="nb">eval</span> <span class="s1">&#39;sudo ./tcpdump -i $IF -w $FILE&#39;</span>
+</pre></div>
+</div>
+<p>위의 방식과 유사 하지만 bosh-lite 에서 director 는 다른 vm 과 달리 vagrant 내에서 수행하며 NIC name 이 vboxnet0 이다.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="nv">FILE</span><span class="o">=</span>pcap-5-cli.pcap <span class="nv">IF</span><span class="o">=</span>vboxnet0 <span class="nb">eval</span> <span class="s1">&#39;sudo tcpdump -i $IF -w $FILE&#39;</span>
+
+cf create-service-broker p-mysql admin password https://p-mysql.bosh-lite.com:443
+</pre></div>
+</div>
+<p>캡쳐가 끝나면 덤프 데이터를 내 PC 로 가져와야 하는데 원격 로그인을 위한 Public Key 를 생성한 후
+ssh 로 전송한다.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>cat <span class="s">&lt;&lt; EOL &gt; ~/.ssh/id_rsa</span>
+<span class="s">-----BEGIN RSA PRIVATE KEY-----</span>
+<span class="s">MIIEpQIBAAKCAQEAqCXkcoUt4aVnfVw1ToLUZA6OPFZ25AFC5m+ck+7PgtTc7jIn</span>
+<span class="s">.....</span>
+<span class="s">CBxlZtak/RURKlNT0E+K1mVK9YwJPYZ8pt7jtszjjYKaIh+EZEl6YDo=</span>
+<span class="s">-----END RSA PRIVATE KEY-----</span>
+<span class="s">EOL</span>
+chmod go-rwX ~/.ssh/id_rsa
+scp *.pcap &lt;target_server&gt;:~/
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="ch1.6.html" title="previous chapter">BOSH2 CLI 로 VM 에 로그인 하기</a></li>
+      <li>Next: <a href="ch1.8.html" title="next chapter">Inside Cell</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/cf/ch1.7.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, me.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="../_sources/cf/ch1.7.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

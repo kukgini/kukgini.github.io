@@ -1,0 +1,352 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>BOSH Inside &mdash; my.sphinx  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="my.sphinx  documentation" href="../index.html"/>
+        <link rel="next" title="OpenStack Case 1" href="troubleshoot-case-01-openstack.html"/>
+        <link rel="prev" title="BOSH task" href="bosh-task.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> my.sphinx
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="bosh-agent-dev-setup.html">BOSH Agent Development Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bosh-stemcell-builder.html">BOSH linux stemcell builder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bosh-lite-resizing.html">BOSH lite resizing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-upstart.html">Using upstart on ubuntu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reverse-ssh-port-forwarding.html">Bypassing corporate firewall with reverse ssh port forwarding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bosh-task.html">BOSH task</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">BOSH Inside</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshoot-case-01-openstack.html">OpenStack Case 1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshoot-case-02-openstack.html">OpenStack Case 2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshoot-case-03-aws.html">Case 3 AWS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshoot-case-04-aws.html">Case 4 AWS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshoot-case-05-galera-cluster.html">IaaS 네트워크 장비 교체 작업 후 mariadb galera cluster 장애</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="ch-02-02.html">Trouble Shoot case 6 OpenStack</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../2-cloudfoundry/index.html">Cloud Foundry</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../3-openstack/index.html">Open Stack</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../4-git/git-flow.html">git flow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../4-git/git-push.html">git push</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../4-git/git-status.html">git status</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../z-examples/rst_examples.html">ReStructuresText Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../z-examples/markdown_examples.html">Markdown Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../z-examples/markdown_examples.html#an-h1-header">An h1 header</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">my.sphinx</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>BOSH Inside</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/1-bosh/bosh-inside.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="bosh-inside">
+<span id="bosh-inside"></span><h1>BOSH Inside<a class="headerlink" href="#bosh-inside" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="bosh-architecture">
+<span id="bosh-architecture"></span><h2>BOSH Architecture<a class="headerlink" href="#bosh-architecture" title="Permalink to this headline">¶</a></h2>
+<p>(다이어그램)</p>
+<p>.. _ImageLink:
+<img alt="BOSH Architecture" src="https://image.slidesharecdn.com/cloudfoundry-integration-with-openstack-and-docker-bangalorecfmeetup-150402095116-conversion-gate01/95/cloud-foundry-integrationwithopenstackanddockerbangalorecfmeetup-17-638.jpg?cb=1427968572" /></p>
+</div>
+<div class="section" id="bosh-release">
+<span id="bosh-release"></span><h2>BOSH Release 의 구성 요소<a class="headerlink" href="#bosh-release" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>nats</li>
+<li>postgres (table schema, initial data)</li>
+<li>blobstore (structure, size)</li>
+<li>director</li>
+<li>hm9000</li>
+<li>ntp</li>
+<li>agnet (nats?)</li>
+</ul>
+</div>
+<div class="section" id="bosh-release">
+<span id="id1"></span><h2>BOSH Release 의 추가 요소<a class="headerlink" href="#bosh-release" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Config Server</li>
+<li>Turbulence</li>
+<li>local-dns</li>
+<li>powerdns</li>
+<li>UAA Integration</li>
+</ul>
+</div>
+<div class="section" id="security">
+<span id="security"></span><h2>Security 를 위한 설정<a class="headerlink" href="#security" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="jumpbox">
+<span id="jumpbox"></span><h2>Jumpbox<a class="headerlink" href="#jumpbox" title="Permalink to this headline">¶</a></h2>
+<p>이건 뭘까? 최근에 생긴건데.</p>
+</div>
+<div class="section" id="bosh-lite">
+<span id="bosh-lite"></span><h2>bosh-lite 의 구성<a class="headerlink" href="#bosh-lite" title="Permalink to this headline">¶</a></h2>
+<p><img alt="bosh-lite" src="https://i.stack.imgur.com/z3HrU.png" /></p>
+<p>https://stackoverflow.com/questions/41303870/how-can-i-deploy-a-bosh-director-on-bosh-lite</p>
+<p>The following is an extension of this question: https://cloudfoundry.slack.com/archives/C0SBBBJSZ/p1496276319629886</p>
+<p>After checking the following logs in the generated bosh vm, it seems that there is not enough disk space.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>    <span class="mi">2017</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">07</span><span class="n">_06</span><span class="p">:</span> <span class="mi">36</span><span class="p">:</span> <span class="mf">14.10298</span> <span class="p">[</span><span class="n">main</span><span class="p">]</span> <span class="mi">2017</span><span class="o">/</span><span class="mi">06</span><span class="o">/</span><span class="mi">07</span> <span class="mi">06</span><span class="p">:</span><span class="mi">36</span><span class="p">:</span><span class="mi">14</span> <span class="n">ERROR</span> <span class="o">-</span> <span class="n">App</span> <span class="n">setup</span> <span class="n">Running</span> <span class="n">bootstrap</span><span class="p">:</span> <span class="n">Setting</span> <span class="n">up</span> <span class="n">ephemeral</span> <span class="n">disk</span><span class="p">:</span> <span class="n">Creating</span> <span class="n">ephemeral</span> <span class="n">partitions</span> <span class="n">on</span> <span class="n">root</span> <span class="n">device</span><span class="p">:</span> <span class="n">Insufficient</span> <span class="n">remaining</span> <span class="n">disk</span> <span class="n">space</span> <span class="p">(</span><span class="mi">150225408</span><span class="n">B</span><span class="p">)</span> <span class="k">for</span> <span class="n">ephemeral</span> <span class="n">Partition</span> <span class="p">(</span><span class="nb">min</span><span class="p">:</span> <span class="mi">1073741824</span><span class="n">B</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>I tried to modify deployment menifest like this:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>    .../bosh-deployment $ git diff bosh.yml
+    Diff --git a / bosh.yml b / bosh.yml
+    Index 14890d8..dfe4e93 100644
+    --- a / bosh.yml
+    +++ b / bosh.yml
+    @@ -16,7 +16,7 @@ resource_pools:
+
+    Disk_pools:
+    - name: disks
+    - disk_size: 32_768
+    + disk_size: 1_000_000
+
+    Networks:
+    - name: default
+    ```
+    ```$ git diff openstack/cpi.yml
+    diff --git a/openstack/cpi.yml b/openstack/cpi.yml
+    index 121bc01..15cd9f4 100644
+    --- a/openstack/cpi.yml
+    +++ b/openstack/cpi.yml
+    @@ -10,14 +10,15 @@
+    # Configure sizes
+    - type: replace
+    path: /resource_pools/name=vms/cloud_properties?
+    value:
+    - instance_type: m1.xlarge
+    + instance_type: linux_c8m64
+    + ephemeral_disk: {size: 1_000_000, type: &lt;my-cinder-type&gt;}
+    availability_zone: ((az))
+</pre></div>
+</div>
+<p>But it did not working. bosh/0 vm still have only 3GB.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>    /:~$ df -h
+    Filesystem Size Used Avail Use% Mounted on
+    udev 7.9G 4.0K 7.9G 1% /dev
+    tmpfs 1.6G 296K 1.6G 1% /run
+    /dev/vda1 2.8G 1.2G 1.5G 43% /
+    none 4.0K 0 4.0K 0% /sys/fs/cgroup
+    none 5.0M 0 5.0M 0% /run/lock
+    none 7.9G 0 7.9G 0% /run/shm
+    none 100M 0 100M 0% /run/user
+</pre></div>
+</div>
+<p>QuestionIs: How to increase root volume or add ephemeral disk?</p>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="troubleshoot-case-01-openstack.html" class="btn btn-neutral float-right" title="OpenStack Case 1" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="bosh-task.html" class="btn btn-neutral" title="BOSH task" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, me.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

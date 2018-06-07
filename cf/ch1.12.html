@@ -1,0 +1,150 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>bosh-init 시 Open Stack Nova Bug 관련 &#8212; my.sphinx  documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="cf-openstack-validator 실행시 floatingip 관련 오류" href="ch1.13.html" />
+    <link rel="prev" title="Cloud Check 를 통한 vm 장애 복구" href="ch1.11.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="bosh-init-open-stack-nova-bug">
+<h1>bosh-init 시 Open Stack Nova Bug 관련<a class="headerlink" href="#bosh-init-open-stack-nova-bug" title="Permalink to this headline">¶</a></h1>
+<p>bosh-init 으로 director vm 생성시 다음과 같은 오류가 발생한다면</p>
+<div class="highlight-none"><div class="highlight"><pre><span></span>asn1: structure error: superfluous leading zeros in length
+</pre></div>
+</div>
+<p>오픈 스택 Nova 버그에 기인한 것으로 생각된다.</p>
+<p>관련 issue: <a class="reference external" href="https://bugs.launchpad.net/nova/+bug/1483132">https://bugs.launchpad.net/nova/+bug/1483132</a></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ bosh-init deploy ./bosh.yml
+Deployment manifest: &#39;.../bosh.yml&#39;
+Deployment state: &#39;.../bosh-state.json&#39;
+
+Started validating
+  Downloading release &#39;bosh&#39;... Skipped [Found in local cache] (00:00:00)
+  Validating release &#39;bosh&#39;... Finished (00:00:01)
+  Downloading release &#39;bosh-openstack-cpi&#39;... Skipped [Found in local cache] (00:00:00)
+  Validating release &#39;bosh-openstack-cpi&#39;... Finished (00:00:00)
+  Validating cpi release... Finished (00:00:00)
+  Validating deployment manifest... Finished (00:00:00)
+  Downloading stemcell... Skipped [Found in local cache] (00:00:00)
+  Validating stemcell... Finished (00:00:02)
+Finished validating (00:00:04)
+
+Started installing CPI
+  Compiling package &#39;ruby_openstack_cpi/6f724febcae828dcbfea470faff5b104d48dd944&#39;... Finished (00:00:00)
+  Compiling package &#39;bosh_openstack_cpi/119de5f71bee352cabba8575aa97fc993b974f56&#39;... Finished (00:00:00)
+  Installing packages... Finished (00:00:00)
+  Rendering job templates... Finished (00:00:00)
+  Installing job &#39;openstack_cpi&#39;... Finished (00:00:00)
+Finished installing CPI (00:00:00)
+
+Starting registry... Finished (00:00:00)
+Uploading stemcell &#39;bosh-openstack-kvm-ubuntu-trusty-go_agent-raw/3363.19&#39;... Skipped [Stemcell already uploaded] (00:00:00)
+
+Started deploying
+  Waiting for the agent on VM &#39;225f36f5-ad48-4347-ac4c-44613f753985&#39;... Failed (00:00:09)
+  Deleting VM &#39;225f36f5-ad48-4347-ac4c-44613f753985&#39;... Finished (00:00:07)
+  Creating VM for instance &#39;bosh/0&#39; from stemcell &#39;ea92f9f2-1c18-4acb-8fa8-2e791839caad&#39;... Finished (00:00:41)
+  Waiting for the agent on VM &#39;1973e064-b0f7-4414-8d88-52ca05b6d4de&#39; to be ready... Failed (00:00:00)
+Failed deploying (00:00:59)
+
+Stopping registry... Finished (00:00:00)
+Cleaning up rendered CPI jobs... Finished (00:00:00)
+
+Command &#39;deploy&#39; failed:
+  Deploying:
+    Creating instance &#39;bosh/0&#39;:
+      Waiting until instance is ready:
+        Starting SSH tunnel:
+          Parsing private key file &#39;.../bosh.pem&#39;:
+            asn1: structure error: superfluous leading zeros in length
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="ch1.11.html" title="previous chapter">Cloud Check 를 통한 vm 장애 복구</a></li>
+      <li>Next: <a href="ch1.13.html" title="next chapter">cf-openstack-validator 실행시 floatingip 관련 오류</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/cf/ch1.12.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, me.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="../_sources/cf/ch1.12.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

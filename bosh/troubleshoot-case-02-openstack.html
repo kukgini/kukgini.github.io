@@ -1,0 +1,175 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>OpenStack Case 2 &#8212; my.sphinx  documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Case 3 AWS" href="troubleshoot-case-03-aws.html" />
+    <link rel="prev" title="OpenStack Case 1" href="troubleshoot-case-01-openstack.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="openstack-case-2">
+<span id="openstack-case-2"></span><h1>OpenStack Case 2<a class="headerlink" href="#openstack-case-2" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goal">
+<span id="goal"></span><h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<p>I'm tring to deploy bosh director using bosh cli v2 (2.0.16) on Openstack(mikata) from external network.</p>
+</div>
+<div class="section" id="problem">
+<span id="problem"></span><h2>Problem<a class="headerlink" href="#problem" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default"><div class="highlight"><pre><span></span>    $ ./bosh create-env bosh.yml ....
+    Deployment manifest: &#39;/home/.../bosh-deployment/bosh.yml&#39;
+    Deployment state: &#39;/home/.../bosh-1/state.json&#39;
+
+    Started validating
+    Downloading release &#39;bosh&#39;... Skipped [Found in local cache] (00:00:00)
+    Validating release &#39;bosh&#39;... Finished (00:00:00)
+    Downloading release &#39;bosh-openstack-cpi&#39;... Skipped [Found in local cache] (00:00:00)
+    Validating release &#39;bosh-openstack-cpi&#39;... Finished (00:00:00)
+    Validating cpi release... Finished (00:00:00)
+    Validating deployment manifest... Finished (00:00:00)
+    Downloading stemcell... Skipped [Found in local cache] (00:00:00)
+    Validating stemcell... Finished (00:00:02)
+    Finished validating (00:00:03)
+
+    Started installing CPI
+    Compiling package &#39;ruby_openstack_cpi/9485b575...&#39;... Finished (00:00:00)
+    Compiling package &#39;bosh_openstack_cpi/dd0bab98...&#39;... Finished (00:00:00)
+    Installing packages... Finished (00:00:00)
+    Rendering job templates... Finished (00:00:00)
+    Installing job &#39;openstack_cpi&#39;... Finished (00:00:00)
+    Finished installing CPI (00:00:00)
+
+    Starting registry... Finished (00:00:00)
+    Uploading stemcell &#39;bosh-openstack-kvm-ubuntu-trusty-go_agent-raw/3363.20&#39;... Skipped [Stemcell already uploaded] (00:00:00)
+
+    Started deploying
+    Waiting for the agent on VM &#39;011c4fb3-xxxx&#39;... Failed (00:00:12)
+    Deleting VM &#39;011c4fb3-xxxx&#39;... Finished (00:00:07)
+    Creating VM for instance &#39;bosh/0&#39; from stemcell &#39;88e02896-xxxx&#39;... Finished (00:00:37)
+    Waiting for the agent on VM &#39;6fdfc19a-xxxx&#39; to be ready...
+
+
+    Failed (00:10:08)
+    Failed deploying (00:11:06)
+
+    Stopping registry... Finished (00:00:00)
+    Cleaning up rendered CPI jobs... Finished (00:00:00)
+
+    Deploying:
+    Creating instance &#39;bosh/0&#39;:
+        Waiting until instance is ready:
+        Sending ping to the agent:
+            Performing request to agent endpoint &#39;https://mbus:xxxx@xx.xx.xx.xx:6868/agent&#39;:
+            Performing POST request:
+                Post https://mbus:&lt;redacted&gt;@xx.xx.xx.xx:6868/agent: dial tcp xx.xx.xx.xx:6868: getsockopt: connection refused
+
+    Exit code 1
+</pre></div>
+</div>
+</div>
+<div class="section" id="solution">
+<span id="solution"></span><h2>Solution<a class="headerlink" href="#solution" title="Permalink to this headline">¶</a></h2>
+<p>NATS 서버가 Listening 하고 있는 6868 port 에 대한 접근 권한이 없는 것이 원인임. IaaS security group 설정에서 bosh security group 에 대해 6868 port 접근이 가능하도록 수정.</p>
+</div>
+<div class="section" id="references">
+<span id="references"></span><h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<p>none.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">OpenStack Case 2</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#problem">Problem</a></li>
+<li><a class="reference internal" href="#solution">Solution</a></li>
+<li><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="troubleshoot-case-01-openstack.html" title="previous chapter">OpenStack Case 1</a></li>
+      <li>Next: <a href="troubleshoot-case-03-aws.html" title="next chapter">Case 3 AWS</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/bosh/troubleshoot-case-02-openstack.md.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, me.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="../_sources/bosh/troubleshoot-case-02-openstack.md.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

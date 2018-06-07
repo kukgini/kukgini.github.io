@@ -1,0 +1,118 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Cloud Native Application &#8212; my.sphinx  documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Failed to push java app (case sensative entries)" href="ch1.3.html" />
+    <link rel="prev" title="Custom User Provided Service (CUPS)" href="ch1.1.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="cloud-native-application">
+<h1>Cloud Native Application<a class="headerlink" href="#cloud-native-application" title="Permalink to this headline">¶</a></h1>
+<p>Java Application 의 경우 다음과 같은 형식으로 프로세스가 기동된다.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>/home/vcap/app/.java-buildpack/open_jdk_jre/bin/java
+    -Djava.io.tmpdir<span class="o">=</span>/home/vcap/tmp
+    -XX:OnOutOfMemoryError<span class="o">=</span>/home/vcap/app/.java-buildpack/open_jdk_jre/bin/killjava.sh
+    -XX:MaxMetaspaceSize<span class="o">=</span>64M -Xss228K -Xms317161K -XX:MetaspaceSize<span class="o">=</span>64M -Xmx317161K
+    -Djavax.net.ssl.trustStore<span class="o">=</span>/home/vcap/app/.java-buildpack/container_certificate_trust_store/truststore.jks
+    -Djavax.net.ssl.trustStorePassword<span class="o">=</span>java-buildpack-trust-store-password
+    -cp /home/vcap/app/.:/home/vcap/app/*
+    &lt;java-main-class-which-has-static-main-function&gt;
+</pre></div>
+</div>
+<ol class="arabic simple">
+<li>JDK/JRE 는 /home/vcap/app/.java-buildpack/open_jdk_jre 에 설치된다.</li>
+<li>$TEMP dir 는 /home/vcap/tmp 이므로 반드시 java.io.tmpdir 환경 변수를 참조해야 함</li>
+<li>OutOfMemoryError 가 발생할 경우 killjava.sh 가 실행된다.</li>
+<li>메모리 크기는 컨테이너에 할당된 양에 맞추어 동적으로 조정된다.</li>
+<li>truststore.jks 라 customize 될 수 있다.</li>
+<li>jar 의 내용이 압축이 풀린 상태로 실행된다.</li>
+</ol>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="ch1.1.html" title="previous chapter">Custom User Provided Service (CUPS)</a></li>
+      <li>Next: <a href="ch1.3.html" title="next chapter">Failed to push java app (case sensative entries)</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/cf/ch1.2.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, me.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="../_sources/cf/ch1.2.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

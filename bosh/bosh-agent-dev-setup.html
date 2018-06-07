@@ -1,0 +1,252 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>BOSH Agent Development Setup &#8212; my.sphinx  documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="BOSH linux stemcell builder" href="bosh-stemcell-builder.html" />
+    <link rel="prev" title="mockery" href="../golang/mockery.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="bosh-agent-development-setup">
+<span id="bosh-agent-development-setup"></span><h1>BOSH Agent Development Setup<a class="headerlink" href="#bosh-agent-development-setup" title="Permalink to this headline">¶</a></h1>
+<div class="highlight-default"><div class="highlight"><pre><span></span>PATH=.../s3cli/out:$PATH bin/run -P ubuntu -C path_to_config.json
+</pre></div>
+</div>
+<div class="section" id="running-locally">
+<span id="running-locally"></span><h2>Running locally<a class="headerlink" href="#running-locally" title="Permalink to this headline">¶</a></h2>
+<p>To start server locally:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">gem</span> <span class="n">install</span> <span class="n">nats</span>
+<span class="n">nats</span><span class="o">-</span><span class="n">server</span>
+</pre></div>
+</div>
+<p>To subscribe:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">nats</span><span class="o">-</span><span class="n">sub</span> <span class="s1">&#39;&gt;&#39;</span> <span class="o">-</span><span class="n">s</span> <span class="n">nats</span><span class="p">:</span><span class="o">//</span><span class="n">localhost</span><span class="p">:</span><span class="mi">4222</span>
+</pre></div>
+</div>
+<p>To publish:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">nats</span><span class="o">-</span><span class="n">pub</span> <span class="n">agent</span><span class="o">.</span><span class="mi">123</span><span class="o">-</span><span class="mi">456</span><span class="o">-</span><span class="mi">789</span> <span class="s1">&#39;{&quot;method&quot;:&quot;apply&quot;,&quot;arguments&quot;:[{&quot;packages&quot;:[{&quot;name&quot;:&quot;package-name&quot;, &quot;version&quot;:&quot;package-version&quot;}]}]}&#39;</span> <span class="o">-</span><span class="n">s</span> <span class="n">nats</span><span class="p">:</span><span class="o">//</span><span class="n">localhost</span><span class="p">:</span><span class="mi">4222</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="blobstores">
+<span id="blobstores"></span><h2>Blobstores<a class="headerlink" href="#blobstores" title="Permalink to this headline">¶</a></h2>
+<p>The Go Agent ships with 4 default blobstores:</p>
+<ul class="simple">
+<li>Local filesystem</li>
+<li>S3</li>
+<li>DAV</li>
+<li>Dummy (for testing)</li>
+</ul>
+<p>You can, however, use custom blobstores by implementing a simple interface. For example, if you want to use a blobstore named &quot;custom&quot; you need to create an executable named <code class="docutils literal"><span class="pre">bosh-blobstore-custom</span></code> somewhere in <code class="docutils literal"><span class="pre">PATH</span></code>. This executable must conform to the following command line interface:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">-c</span></code> flag that specifies a config file path (this will be passed to every call to the executable)</li>
+<li>must parse the config file in JSON format</li>
+<li>must respond to <code class="docutils literal"><span class="pre">get</span> <span class="pre">&lt;blobID&gt;</span> <span class="pre">&lt;filename&gt;</span></code> by placing the file identified by the blobID into the filename specified</li>
+<li>must respond to <code class="docutils literal"><span class="pre">put</span> <span class="pre">&lt;filename&gt;</span> <span class="pre">&lt;blobID&gt;</span></code> by storing the file at filename into the blobstore at the specified blobID</li>
+</ul>
+<p>A full call might look like:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">bosh</span><span class="o">-</span><span class="n">blobstore</span><span class="o">-</span><span class="n">custom</span> <span class="o">-</span><span class="n">c</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">vcap</span><span class="o">/</span><span class="n">bosh</span><span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">blobstore</span><span class="o">-</span><span class="n">custom</span><span class="o">.</span><span class="n">json</span> <span class="n">get</span> <span class="mi">2340958</span><span class="n">ddfg</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">my</span><span class="o">-</span><span class="n">cool</span><span class="o">-</span><span class="n">file</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="set-up-a-workstation-for-development">
+<span id="set-up-a-workstation-for-development"></span><h2>Set up a workstation for development<a class="headerlink" href="#set-up-a-workstation-for-development" title="Permalink to this headline">¶</a></h2>
+<p>Note: This guide assumes a few things:</p>
+<ul class="simple">
+<li>You have gcc (or an equivalent)</li>
+<li>You can install packages (brew, apt-get, or equivalent)</li>
+</ul>
+<p>Get Golang and its dependencies (Mac example, replace with your package manager of choice):</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">brew</span> <span class="pre">update</span></code></li>
+<li><code class="docutils literal"><span class="pre">brew</span> <span class="pre">install</span> <span class="pre">go</span></code></li>
+<li><code class="docutils literal"><span class="pre">brew</span> <span class="pre">install</span> <span class="pre">git</span></code> (Go needs git for the <code class="docutils literal"><span class="pre">go</span> <span class="pre">get</span></code> command)</li>
+<li><code class="docutils literal"><span class="pre">brew</span> <span class="pre">install</span> <span class="pre">hg</span></code> (Go needs mercurial for the <code class="docutils literal"><span class="pre">go</span> <span class="pre">get</span></code> command)</li>
+</ul>
+<p>Clone and set up the BOSH Agent repository:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">go</span> <span class="pre">get</span> <span class="pre">-d</span> <span class="pre">github.com/cloudfoundry/bosh-agent</span></code><ul>
+<li>Note that this will print an error message because it expects a single package; our repository consists of several packages.
+The error message is harmless—the repository will still be checked out.</li>
+</ul>
+</li>
+<li><code class="docutils literal"><span class="pre">cd</span> <span class="pre">$GOPATH/src/github.com/cloudfoundry/bosh-agent</span></code></li>
+</ul>
+<p>From here on out we assume you're working in <code class="docutils literal"><span class="pre">$GOPATH/src/github.com/cloudfoundry/bosh-agent</span></code></p>
+<p>Install tools used by the BOSH Agent test suite:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">bin/go</span> <span class="pre">get</span> <span class="pre">code.google.com/p/go.tools/cmd/vet</span></code></li>
+<li><code class="docutils literal"><span class="pre">bin/go</span> <span class="pre">get</span> <span class="pre">github.com/golang/lint/golint</span></code></li>
+</ul>
+<div class="section" id="updating-dependencies">
+<span id="updating-dependencies"></span><h3>Updating dependencies<a class="headerlink" href="#updating-dependencies" title="Permalink to this headline">¶</a></h3>
+<p>All dependencies:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">update</span><span class="o">-</span><span class="n">dep</span> <span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">cloudfoundry</span><span class="o">/</span><span class="n">bosh</span><span class="o">-</span><span class="n">utils</span><span class="o">/...</span>
+</pre></div>
+</div>
+<p>An example for a single dependency:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">update</span><span class="o">-</span><span class="n">dep</span> <span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">pivotal</span><span class="o">-</span><span class="n">golang</span><span class="o">/</span><span class="n">clock</span><span class="o">/</span><span class="n">fakeclock</span>
+</pre></div>
+</div>
+<p>The script will pull latest package version and copy its files to vendor directory. Note, that it does not pull dependecies recursively from package unless they are vendored.</p>
+<p>For development purposes, delete package from vendor use it from your $GOPATH. Once everything works in other package push changes in that package to github and run ./update-dep to add latest version.</p>
+<p>Every vendored packaged is recorded in deps.txt with git/hg sha of the package for references. The known issue if subpackages are being vendored and later full package is being vendored subpackage references are not deleted in deps.txt.</p>
+<p>To delete package  <code class="docutils literal"><span class="pre">rm</span> <span class="pre">-rf</span> <span class="pre">vendor/path_to_package</span></code> and delete reference in deps.txt.</p>
+</div>
+<div class="section" id="running-tests">
+<span id="running-tests"></span><h3>Running tests<a class="headerlink" href="#running-tests" title="Permalink to this headline">¶</a></h3>
+<p>Each package in the agent has its own unit tests. You can run all unit tests with <code class="docutils literal"><span class="pre">bin/test-unit</span></code>.</p>
+<p>Additionally, <a class="reference external" href="https://github.com/cloudfoundry/bosh">BOSH</a> includes integration tests that use this agent.
+Run <code class="docutils literal"><span class="pre">bin/test-bosh-integration</span></code> to run those with your local agent changes.
+However, in order to run the BOSH integrations tests, you will need a copy of the BOSH repo, which this script will do in <code class="docutils literal"><span class="pre">./tmp</span></code>.
+BOSH uses Ruby for its tests, so you will also need to have that available.</p>
+<p>You can run all the tests by running <code class="docutils literal"><span class="pre">bin/test</span></code>.</p>
+<p>There is a stand-alone <em>BOSH Agent</em> integration test to test config-drive using bosh-lite. This can be run locally via <code class="docutils literal"><span class="pre">bin/test-integration</span> <span class="pre">--provider=virtualbox</span></code>. The vagrant provider passed in can be changed to a provider of your choosing if you so desire.</p>
+</div>
+<div class="section" id="using-intellij-with-go-and-the-bosh-agent">
+<span id="using-intellij-with-go-and-the-bosh-agent"></span><h3>Using IntelliJ with Go and the BOSH Agent<a class="headerlink" href="#using-intellij-with-go-and-the-bosh-agent" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Install <a class="reference external" href="http://www.jetbrains.com/idea/download/index.html">IntelliJ 15</a></li>
+<li>Install the latest <a class="reference external" href="https://github.com/go-lang-plugin-org/go-lang-idea-plugin">Google Go plugin for IntelliJ</a>. You may want to grab the latest early access (EAP) build, rather than the last release.</li>
+<li>(Optional) Download, Install &amp; Select <a class="reference external" href="https://github.com/Pivotal-Boulder/IDE-Preferences">improved keybindings</a> for IntelliJ:<ul>
+<li><code class="docutils literal"><span class="pre">git</span> <span class="pre">clone</span> <span class="pre">git&#64;github.com:Pivotal-Boulder/IDE-Preferences.git</span></code></li>
+<li><code class="docutils literal"><span class="pre">cd</span> <span class="pre">~/Library/Preferences/IntelliJIdea13/keymaps</span></code></li>
+<li><code class="docutils literal"><span class="pre">ln</span> <span class="pre">-sf</span> <span class="pre">~/workspace/IDE-Preferences/IntelliJKeymap.xml</span></code></li>
+<li>In IntelliJ: Preferences -&gt; Keymap -&gt; Pick 'Mac OS X 10.5+ Improved'</li>
+</ul>
+</li>
+<li>Clone bosh-agent into a clean go workspace (or use a <a class="reference external" href="https://github.com/cloudfoundry/bosh">bosh</a> clone with bosh/go as the workspace root):<ul>
+<li><code class="docutils literal"><span class="pre">mkdir</span> <span class="pre">-p</span> <span class="pre">~/workspace/bosh-agent-workspace/src/github.com/cloudfoundry</span></code></li>
+<li><code class="docutils literal"><span class="pre">cd</span> <span class="pre">~/workspace/bosh-agent-workspace/src/github.com/cloudfoundry</span></code></li>
+<li><code class="docutils literal"><span class="pre">git</span> <span class="pre">clone</span> <span class="pre">https://github.com/cloudfoundry/bosh-agent</span></code></li>
+</ul>
+</li>
+<li>Open ~/workspace/bosh-agent-workspace as a new project in IntelliJ.</li>
+<li>Set the Go SDK as the Project SDK:<ul>
+<li>Open the Project Structure window: <code class="docutils literal"><span class="pre">File</span> <span class="pre">-&gt;</span> <span class="pre">Project</span> <span class="pre">Structure</span></code></li>
+<li>Select the <code class="docutils literal"><span class="pre">Project</span></code> tab in left sidebar</li>
+<li>(Optional) Add a <code class="docutils literal"><span class="pre">New</span></code> Go SDK by selecting your go root.</li>
+<li>Select <code class="docutils literal"><span class="pre">Go</span> <span class="pre">SDK</span> <span class="pre">go1.3</span></code> under Project SDK</li>
+</ul>
+</li>
+<li>Setup module sources<ul>
+<li>Open the Project Structure window: <code class="docutils literal"><span class="pre">File</span> <span class="pre">-&gt;</span> <span class="pre">Project</span> <span class="pre">Structure</span></code></li>
+<li>Select the <code class="docutils literal"><span class="pre">Modules</span></code> tab in left sidebar</li>
+<li>Select your module in the middle sidebar</li>
+<li>Select the <code class="docutils literal"><span class="pre">Sources</span></code> tab in the Module pane</li>
+<li>Select ~/workspace/bosh-agent-workspace/src and add is as a source dir</li>
+</ul>
+</li>
+<li>Install &amp; configure the <a class="reference external" href="https://github.com/krasa/GrepConsole">Grep Console</a> plugin<ul>
+<li>Install via <code class="docutils literal"><span class="pre">Preferences</span> <span class="pre">-&gt;</span> <span class="pre">Plugins</span></code></li>
+<li>Select <code class="docutils literal"><span class="pre">Preferences</span> <span class="pre">-&gt;</span> <span class="pre">Grep</span> <span class="pre">COnsole</span> <span class="pre">-&gt;</span> <span class="pre">Enable</span> <span class="pre">ANSI</span> <span class="pre">coloring</span></code> to colorize Ginkgo test output</li>
+</ul>
+</li>
+<li>Re-index your project: <code class="docutils literal"><span class="pre">File</span> <span class="pre">-&gt;</span> <span class="pre">Invalidate</span> <span class="pre">Cache</span> <span class="pre">/</span> <span class="pre">Restart</span></code></li>
+</ul>
+<p>You should now be able to 'go to declaration', auto-complete, and run tests from within IntelliJ.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">BOSH Agent Development Setup</a><ul>
+<li><a class="reference internal" href="#running-locally">Running locally</a></li>
+<li><a class="reference internal" href="#blobstores">Blobstores</a></li>
+<li><a class="reference internal" href="#set-up-a-workstation-for-development">Set up a workstation for development</a><ul>
+<li><a class="reference internal" href="#updating-dependencies">Updating dependencies</a></li>
+<li><a class="reference internal" href="#running-tests">Running tests</a></li>
+<li><a class="reference internal" href="#using-intellij-with-go-and-the-bosh-agent">Using IntelliJ with Go and the BOSH Agent</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="../golang/mockery.html" title="previous chapter">mockery</a></li>
+      <li>Next: <a href="bosh-stemcell-builder.html" title="next chapter">BOSH linux stemcell builder</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/bosh/bosh-agent-dev-setup.md.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, me.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="../_sources/bosh/bosh-agent-dev-setup.md.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,215 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>mockery &#8212; my.sphinx  documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="BOSH Agent Development Setup" href="../bosh/bosh-agent-dev-setup.html" />
+    <link rel="prev" title="Welcome to my.sphinx’s documentation!" href="../index.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="mockery">
+<span id="mockery"></span><h1>mockery<a class="headerlink" href="#mockery" title="Permalink to this headline">¶</a></h1>
+<p>mockery 는 golang interface 로 부터 mock 의 생성을 자동화 한 도구이다. 이것을 통해 mock 기반의 테스트를 위해 불필요한 상용구 (boilerplate code) 를 작성하지 않아도 된다. 어떻게 쓰는 것인지 살펴보자.</p>
+<div class="section" id="installation">
+<span id="installation"></span><h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">go</span> <span class="n">get</span> <span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">vektra</span><span class="o">/</span><span class="n">mockery</span><span class="o">/.../</span>
+</pre></div>
+</div>
+<p>그럼 다음 위치에 실행파일이 만들어진다.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>$GOPATH/bin/mockery
+</pre></div>
+</div>
+</div>
+<div class="section" id="examples">
+<span id="examples"></span><h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="simplest-case">
+<span id="simplest-case"></span><h3>Simplest case<a class="headerlink" href="#simplest-case" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal"><span class="pre">string.go</span></code> 가 다음과 같다고 가정해보자.</p>
+<div class="highlight-go"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">test</span>
+
+<span class="kd">type</span> <span class="nx">Stringer</span> <span class="kd">interface</span> <span class="p">{</span>
+    <span class="nx">String</span><span class="p">()</span> <span class="kt">string</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">mockery</span> <span class="pre">--name=Stringer</span></code> 를 실행하면 다음 파일이 떨어진다 <code class="docutils literal"><span class="pre">mocks/Stringer.go</span></code></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">package</span> <span class="n">mocks</span>
+
+<span class="kn">import</span> <span class="s2">&quot;github.com/stretchr/testify/mock&quot;</span>
+
+<span class="nb">type</span> <span class="n">Stringer</span> <span class="n">struct</span> <span class="p">{</span>
+    <span class="n">mock</span><span class="o">.</span><span class="n">Mock</span>
+<span class="p">}</span>
+
+<span class="n">func</span> <span class="p">(</span><span class="n">m</span> <span class="o">*</span><span class="n">Stringer</span><span class="p">)</span> <span class="n">String</span><span class="p">()</span> <span class="n">string</span> <span class="p">{</span>
+    <span class="n">ret</span> <span class="p">:</span><span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">Called</span><span class="p">()</span>
+
+    <span class="n">var</span> <span class="n">r0</span> <span class="n">string</span>
+    <span class="k">if</span> <span class="n">rf</span><span class="p">,</span> <span class="n">ok</span> <span class="p">:</span><span class="o">=</span> <span class="n">ret</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="p">(</span><span class="n">func</span><span class="p">()</span> <span class="n">string</span><span class="p">);</span> <span class="n">ok</span> <span class="p">{</span>
+        <span class="n">r0</span> <span class="o">=</span> <span class="n">rf</span><span class="p">()</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="n">r0</span> <span class="o">=</span> <span class="n">ret</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">r0</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="next-level">
+<span id="next-level"></span><h3>Next Level<a class="headerlink" href="#next-level" title="Permalink to this headline">¶</a></h3>
+<p>AWS S3 API 를 테스트하는 코드를 작성해보자. 파일명은 <code class="docutils literal"><span class="pre">aws-s3-mock-test.go</span></code> 로 하자.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">package</span> <span class="n">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+    <span class="s2">&quot;fmt&quot;</span>
+
+    <span class="s2">&quot;github.com/aws/aws-sdk-go/aws&quot;</span>
+    <span class="s2">&quot;github.com/aws/aws-sdk-go/service/s3&quot;</span>
+    <span class="s2">&quot;github.com/jaytaylor/mockery-example/mocks&quot;</span>
+    <span class="s2">&quot;github.com/stretchr/testify/mock&quot;</span>
+<span class="p">)</span>
+
+<span class="n">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">mockS3</span> <span class="p">:</span><span class="o">=</span> <span class="o">&amp;</span><span class="n">mocks</span><span class="o">.</span><span class="n">S3API</span><span class="p">{}</span>
+
+    <span class="n">mockResultFn</span> <span class="p">:</span><span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="nb">input</span> <span class="o">*</span><span class="n">s3</span><span class="o">.</span><span class="n">ListObjectsInput</span><span class="p">)</span> <span class="o">*</span><span class="n">s3</span><span class="o">.</span><span class="n">ListObjectsOutput</span> <span class="p">{</span>
+        <span class="n">output</span> <span class="p">:</span><span class="o">=</span> <span class="o">&amp;</span><span class="n">s3</span><span class="o">.</span><span class="n">ListObjectsOutput</span><span class="p">{}</span>
+        <span class="n">output</span><span class="o">.</span><span class="n">SetCommonPrefixes</span><span class="p">([]</span><span class="o">*</span><span class="n">s3</span><span class="o">.</span><span class="n">CommonPrefix</span><span class="p">{</span>
+            <span class="o">&amp;</span><span class="n">s3</span><span class="o">.</span><span class="n">CommonPrefix</span><span class="p">{</span>
+                <span class="n">Prefix</span><span class="p">:</span> <span class="n">aws</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="s2">&quot;2017-01-01&quot;</span><span class="p">),</span>
+            <span class="p">},</span>
+        <span class="p">})</span>
+        <span class="k">return</span> <span class="n">output</span>
+    <span class="p">}</span>
+
+    <span class="o">//</span> <span class="n">NB</span><span class="p">:</span> <span class="o">.</span><span class="n">Return</span><span class="p">(</span><span class="o">...</span><span class="p">)</span> <span class="n">must</span> <span class="k">return</span> <span class="n">the</span> <span class="n">same</span> <span class="n">signature</span> <span class="k">as</span> <span class="n">the</span> <span class="n">method</span> <span class="n">being</span> <span class="n">mocked</span><span class="o">.</span>
+    <span class="o">//</span>     <span class="n">In</span> <span class="n">this</span> <span class="n">case</span> <span class="n">it</span><span class="s1">&#39;s (*s3.ListObjectsOutput, error).</span>
+    <span class="n">mockS3</span><span class="o">.</span><span class="n">On</span><span class="p">(</span><span class="s2">&quot;ListObjects&quot;</span><span class="p">,</span> <span class="n">mock</span><span class="o">.</span><span class="n">MatchedBy</span><span class="p">(</span><span class="n">func</span><span class="p">(</span><span class="nb">input</span> <span class="o">*</span><span class="n">s3</span><span class="o">.</span><span class="n">ListObjectsInput</span><span class="p">)</span> <span class="nb">bool</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nb">input</span><span class="o">.</span><span class="n">Delimiter</span> <span class="o">!=</span> <span class="n">nil</span> <span class="o">&amp;&amp;</span> <span class="o">*</span><span class="nb">input</span><span class="o">.</span><span class="n">Delimiter</span> <span class="o">==</span> <span class="s2">&quot;/&quot;</span> <span class="o">&amp;&amp;</span> <span class="nb">input</span><span class="o">.</span><span class="n">Prefix</span> <span class="o">==</span> <span class="n">nil</span>
+    <span class="p">}))</span><span class="o">.</span><span class="n">Return</span><span class="p">(</span><span class="n">mockResultFn</span><span class="p">,</span> <span class="n">nil</span><span class="p">)</span>
+
+    <span class="n">listingInput</span> <span class="p">:</span><span class="o">=</span> <span class="o">&amp;</span><span class="n">s3</span><span class="o">.</span><span class="n">ListObjectsInput</span><span class="p">{</span>
+        <span class="n">Bucket</span><span class="p">:</span>    <span class="n">aws</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="s2">&quot;foo&quot;</span><span class="p">),</span>
+        <span class="n">Delimiter</span><span class="p">:</span> <span class="n">aws</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">),</span>
+    <span class="p">}</span>
+    <span class="n">listingOutput</span><span class="p">,</span> <span class="n">err</span> <span class="p">:</span><span class="o">=</span> <span class="n">mockS3</span><span class="o">.</span><span class="n">ListObjects</span><span class="p">(</span><span class="n">listingInput</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="n">nil</span> <span class="p">{</span>
+        <span class="n">panic</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">x</span> <span class="p">:</span><span class="o">=</span> <span class="nb">range</span> <span class="n">listingOutput</span><span class="o">.</span><span class="n">CommonPrefixes</span> <span class="p">{</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s2">&quot;common prefix: %+v</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">x</span><span class="p">)</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+<p>실행해보자. 다음과 같은 결과를 확인할 수 있을것이다.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ go run aws-s3-mock-test.go
+common prefix: {
+  Prefix: &quot;2017-01-01&quot;
+}
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">mockery</a><ul>
+<li><a class="reference internal" href="#installation">Installation</a></li>
+<li><a class="reference internal" href="#examples">Examples</a><ul>
+<li><a class="reference internal" href="#simplest-case">Simplest case</a></li>
+<li><a class="reference internal" href="#next-level">Next Level</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="../index.html" title="previous chapter">Welcome to my.sphinx’s documentation!</a></li>
+      <li>Next: <a href="../bosh/bosh-agent-dev-setup.html" title="next chapter">BOSH Agent Development Setup</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/golang/mockery.md.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, me.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="../_sources/golang/mockery.md.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

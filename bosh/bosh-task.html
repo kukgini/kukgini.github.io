@@ -1,0 +1,141 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>BOSH task &#8212; my.sphinx  documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="BOSH Inside" href="bosh-inside.html" />
+    <link rel="prev" title="Bypassing corporate firewall with reverse ssh port forwarding" href="reverse-ssh-port-forwarding.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="bosh-task">
+<span id="bosh-task"></span><h1>BOSH task<a class="headerlink" href="#bosh-task" title="Permalink to this headline">¶</a></h1>
+<p>BOSH 를 통한 모든 작업은 task 라고 하는 단위로 관리 된다. 그리고 task 를 조회하는 작업도 하나의 task 이므로 아래와 같이 watch 명령으로 반복 조회를 할 경우 어느 순간 task number 가 순식간이 올라가 있는 것을 발견하게 될 것이다. 조심하자.</p>
+<div class="section" id="tasks">
+<span id="tasks"></span><h2>Tasks<a class="headerlink" href="#tasks" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default"><div class="highlight"><pre><span></span>    $ watch bosh -e lite tasks
+    Using environment &#39;192.168.50.4&#39; as client &#39;admin&#39;
+
+    #    State   Started At                    Last Activity At              User       Deployment  Description                    Result
+    256  queued  Thu Jan  1 00:00:00 UTC 1970  Mon May 22 07:00:00 UTC 2017  scheduler  -           scheduled SnapshotDeployments  -
+    255  queued  Thu Jan  1 00:00:00 UTC 1970  Mon May 22 06:53:46 UTC 2017  admin      cf-mysql    delete deployment cf-mysql     -
+    254  queued  Thu Jan  1 00:00:00 UTC 1970  Mon May 22 06:53:26 UTC 2017  admin      cf-mysql    retrieve vm-stats              -
+    253  queued  Thu Jan  1 00:00:00 UTC 1970  Mon May 22 06:52:38 UTC 2017  admin      cf          retrieve vm-stats              -
+    252  queued  Thu Jan  1 00:00:00 UTC 1970  Mon May 22 06:49:39 UTC 2017  admin      cf-mysql    delete deployment cf-mysql     -
+    251  queued  Thu Jan  1 00:00:00 UTC 1970  Mon May 22 06:49:14 UTC 2017  admin      cf          retrieve vm-stats              -
+    250  queued  Thu Jan  1 00:00:00 UTC 1970  Mon May 22 06:48:34 UTC 2017  admin      cf          retrieve vm-stats              -
+    249  queued  Thu Jan  1 00:00:00 UTC 1970  Mon May 22 06:48:16 UTC 2017  admin      cf-mysql    delete deployment cf-mysql     -
+    245  queued  Thu Jan  1 00:00:00 UTC 1970  Mon May 22 06:25:53 UTC 2017  admin      cf-mysql    retrieve vm-stats              -
+    244  queued  Thu Jan  1 00:00:00 UTC 1970  Mon May 22 06:24:50 UTC 2017  admin      cf-mysql    retrieve vm-stats              -
+    243  queued  Thu Jan  1 00:00:00 UTC 1970  Mon May 22 06:24:20 UTC 2017  admin      cf          retrieve vm-stats              -
+    242  queued  Thu Jan  1 00:00:00 UTC 1970  Mon May 22 06:22:43 UTC 2017  admin      cf          retrieve vm-stats              -
+
+    12 tasks
+
+    Succeeded
+</pre></div>
+</div>
+</div>
+<div class="section" id="cancel-task">
+<span id="cancel-task"></span><h2>cancel-task<a class="headerlink" href="#cancel-task" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default"><div class="highlight"><pre><span></span>    $ bosh -e lite cancel-task 256
+</pre></div>
+</div>
+<p>이렇게 하여 진행중인 task 를 취소할 수 있다. 이것은 때때로 무한히 대기를 탈 수도 있다.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">BOSH task</a><ul>
+<li><a class="reference internal" href="#tasks">Tasks</a></li>
+<li><a class="reference internal" href="#cancel-task">cancel-task</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="reverse-ssh-port-forwarding.html" title="previous chapter">Bypassing corporate firewall with reverse ssh port forwarding</a></li>
+      <li>Next: <a href="bosh-inside.html" title="next chapter">BOSH Inside</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/bosh/bosh-task.md.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, me.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="../_sources/bosh/bosh-task.md.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

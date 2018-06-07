@@ -1,0 +1,950 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Cloud Foundry &mdash; my.sphinx  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="my.sphinx  documentation" href="../index.html"/>
+        <link rel="next" title="Open Stack" href="../3-openstack/index.html"/>
+        <link rel="prev" title="Trouble Shoot case 6 OpenStack" href="../1-bosh/ch-02-02.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> my.sphinx
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Table of Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../1-bosh/bosh-agent-dev-setup.html">BOSH Agent Development Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../1-bosh/bosh-stemcell-builder.html">BOSH linux stemcell builder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../1-bosh/bosh-lite-resizing.html">BOSH lite resizing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../1-bosh/using-upstart.html">Using upstart on ubuntu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../1-bosh/reverse-ssh-port-forwarding.html">Bypassing corporate firewall with reverse ssh port forwarding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../1-bosh/bosh-task.html">BOSH task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../1-bosh/bosh-inside.html">BOSH Inside</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../1-bosh/troubleshoot-case-01-openstack.html">OpenStack Case 1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../1-bosh/troubleshoot-case-02-openstack.html">OpenStack Case 2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../1-bosh/troubleshoot-case-03-aws.html">Case 3 AWS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../1-bosh/troubleshoot-case-04-aws.html">Case 4 AWS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../1-bosh/troubleshoot-case-05-galera-cluster.html">IaaS 네트워크 장비 교체 작업 후 mariadb galera cluster 장애</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../1-bosh/ch-02-02.html">Trouble Shoot case 6 OpenStack</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Cloud Foundry</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#cf-extensions-projects-in-incubation">CF-Extensions projects in incubation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#custom-user-provided-service-cups">Custom User Provided Service (CUPS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#binding-credentials">Binding Credentials</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#eureka-server-cups">Eureka Server CUPS 로 등록하기</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#cloud-native-application">Cloud Native Application</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#failed-to-push-java-app-case-sensative-entries">Failed to push java app (case sensative entries)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bosh-lite-case-1">bosh-lite 장애 Case 1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#heartbeat-message-sample">Heartbeat Message sample</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bosh2-cli-vm">BOSH2 CLI 로 VM 에 로그인 하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#howto-simply-tcpdump-and-get">HowTo Simply TcpDump and get.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#inside-cell">Inside Cell</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#inside-diego-database">Inside Diego Database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#router-register-log">Router Register Log</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cloud-check-vm">Cloud Check 를 통한 vm 장애 복구</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bosh-init-open-stack-nova-bug">bosh-init 시 Open Stack Nova Bug 관련</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cf-openstack-validator-floatingip">cf-openstack-validator 실행시 floatingip 관련 오류</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#uncategorized">Uncategorized</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../3-openstack/index.html">Open Stack</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../4-git/git-flow.html">git flow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../4-git/git-push.html">git push</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../4-git/git-status.html">git status</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../z-examples/rst_examples.html">ReStructuresText Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../z-examples/markdown_examples.html">Markdown Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../z-examples/markdown_examples.html#an-h1-header">An h1 header</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">my.sphinx</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Cloud Foundry</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/2-cloudfoundry/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="toctree-wrapper compound">
+</div>
+<div class="section" id="cloud-foundry">
+<h1>Cloud Foundry<a class="headerlink" href="#cloud-foundry" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="cf-extensions-projects-in-incubation">
+<h2>CF-Extensions projects in incubation<a class="headerlink" href="#cf-extensions-projects-in-incubation" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><a class="reference external" href="https://www.altoros.com/blog/the-unik-compiler-added-to-the-cloud-foundry-extensions-incubation/">https://www.altoros.com/blog/the-unik-compiler-added-to-the-cloud-foundry-extensions-incubation/</a></li>
+</ul>
+</div>
+<div class="section" id="custom-user-provided-service-cups">
+<h2>Custom User Provided Service (CUPS)<a class="headerlink" href="#custom-user-provided-service-cups" title="Permalink to this headline">¶</a></h2>
+<p>CloudFoundry Marketplace 를 통해서 제공되는 서비스가 아닌 경우 마치 서비스인 것 처럼 등록하여 쓸 수 있는 기능.</p>
+<div class="section" id="binding-credentials">
+<h3>Binding Credentials<a class="headerlink" href="#binding-credentials" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="eureka-server-cups">
+<h3>Eureka Server CUPS 로 등록하기<a class="headerlink" href="#eureka-server-cups" title="Permalink to this headline">¶</a></h3>
+<p>우선 다음 eureka 서버 샘플을 내려 받는다: <a class="reference external" href="https://github.com/making/cf-eureka-server">https://github.com/making/cf-eureka-server</a></p>
+<p>내 경우는 이녀석이 너무 만들어 진지 오래 되어 SpringBoot 버전을 상향하였다. (1.1.3 -&gt; 1.3.3)</p>
+<p>build 한 후 manifest 를 작성하여 push 한다. push 가 되면서 Router url 이 발급되었을 것이다.</p>
+<p>다음 명령으로 서비스화 한다.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>cf uups eureka -p <span class="s1">&#39;{&quot;name&quot;:&quot;eureka&quot;, &quot;uri&quot;:&quot;http://eureka:changeme@&lt;router-url-of-pushed-app&gt;&quot;}&#39;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="cloud-native-application">
+<h2>Cloud Native Application<a class="headerlink" href="#cloud-native-application" title="Permalink to this headline">¶</a></h2>
+<p>Java Application 의 경우 다음과 같은 형식으로 프로세스가 기동된다.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>/home/vcap/app/.java-buildpack/open_jdk_jre/bin/java
+    -Djava.io.tmpdir<span class="o">=</span>/home/vcap/tmp
+    -XX:OnOutOfMemoryError<span class="o">=</span>/home/vcap/app/.java-buildpack/open_jdk_jre/bin/killjava.sh
+    -XX:MaxMetaspaceSize<span class="o">=</span>64M -Xss228K -Xms317161K -XX:MetaspaceSize<span class="o">=</span>64M -Xmx317161K
+    -Djavax.net.ssl.trustStore<span class="o">=</span>/home/vcap/app/.java-buildpack/container_certificate_trust_store/truststore.jks
+    -Djavax.net.ssl.trustStorePassword<span class="o">=</span>java-buildpack-trust-store-password
+    -cp /home/vcap/app/.:/home/vcap/app/*
+    &lt;java-main-class-which-has-static-main-function&gt;
+</pre></div>
+</div>
+<ol class="arabic simple">
+<li>JDK/JRE 는 /home/vcap/app/.java-buildpack/open_jdk_jre 에 설치된다.</li>
+<li>$TEMP dir 는 /home/vcap/tmp 이므로 반드시 java.io.tmpdir 환경 변수를 참조해야 함</li>
+<li>OutOfMemoryError 가 발생할 경우 killjava.sh 가 실행된다.</li>
+<li>메모리 크기는 컨테이너에 할당된 양에 맞추어 동적으로 조정된다.</li>
+<li>truststore.jks 라 customize 될 수 있다.</li>
+<li>jar 의 내용이 압축이 풀린 상태로 실행된다.</li>
+</ol>
+</div>
+<div class="section" id="failed-to-push-java-app-case-sensative-entries">
+<h2>Failed to push java app (case sensative entries)<a class="headerlink" href="#failed-to-push-java-app-case-sensative-entries" title="Permalink to this headline">¶</a></h2>
+<p>Case Sensative 한 entries 가 포함된 jar 를 Case Insensative 한 FileSystem 을 가진 OS (예: MacOS X, Windows)
+에서 push 하면 오류가 발생한다. 다음은 Slack 에 문의했던 내용을 기초로 제출한 GitHub Issue (<a class="reference external" href="https://github.com/cloudfoundry/cli/issues/1147">https://github.com/cloudfoundry/cli/issues/1147</a>) 이다</p>
+<blockquote>
+<div><p>When I push app for java_buildpack. i got this message:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ cf push
+Using manifest file .../manifest.yml
+
+Updating app &lt;appname&gt; in org &lt;orgname&gt; / space &lt;spacename&gt; as &lt;appname&gt;...
+OK
+
+FAILED
+Error processing app files: mkdir /var/folders/51/r9kh5s8s6s.../T/unzipped-app006450987/META-INF/license: not a directory
+<span class="sb">```</span>
+
+There is <span class="k">case</span> sensitive entries like this:
+<span class="sb">```</span>
+META-INF/LICENSE <span class="o">(</span>which is file<span class="o">)</span>
+META-INF/license/
+META-INF/license/license-file-1.txt
+META-INF/license/license-file-2.txt
+</pre></div>
+</div>
+<p>I am a MacOS X User (and sometimes use Windows of course).
+It seems like cf cli try to extract jar entries into /var/ before push it.
+But, MacOS default file system is case insensitive.</p>
+<p>Sometimes, I can&#8217;t manipulate jar entries because it is auto generated by build system (like gradle).
+So, It&#8217;s better not extracting files from jar.</p>
+</div></blockquote>
+</div>
+<div class="section" id="bosh-lite-case-1">
+<h2>bosh-lite 장애 Case 1<a class="headerlink" href="#bosh-lite-case-1" title="Permalink to this headline">¶</a></h2>
+<p>bosh cli 로 아예 director 에 connection refused 가 났기 때문에 director 에 문제가 생긴 것으로 추정함.
+director 는 bosh-lite 의 경우 Vagrant VM 그 자체이므로 다음과 같이 로그인 할 수 있다.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ vagrant ssh
+</pre></div>
+</div>
+<p>director 로그에는 access 자체가 안되는 것으로 보여서 시스템 로그를 확인해 보았다.</p>
+<div class="highlight-text"><div class="highlight"><pre><span></span>tail -f /var/log/syslog.log
+
+May 15 07:36:03 MY-SVR anacron[26411]: Job `cron.daily&#39; terminated
+May 15 07:36:03 MY-SVR anacron[26411]: Normal exit (1 job run)
+May 15 08:17:01 MY-SVR CRON[26579]: (root) CMD (   cd / &amp;&amp; run-parts --report /etc/cron.hourly)
+May 15 09:17:01 MY-SVR CRON[26596]: (root) CMD (   cd / &amp;&amp; run-parts --report /etc/cron.hourly)
+May 15 10:17:01 MY-SVR CRON[26852]: (root) CMD (   cd / &amp;&amp; run-parts --report /etc/cron.hourly)
+May 15 10:23:23 MY-SVR systemd[1]: snapd.refresh.timer: Adding 26min 19.000282s random time.
+May 15 11:17:01 MY-SVR CRON[27041]: (root) CMD (   cd / &amp;&amp; run-parts --report /etc/cron.hourly)
+May 15 11:27:23 MY-SVR systemd[1]: snapd.refresh.timer: Adding 4h 39min 57.220974s random time.
+May 15 12:11:23 MY-SVR systemd[1]: Starting Daily apt activities...
+May 15 12:11:40 MY-SVR systemd[1]: Started Daily apt activities.
+May 15 12:11:40 MY-SVR systemd[1]: apt-daily.timer: Adding 11h 32min 45.317937s random time.
+May 15 12:11:40 MY-SVR systemd[1]: apt-daily.timer: Adding 9h 39min 19.081080s random time.
+May 15 12:17:01 MY-SVR CRON[27412]: (root) CMD (   cd / &amp;&amp; run-parts --report /etc/cron.hourly)
+May 15 13:17:01 MY-SVR CRON[27469]: (root) CMD (   cd / &amp;&amp; run-parts --report /etc/cron.hourly)
+
+May 15 13:19:36 MY-SVR kernel: [2146474.509021] device vboxnet0 left promiscuous mode (&lt;-- 요기 주목!!!)
+May 15 13:19:36 MY-SVR NetworkManager[1233]: &lt;info&gt;  [1494821976.7642] device (vboxnet0): link disconnected
+May 15 13:19:36 MY-SVR kernel: [2146474.525511] vboxnetflt: 3649851 out of 3651331 packets were not sent (directed to host)
+
+May 15 13:24:02 MY-SVR systemd[1]: Started Session 781 of user lgcns.
+May 15 13:26:39 MY-SVR systemd[1]: Started Session 782 of user lgcns.
+May 15 13:26:39 MY-SVR systemd[1]: Started Session 783 of user lgcns.
+May 15 13:31:44 MY-SVR kernel: [2147202.365199] ip_tables: (C) 2000-2006 Netfilter Core Team
+</pre></div>
+</div>
+<p>로그를 보았을 때 vboxnet0 라는 NIC 디바이스가 장애가 난 것으로 보인다.</p>
+<p>vboxnet0 는 Virtual Box 가 Host 와 Guest VM 사이의 통신을 위해 만든 가상 디바이스이다. 다음 명령으로 디바이스 리스트를 볼 수 있다.</p>
+<p>이 경우 장치 오류이므로 어찌할 도리가 없어 서버를 재기동 하고 snapshot 으로 복구하였다.</p>
+<p>관련 자료:</p>
+<ul class="simple">
+<li><a class="reference external" href="http://www.linuxquestions.org/questions/linux-security-4/device-entered-promiscuous-mode-696873/">http://www.linuxquestions.org/questions/linux-security-4/device-entered-promiscuous-mode-696873/</a></li>
+<li><a class="reference external" href="https://forums.virtualbox.org/viewtopic.php?f=7&amp;t=82378">https://forums.virtualbox.org/viewtopic.php?f=7&amp;t=82378</a></li>
+</ul>
+</div>
+<div class="section" id="heartbeat-message-sample">
+<h2>Heartbeat Message sample<a class="headerlink" href="#heartbeat-message-sample" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">hm</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">heartbeat</span><span class="o">.</span><span class="mf">8e3</span><span class="n">d4f5e</span><span class="o">-</span><span class="mi">8426</span><span class="o">-</span><span class="mi">4</span><span class="n">c41</span><span class="o">-</span><span class="n">a91a</span><span class="o">-</span><span class="mi">5</span><span class="n">c569e8a40be</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;deployment&quot;</span><span class="p">:</span><span class="s2">&quot;paasta-redis-service&quot;</span><span class="p">,</span><span class="s2">&quot;job&quot;</span><span class="p">:</span><span class="s2">&quot;dedicated-node&quot;</span><span class="p">,</span><span class="s2">&quot;index&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="s2">&quot;job_state&quot;</span><span class="p">:</span><span class="s2">&quot;running&quot;</span><span class="p">,</span><span class="s2">&quot;vitals&quot;</span><span class="p">:{</span><span class="s2">&quot;cpu&quot;</span><span class="p">:{</span><span class="s2">&quot;sys&quot;</span><span class="p">:</span><span class="s2">&quot;0.0&quot;</span><span class="p">,</span><span class="s2">&quot;user&quot;</span><span class="p">:</span><span class="s2">&quot;0.0&quot;</span><span class="p">,</span><span class="s2">&quot;wait&quot;</span><span class="p">:</span><span class="s2">&quot;0.1&quot;</span><span class="p">},</span><span class="s2">&quot;disk&quot;</span><span class="p">:{</span><span class="s2">&quot;ephemeral&quot;</span><span class="p">:{</span><span class="s2">&quot;inode_percent&quot;</span><span class="p">:</span><span class="s2">&quot;0&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;1&quot;</span><span class="p">},</span><span class="s2">&quot;persistent&quot;</span><span class="p">:{</span><span class="s2">&quot;inode_percent&quot;</span><span class="p">:</span><span class="s2">&quot;0&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;0&quot;</span><span class="p">},</span><span class="s2">&quot;system&quot;</span><span class="p">:{</span><span class="s2">&quot;inode_percent&quot;</span><span class="p">:</span><span class="s2">&quot;31&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;38&quot;</span><span class="p">}},</span><span class="s2">&quot;load&quot;</span><span class="p">:[</span><span class="s2">&quot;0.00&quot;</span><span class="p">,</span><span class="s2">&quot;0.00&quot;</span><span class="p">,</span><span class="s2">&quot;0.00&quot;</span><span class="p">],</span><span class="s2">&quot;mem&quot;</span><span class="p">:{</span><span class="s2">&quot;kb&quot;</span><span class="p">:</span><span class="s2">&quot;79572&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;4&quot;</span><span class="p">},</span><span class="s2">&quot;swap&quot;</span><span class="p">:{</span><span class="s2">&quot;kb&quot;</span><span class="p">:</span><span class="s2">&quot;0&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;0&quot;</span><span class="p">}},</span><span class="s2">&quot;node_id&quot;</span><span class="p">:</span><span class="s2">&quot;9e2795ff-6232-48f2-b425-061f979164d0&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">hm</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">heartbeat</span><span class="o">.</span><span class="n">dd8744b9</span><span class="o">-</span><span class="mi">0</span><span class="n">f41</span><span class="o">-</span><span class="mf">4e65</span><span class="o">-</span><span class="mf">8e4</span><span class="n">c</span><span class="o">-</span><span class="mi">2</span><span class="n">b3838f3dd6c</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;deployment&quot;</span><span class="p">:</span><span class="s2">&quot;cf-diego&quot;</span><span class="p">,</span><span class="s2">&quot;job&quot;</span><span class="p">:</span><span class="s2">&quot;cell_z1&quot;</span><span class="p">,</span><span class="s2">&quot;index&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="s2">&quot;job_state&quot;</span><span class="p">:</span><span class="s2">&quot;failing&quot;</span><span class="p">,</span><span class="s2">&quot;vitals&quot;</span><span class="p">:{</span><span class="s2">&quot;cpu&quot;</span><span class="p">:{</span><span class="s2">&quot;sys&quot;</span><span class="p">:</span><span class="s2">&quot;0.1&quot;</span><span class="p">,</span><span class="s2">&quot;user&quot;</span><span class="p">:</span><span class="s2">&quot;0.1&quot;</span><span class="p">,</span><span class="s2">&quot;wait&quot;</span><span class="p">:</span><span class="s2">&quot;0.0&quot;</span><span class="p">},</span><span class="s2">&quot;disk&quot;</span><span class="p">:{</span><span class="s2">&quot;ephemeral&quot;</span><span class="p">:{</span><span class="s2">&quot;inode_percent&quot;</span><span class="p">:</span><span class="s2">&quot;2&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;7&quot;</span><span class="p">},</span><span class="s2">&quot;system&quot;</span><span class="p">:{</span><span class="s2">&quot;inode_percent&quot;</span><span class="p">:</span><span class="s2">&quot;31&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;38&quot;</span><span class="p">}},</span><span class="s2">&quot;load&quot;</span><span class="p">:[</span><span class="s2">&quot;0.04&quot;</span><span class="p">,</span><span class="s2">&quot;0.04&quot;</span><span class="p">,</span><span class="s2">&quot;0.00&quot;</span><span class="p">],</span><span class="s2">&quot;mem&quot;</span><span class="p">:{</span><span class="s2">&quot;kb&quot;</span><span class="p">:</span><span class="s2">&quot;190072&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;2&quot;</span><span class="p">},</span><span class="s2">&quot;swap&quot;</span><span class="p">:{</span><span class="s2">&quot;kb&quot;</span><span class="p">:</span><span class="s2">&quot;0&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;0&quot;</span><span class="p">}},</span><span class="s2">&quot;node_id&quot;</span><span class="p">:</span><span class="s2">&quot;03e993cd-b884-4aa1-9e92-f79f64abcefb&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">hm</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">heartbeat</span><span class="o">.</span><span class="mi">26</span><span class="n">de8ab9</span><span class="o">-</span><span class="n">e100</span><span class="o">-</span><span class="mi">4</span><span class="n">ec4</span><span class="o">-</span><span class="mi">897</span><span class="n">b</span><span class="o">-</span><span class="mi">39</span><span class="n">ddb583a037</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;deployment&quot;</span><span class="p">:</span><span class="s2">&quot;paasta-mysql-service&quot;</span><span class="p">,</span><span class="s2">&quot;job&quot;</span><span class="p">:</span><span class="s2">&quot;paasta-mysql-java-broker&quot;</span><span class="p">,</span><span class="s2">&quot;index&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="s2">&quot;job_state&quot;</span><span class="p">:</span><span class="s2">&quot;running&quot;</span><span class="p">,</span><span class="s2">&quot;vitals&quot;</span><span class="p">:{</span><span class="s2">&quot;cpu&quot;</span><span class="p">:{</span><span class="s2">&quot;sys&quot;</span><span class="p">:</span><span class="s2">&quot;0.0&quot;</span><span class="p">,</span><span class="s2">&quot;user&quot;</span><span class="p">:</span><span class="s2">&quot;0.1&quot;</span><span class="p">,</span><span class="s2">&quot;wait&quot;</span><span class="p">:</span><span class="s2">&quot;0.0&quot;</span><span class="p">},</span><span class="s2">&quot;disk&quot;</span><span class="p">:{</span><span class="s2">&quot;ephemeral&quot;</span><span class="p">:{</span><span class="s2">&quot;inode_percent&quot;</span><span class="p">:</span><span class="s2">&quot;0&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;6&quot;</span><span class="p">},</span><span class="s2">&quot;persistent&quot;</span><span class="p">:{</span><span class="s2">&quot;inode_percent&quot;</span><span class="p">:</span><span class="s2">&quot;31&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;38&quot;</span><span class="p">},</span><span class="s2">&quot;system&quot;</span><span class="p">:{</span><span class="s2">&quot;inode_percent&quot;</span><span class="p">:</span><span class="s2">&quot;31&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;38&quot;</span><span class="p">}},</span><span class="s2">&quot;load&quot;</span><span class="p">:[</span><span class="s2">&quot;0.00&quot;</span><span class="p">,</span><span class="s2">&quot;0.00&quot;</span><span class="p">,</span><span class="s2">&quot;0.00&quot;</span><span class="p">],</span><span class="s2">&quot;mem&quot;</span><span class="p">:{</span><span class="s2">&quot;kb&quot;</span><span class="p">:</span><span class="s2">&quot;263340&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;7&quot;</span><span class="p">},</span><span class="s2">&quot;swap&quot;</span><span class="p">:{</span><span class="s2">&quot;kb&quot;</span><span class="p">:</span><span class="s2">&quot;0&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;0&quot;</span><span class="p">}},</span><span class="s2">&quot;node_id&quot;</span><span class="p">:</span><span class="s2">&quot;23aef558-e1b5-4668-a9f7-e88bc6f46e4d&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">hm</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">heartbeat</span><span class="o">.</span><span class="mi">0</span><span class="n">f1a6923</span><span class="o">-</span><span class="mi">5</span><span class="n">d3d</span><span class="o">-</span><span class="mi">4236</span><span class="o">-</span><span class="mi">89</span><span class="n">fe</span><span class="o">-</span><span class="mi">9</span><span class="n">b88e43489da</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;deployment&quot;</span><span class="p">:</span><span class="s2">&quot;cf&quot;</span><span class="p">,</span><span class="s2">&quot;job&quot;</span><span class="p">:</span><span class="s2">&quot;router_z2&quot;</span><span class="p">,</span><span class="s2">&quot;index&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="s2">&quot;job_state&quot;</span><span class="p">:</span><span class="s2">&quot;running&quot;</span><span class="p">,</span><span class="s2">&quot;vitals&quot;</span><span class="p">:{</span><span class="s2">&quot;cpu&quot;</span><span class="p">:{</span><span class="s2">&quot;sys&quot;</span><span class="p">:</span><span class="s2">&quot;0.1&quot;</span><span class="p">,</span><span class="s2">&quot;user&quot;</span><span class="p">:</span><span class="s2">&quot;0.2&quot;</span><span class="p">,</span><span class="s2">&quot;wait&quot;</span><span class="p">:</span><span class="s2">&quot;0.0&quot;</span><span class="p">},</span><span class="s2">&quot;disk&quot;</span><span class="p">:{</span><span class="s2">&quot;ephemeral&quot;</span><span class="p">:{</span><span class="s2">&quot;inode_percent&quot;</span><span class="p">:</span><span class="s2">&quot;1&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;5&quot;</span><span class="p">},</span><span class="s2">&quot;system&quot;</span><span class="p">:{</span><span class="s2">&quot;inode_percent&quot;</span><span class="p">:</span><span class="s2">&quot;31&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;38&quot;</span><span class="p">}},</span><span class="s2">&quot;load&quot;</span><span class="p">:[</span><span class="s2">&quot;0.00&quot;</span><span class="p">,</span><span class="s2">&quot;0.03&quot;</span><span class="p">,</span><span class="s2">&quot;0.00&quot;</span><span class="p">],</span><span class="s2">&quot;mem&quot;</span><span class="p">:{</span><span class="s2">&quot;kb&quot;</span><span class="p">:</span><span class="s2">&quot;130464&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;2&quot;</span><span class="p">},</span><span class="s2">&quot;swap&quot;</span><span class="p">:{</span><span class="s2">&quot;kb&quot;</span><span class="p">:</span><span class="s2">&quot;0&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;0&quot;</span><span class="p">}},</span><span class="s2">&quot;node_id&quot;</span><span class="p">:</span><span class="s2">&quot;199b328b-ca60-4837-8d88-a4a702821d31&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">hm</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">heartbeat</span><span class="o">.</span><span class="n">c1336513</span><span class="o">-</span><span class="mf">4e5</span><span class="n">b</span><span class="o">-</span><span class="mi">4500</span><span class="o">-</span><span class="mi">89</span><span class="n">ce</span><span class="o">-</span><span class="mi">7</span><span class="n">beb94798bc3</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;deployment&quot;</span><span class="p">:</span><span class="s2">&quot;paasta-redis-service&quot;</span><span class="p">,</span><span class="s2">&quot;job&quot;</span><span class="p">:</span><span class="s2">&quot;dedicated-node&quot;</span><span class="p">,</span><span class="s2">&quot;index&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="s2">&quot;job_state&quot;</span><span class="p">:</span><span class="s2">&quot;running&quot;</span><span class="p">,</span><span class="s2">&quot;vitals&quot;</span><span class="p">:{</span><span class="s2">&quot;cpu&quot;</span><span class="p">:{</span><span class="s2">&quot;sys&quot;</span><span class="p">:</span><span class="s2">&quot;0.0&quot;</span><span class="p">,</span><span class="s2">&quot;user&quot;</span><span class="p">:</span><span class="s2">&quot;0.0&quot;</span><span class="p">,</span><span class="s2">&quot;wait&quot;</span><span class="p">:</span><span class="s2">&quot;0.1&quot;</span><span class="p">},</span><span class="s2">&quot;disk&quot;</span><span class="p">:{</span><span class="s2">&quot;ephemeral&quot;</span><span class="p">:{</span><span class="s2">&quot;inode_percent&quot;</span><span class="p">:</span><span class="s2">&quot;0&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;1&quot;</span><span class="p">},</span><span class="s2">&quot;persistent&quot;</span><span class="p">:{</span><span class="s2">&quot;inode_percent&quot;</span><span class="p">:</span><span class="s2">&quot;0&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;0&quot;</span><span class="p">},</span><span class="s2">&quot;system&quot;</span><span class="p">:{</span><span class="s2">&quot;inode_percent&quot;</span><span class="p">:</span><span class="s2">&quot;31&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;38&quot;</span><span class="p">}},</span><span class="s2">&quot;load&quot;</span><span class="p">:[</span><span class="s2">&quot;0.08&quot;</span><span class="p">,</span><span class="s2">&quot;0.02&quot;</span><span class="p">,</span><span class="s2">&quot;0.01&quot;</span><span class="p">],</span><span class="s2">&quot;mem&quot;</span><span class="p">:{</span><span class="s2">&quot;kb&quot;</span><span class="p">:</span><span class="s2">&quot;79388&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;4&quot;</span><span class="p">},</span><span class="s2">&quot;swap&quot;</span><span class="p">:{</span><span class="s2">&quot;kb&quot;</span><span class="p">:</span><span class="s2">&quot;0&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;0&quot;</span><span class="p">}},</span><span class="s2">&quot;node_id&quot;</span><span class="p">:</span><span class="s2">&quot;d3f76d22-7029-499f-aad7-373885659f1d&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">hm</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">heartbeat</span><span class="o">.</span><span class="mi">55</span><span class="n">ebcd59</span><span class="o">-</span><span class="n">d8d0</span><span class="o">-</span><span class="mi">41</span><span class="n">bb</span><span class="o">-</span><span class="mi">8</span><span class="n">b22</span><span class="o">-</span><span class="n">bc881a6293cb</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;deployment&quot;</span><span class="p">:</span><span class="s2">&quot;cf&quot;</span><span class="p">,</span><span class="s2">&quot;job&quot;</span><span class="p">:</span><span class="s2">&quot;blobstore_z1&quot;</span><span class="p">,</span><span class="s2">&quot;index&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="s2">&quot;job_state&quot;</span><span class="p">:</span><span class="s2">&quot;running&quot;</span><span class="p">,</span><span class="s2">&quot;vitals&quot;</span><span class="p">:{</span><span class="s2">&quot;cpu&quot;</span><span class="p">:{</span><span class="s2">&quot;sys&quot;</span><span class="p">:</span><span class="s2">&quot;0.1&quot;</span><span class="p">,</span><span class="s2">&quot;user&quot;</span><span class="p">:</span><span class="s2">&quot;0.2&quot;</span><span class="p">,</span><span class="s2">&quot;wait&quot;</span><span class="p">:</span><span class="s2">&quot;0.0&quot;</span><span class="p">},</span><span class="s2">&quot;disk&quot;</span><span class="p">:{</span><span class="s2">&quot;ephemeral&quot;</span><span class="p">:{</span><span class="s2">&quot;inode_percent&quot;</span><span class="p">:</span><span class="s2">&quot;1&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;4&quot;</span><span class="p">},</span><span class="s2">&quot;persistent&quot;</span><span class="p">:{</span><span class="s2">&quot;inode_percent&quot;</span><span class="p">:</span><span class="s2">&quot;0&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;4&quot;</span><span class="p">},</span><span class="s2">&quot;system&quot;</span><span class="p">:{</span><span class="s2">&quot;inode_percent&quot;</span><span class="p">:</span><span class="s2">&quot;31&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;38&quot;</span><span class="p">}},</span><span class="s2">&quot;load&quot;</span><span class="p">:[</span><span class="s2">&quot;0.00&quot;</span><span class="p">,</span><span class="s2">&quot;0.00&quot;</span><span class="p">,</span><span class="s2">&quot;0.00&quot;</span><span class="p">],</span><span class="s2">&quot;mem&quot;</span><span class="p">:{</span><span class="s2">&quot;kb&quot;</span><span class="p">:</span><span class="s2">&quot;122236&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;3&quot;</span><span class="p">},</span><span class="s2">&quot;swap&quot;</span><span class="p">:{</span><span class="s2">&quot;kb&quot;</span><span class="p">:</span><span class="s2">&quot;0&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;0&quot;</span><span class="p">}},</span><span class="s2">&quot;node_id&quot;</span><span class="p">:</span><span class="s2">&quot;0aea21b9-b44a-409e-b825-4ee0084c0c9d&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">hm</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">heartbeat</span><span class="o">.</span><span class="mi">54468</span><span class="n">a21</span><span class="o">-</span><span class="n">ec74</span><span class="o">-</span><span class="mi">465</span><span class="n">d</span><span class="o">-</span><span class="n">baab</span><span class="o">-</span><span class="mi">4372</span><span class="n">c5977b48</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;deployment&quot;</span><span class="p">:</span><span class="s2">&quot;cf&quot;</span><span class="p">,</span><span class="s2">&quot;job&quot;</span><span class="p">:</span><span class="s2">&quot;ha_proxy_z1&quot;</span><span class="p">,</span><span class="s2">&quot;index&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="s2">&quot;job_state&quot;</span><span class="p">:</span><span class="s2">&quot;running&quot;</span><span class="p">,</span><span class="s2">&quot;vitals&quot;</span><span class="p">:{</span><span class="s2">&quot;cpu&quot;</span><span class="p">:{</span><span class="s2">&quot;sys&quot;</span><span class="p">:</span><span class="s2">&quot;0.1&quot;</span><span class="p">,</span><span class="s2">&quot;user&quot;</span><span class="p">:</span><span class="s2">&quot;0.2&quot;</span><span class="p">,</span><span class="s2">&quot;wait&quot;</span><span class="p">:</span><span class="s2">&quot;0.0&quot;</span><span class="p">},</span><span class="s2">&quot;disk&quot;</span><span class="p">:{</span><span class="s2">&quot;ephemeral&quot;</span><span class="p">:{</span><span class="s2">&quot;inode_percent&quot;</span><span class="p">:</span><span class="s2">&quot;1&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;4&quot;</span><span class="p">},</span><span class="s2">&quot;system&quot;</span><span class="p">:{</span><span class="s2">&quot;inode_percent&quot;</span><span class="p">:</span><span class="s2">&quot;31&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;38&quot;</span><span class="p">}},</span><span class="s2">&quot;load&quot;</span><span class="p">:[</span><span class="s2">&quot;0.00&quot;</span><span class="p">,</span><span class="s2">&quot;0.00&quot;</span><span class="p">,</span><span class="s2">&quot;0.00&quot;</span><span class="p">],</span><span class="s2">&quot;mem&quot;</span><span class="p">:{</span><span class="s2">&quot;kb&quot;</span><span class="p">:</span><span class="s2">&quot;134876&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;2&quot;</span><span class="p">},</span><span class="s2">&quot;swap&quot;</span><span class="p">:{</span><span class="s2">&quot;kb&quot;</span><span class="p">:</span><span class="s2">&quot;0&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;0&quot;</span><span class="p">}},</span><span class="s2">&quot;node_id&quot;</span><span class="p">:</span><span class="s2">&quot;b813592c-0130-40fd-b8be-100e749086a8&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">hm</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">heartbeat</span><span class="o">.</span><span class="mi">649</span><span class="n">b4867</span><span class="o">-</span><span class="mi">5877</span><span class="o">-</span><span class="mi">428</span><span class="n">d</span><span class="o">-</span><span class="mi">8</span><span class="n">ca9</span><span class="o">-</span><span class="mi">440947</span><span class="n">c7e4d0</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;deployment&quot;</span><span class="p">:</span><span class="s2">&quot;cf&quot;</span><span class="p">,</span><span class="s2">&quot;job&quot;</span><span class="p">:</span><span class="s2">&quot;router_z1&quot;</span><span class="p">,</span><span class="s2">&quot;index&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="s2">&quot;job_state&quot;</span><span class="p">:</span><span class="s2">&quot;running&quot;</span><span class="p">,</span><span class="s2">&quot;vitals&quot;</span><span class="p">:{</span><span class="s2">&quot;cpu&quot;</span><span class="p">:{</span><span class="s2">&quot;sys&quot;</span><span class="p">:</span><span class="s2">&quot;0.2&quot;</span><span class="p">,</span><span class="s2">&quot;user&quot;</span><span class="p">:</span><span class="s2">&quot;0.2&quot;</span><span class="p">,</span><span class="s2">&quot;wait&quot;</span><span class="p">:</span><span class="s2">&quot;0.0&quot;</span><span class="p">},</span><span class="s2">&quot;disk&quot;</span><span class="p">:{</span><span class="s2">&quot;ephemeral&quot;</span><span class="p">:{</span><span class="s2">&quot;inode_percent&quot;</span><span class="p">:</span><span class="s2">&quot;1&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;5&quot;</span><span class="p">},</span><span class="s2">&quot;system&quot;</span><span class="p">:{</span><span class="s2">&quot;inode_percent&quot;</span><span class="p">:</span><span class="s2">&quot;31&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;38&quot;</span><span class="p">}},</span><span class="s2">&quot;load&quot;</span><span class="p">:[</span><span class="s2">&quot;0.00&quot;</span><span class="p">,</span><span class="s2">&quot;0.00&quot;</span><span class="p">,</span><span class="s2">&quot;0.00&quot;</span><span class="p">],</span><span class="s2">&quot;mem&quot;</span><span class="p">:{</span><span class="s2">&quot;kb&quot;</span><span class="p">:</span><span class="s2">&quot;125676&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;2&quot;</span><span class="p">},</span><span class="s2">&quot;swap&quot;</span><span class="p">:{</span><span class="s2">&quot;kb&quot;</span><span class="p">:</span><span class="s2">&quot;0&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;0&quot;</span><span class="p">}},</span><span class="s2">&quot;node_id&quot;</span><span class="p">:</span><span class="s2">&quot;8d43f788-ea5f-4c5c-b408-aad0acf6075e&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">hm</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">heartbeat</span><span class="o">.</span><span class="mi">49467</span><span class="n">f8b</span><span class="o">-</span><span class="n">d547</span><span class="o">-</span><span class="mi">4773</span><span class="o">-</span><span class="mi">9246</span><span class="o">-</span><span class="n">bbd517348b3e</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;deployment&quot;</span><span class="p">:</span><span class="s2">&quot;cf-diego&quot;</span><span class="p">,</span><span class="s2">&quot;job&quot;</span><span class="p">:</span><span class="s2">&quot;cc_bridge_z2&quot;</span><span class="p">,</span><span class="s2">&quot;index&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="s2">&quot;job_state&quot;</span><span class="p">:</span><span class="s2">&quot;running&quot;</span><span class="p">,</span><span class="s2">&quot;vitals&quot;</span><span class="p">:{</span><span class="s2">&quot;cpu&quot;</span><span class="p">:{</span><span class="s2">&quot;sys&quot;</span><span class="p">:</span><span class="s2">&quot;0.3&quot;</span><span class="p">,</span><span class="s2">&quot;user&quot;</span><span class="p">:</span><span class="s2">&quot;0.2&quot;</span><span class="p">,</span><span class="s2">&quot;wait&quot;</span><span class="p">:</span><span class="s2">&quot;0.0&quot;</span><span class="p">},</span><span class="s2">&quot;disk&quot;</span><span class="p">:{</span><span class="s2">&quot;ephemeral&quot;</span><span class="p">:{</span><span class="s2">&quot;inode_percent&quot;</span><span class="p">:</span><span class="s2">&quot;3&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;24&quot;</span><span class="p">},</span><span class="s2">&quot;system&quot;</span><span class="p">:{</span><span class="s2">&quot;inode_percent&quot;</span><span class="p">:</span><span class="s2">&quot;31&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;38&quot;</span><span class="p">}},</span><span class="s2">&quot;load&quot;</span><span class="p">:[</span><span class="s2">&quot;0.00&quot;</span><span class="p">,</span><span class="s2">&quot;0.00&quot;</span><span class="p">,</span><span class="s2">&quot;0.00&quot;</span><span class="p">],</span><span class="s2">&quot;mem&quot;</span><span class="p">:{</span><span class="s2">&quot;kb&quot;</span><span class="p">:</span><span class="s2">&quot;139676&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;4&quot;</span><span class="p">},</span><span class="s2">&quot;swap&quot;</span><span class="p">:{</span><span class="s2">&quot;kb&quot;</span><span class="p">:</span><span class="s2">&quot;0&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;0&quot;</span><span class="p">}},</span><span class="s2">&quot;node_id&quot;</span><span class="p">:</span><span class="s2">&quot;bd5548a2-615e-4923-8e92-d37ef4a65442&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">hm</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">heartbeat</span><span class="o">.</span><span class="n">ee2b5239</span><span class="o">-</span><span class="mi">033</span><span class="n">c</span><span class="o">-</span><span class="mi">40</span><span class="n">b7</span><span class="o">-</span><span class="n">b62a</span><span class="o">-</span><span class="mi">79</span><span class="n">f0c7b72337</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;deployment&quot;</span><span class="p">:</span><span class="s2">&quot;cf&quot;</span><span class="p">,</span><span class="s2">&quot;job&quot;</span><span class="p">:</span><span class="s2">&quot;uaa_z1&quot;</span><span class="p">,</span><span class="s2">&quot;index&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="s2">&quot;job_state&quot;</span><span class="p">:</span><span class="s2">&quot;running&quot;</span><span class="p">,</span><span class="s2">&quot;vitals&quot;</span><span class="p">:{</span><span class="s2">&quot;cpu&quot;</span><span class="p">:{</span><span class="s2">&quot;sys&quot;</span><span class="p">:</span><span class="s2">&quot;0.6&quot;</span><span class="p">,</span><span class="s2">&quot;user&quot;</span><span class="p">:</span><span class="s2">&quot;0.5&quot;</span><span class="p">,</span><span class="s2">&quot;wait&quot;</span><span class="p">:</span><span class="s2">&quot;0.0&quot;</span><span class="p">},</span><span class="s2">&quot;disk&quot;</span><span class="p">:{</span><span class="s2">&quot;ephemeral&quot;</span><span class="p">:{</span><span class="s2">&quot;inode_percent&quot;</span><span class="p">:</span><span class="s2">&quot;1&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;12&quot;</span><span class="p">},</span><span class="s2">&quot;system&quot;</span><span class="p">:{</span><span class="s2">&quot;inode_percent&quot;</span><span class="p">:</span><span class="s2">&quot;31&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;38&quot;</span><span class="p">}},</span><span class="s2">&quot;load&quot;</span><span class="p">:[</span><span class="s2">&quot;0.11&quot;</span><span class="p">,</span><span class="s2">&quot;0.03&quot;</span><span class="p">,</span><span class="s2">&quot;0.01&quot;</span><span class="p">],</span><span class="s2">&quot;mem&quot;</span><span class="p">:{</span><span class="s2">&quot;kb&quot;</span><span class="p">:</span><span class="s2">&quot;521168&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;14&quot;</span><span class="p">},</span><span class="s2">&quot;swap&quot;</span><span class="p">:{</span><span class="s2">&quot;kb&quot;</span><span class="p">:</span><span class="s2">&quot;0&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;0&quot;</span><span class="p">}},</span><span class="s2">&quot;node_id&quot;</span><span class="p">:</span><span class="s2">&quot;a9e295a3-b9cf-49e2-911b-b18fbc303631&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">hm</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">heartbeat</span><span class="o">.</span><span class="n">de8e5422</span><span class="o">-</span><span class="mi">017</span><span class="n">c</span><span class="o">-</span><span class="mi">4</span><span class="n">cfb</span><span class="o">-</span><span class="mi">9</span><span class="n">c19</span><span class="o">-</span><span class="n">ca30066cf848</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;deployment&quot;</span><span class="p">:</span><span class="s2">&quot;cf-diego&quot;</span><span class="p">,</span><span class="s2">&quot;job&quot;</span><span class="p">:</span><span class="s2">&quot;route_emitter_z2&quot;</span><span class="p">,</span><span class="s2">&quot;index&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="s2">&quot;job_state&quot;</span><span class="p">:</span><span class="s2">&quot;running&quot;</span><span class="p">,</span><span class="s2">&quot;vitals&quot;</span><span class="p">:{</span><span class="s2">&quot;cpu&quot;</span><span class="p">:{</span><span class="s2">&quot;sys&quot;</span><span class="p">:</span><span class="s2">&quot;0.1&quot;</span><span class="p">,</span><span class="s2">&quot;user&quot;</span><span class="p">:</span><span class="s2">&quot;0.3&quot;</span><span class="p">,</span><span class="s2">&quot;wait&quot;</span><span class="p">:</span><span class="s2">&quot;0.0&quot;</span><span class="p">},</span><span class="s2">&quot;disk&quot;</span><span class="p">:{</span><span class="s2">&quot;ephemeral&quot;</span><span class="p">:{</span><span class="s2">&quot;inode_percent&quot;</span><span class="p">:</span><span class="s2">&quot;3&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;15&quot;</span><span class="p">},</span><span class="s2">&quot;system&quot;</span><span class="p">:{</span><span class="s2">&quot;inode_percent&quot;</span><span class="p">:</span><span class="s2">&quot;31&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;38&quot;</span><span class="p">}},</span><span class="s2">&quot;load&quot;</span><span class="p">:[</span><span class="s2">&quot;0.00&quot;</span><span class="p">,</span><span class="s2">&quot;0.00&quot;</span><span class="p">,</span><span class="s2">&quot;0.00&quot;</span><span class="p">],</span><span class="s2">&quot;mem&quot;</span><span class="p">:{</span><span class="s2">&quot;kb&quot;</span><span class="p">:</span><span class="s2">&quot;101368&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;3&quot;</span><span class="p">},</span><span class="s2">&quot;swap&quot;</span><span class="p">:{</span><span class="s2">&quot;kb&quot;</span><span class="p">:</span><span class="s2">&quot;0&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;0&quot;</span><span class="p">}},</span><span class="s2">&quot;node_id&quot;</span><span class="p">:</span><span class="s2">&quot;4755595a-e3d8-4908-9c3f-ece2fd59f1ff&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">hm</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">heartbeat</span><span class="o">.</span><span class="n">e75da6a4</span><span class="o">-</span><span class="n">a12a</span><span class="o">-</span><span class="mi">4856</span><span class="o">-</span><span class="n">acbb</span><span class="o">-</span><span class="mi">1</span><span class="n">f3c7c0ad512</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;deployment&quot;</span><span class="p">:</span><span class="s2">&quot;cf&quot;</span><span class="p">,</span><span class="s2">&quot;job&quot;</span><span class="p">:</span><span class="s2">&quot;api_worker_z2&quot;</span><span class="p">,</span><span class="s2">&quot;index&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="s2">&quot;job_state&quot;</span><span class="p">:</span><span class="s2">&quot;running&quot;</span><span class="p">,</span><span class="s2">&quot;vitals&quot;</span><span class="p">:{</span><span class="s2">&quot;cpu&quot;</span><span class="p">:{</span><span class="s2">&quot;sys&quot;</span><span class="p">:</span><span class="s2">&quot;0.1&quot;</span><span class="p">,</span><span class="s2">&quot;user&quot;</span><span class="p">:</span><span class="s2">&quot;0.6&quot;</span><span class="p">,</span><span class="s2">&quot;wait&quot;</span><span class="p">:</span><span class="s2">&quot;0.0&quot;</span><span class="p">},</span><span class="s2">&quot;disk&quot;</span><span class="p">:{</span><span class="s2">&quot;ephemeral&quot;</span><span class="p">:{</span><span class="s2">&quot;inode_percent&quot;</span><span class="p">:</span><span class="s2">&quot;5&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;7&quot;</span><span class="p">},</span><span class="s2">&quot;system&quot;</span><span class="p">:{</span><span class="s2">&quot;inode_percent&quot;</span><span class="p">:</span><span class="s2">&quot;31&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;38&quot;</span><span class="p">}},</span><span class="s2">&quot;load&quot;</span><span class="p">:[</span><span class="s2">&quot;0.00&quot;</span><span class="p">,</span><span class="s2">&quot;0.00&quot;</span><span class="p">,</span><span class="s2">&quot;0.00&quot;</span><span class="p">],</span><span class="s2">&quot;mem&quot;</span><span class="p">:{</span><span class="s2">&quot;kb&quot;</span><span class="p">:</span><span class="s2">&quot;221244&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;22&quot;</span><span class="p">},</span><span class="s2">&quot;swap&quot;</span><span class="p">:{</span><span class="s2">&quot;kb&quot;</span><span class="p">:</span><span class="s2">&quot;0&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;0&quot;</span><span class="p">}},</span><span class="s2">&quot;node_id&quot;</span><span class="p">:</span><span class="s2">&quot;a6d9f7f8-1aa2-4dc9-945c-d0f99158734a&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">hm</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">heartbeat</span><span class="o">.</span><span class="n">ca921a35</span><span class="o">-</span><span class="mi">6</span><span class="n">f07</span><span class="o">-</span><span class="mi">475</span><span class="n">b</span><span class="o">-</span><span class="n">aeb8</span><span class="o">-</span><span class="mi">38</span><span class="n">da2cf44ef4</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;deployment&quot;</span><span class="p">:</span><span class="s2">&quot;cf&quot;</span><span class="p">,</span><span class="s2">&quot;job&quot;</span><span class="p">:</span><span class="s2">&quot;doppler_z1&quot;</span><span class="p">,</span><span class="s2">&quot;index&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="s2">&quot;job_state&quot;</span><span class="p">:</span><span class="s2">&quot;running&quot;</span><span class="p">,</span><span class="s2">&quot;vitals&quot;</span><span class="p">:{</span><span class="s2">&quot;cpu&quot;</span><span class="p">:{</span><span class="s2">&quot;sys&quot;</span><span class="p">:</span><span class="s2">&quot;0.1&quot;</span><span class="p">,</span><span class="s2">&quot;user&quot;</span><span class="p">:</span><span class="s2">&quot;0.1&quot;</span><span class="p">,</span><span class="s2">&quot;wait&quot;</span><span class="p">:</span><span class="s2">&quot;0.0&quot;</span><span class="p">},</span><span class="s2">&quot;disk&quot;</span><span class="p">:{</span><span class="s2">&quot;ephemeral&quot;</span><span class="p">:{</span><span class="s2">&quot;inode_percent&quot;</span><span class="p">:</span><span class="s2">&quot;1&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;4&quot;</span><span class="p">},</span><span class="s2">&quot;system&quot;</span><span class="p">:{</span><span class="s2">&quot;inode_percent&quot;</span><span class="p">:</span><span class="s2">&quot;31&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;38&quot;</span><span class="p">}},</span><span class="s2">&quot;load&quot;</span><span class="p">:[</span><span class="s2">&quot;0.00&quot;</span><span class="p">,</span><span class="s2">&quot;0.00&quot;</span><span class="p">,</span><span class="s2">&quot;0.00&quot;</span><span class="p">],</span><span class="s2">&quot;mem&quot;</span><span class="p">:{</span><span class="s2">&quot;kb&quot;</span><span class="p">:</span><span class="s2">&quot;112256&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;3&quot;</span><span class="p">},</span><span class="s2">&quot;swap&quot;</span><span class="p">:{</span><span class="s2">&quot;kb&quot;</span><span class="p">:</span><span class="s2">&quot;0&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;0&quot;</span><span class="p">}},</span><span class="s2">&quot;node_id&quot;</span><span class="p">:</span><span class="s2">&quot;0f9ef545-a098-4650-b0e5-dad297e84c8c&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">hm</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">heartbeat</span><span class="o">.</span><span class="n">d2254aa8</span><span class="o">-</span><span class="n">a679</span><span class="o">-</span><span class="mf">44e2</span><span class="o">-</span><span class="n">b0ed</span><span class="o">-</span><span class="mi">92</span><span class="n">bb223c326b</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;deployment&quot;</span><span class="p">:</span><span class="s2">&quot;cf-diego&quot;</span><span class="p">,</span><span class="s2">&quot;job&quot;</span><span class="p">:</span><span class="s2">&quot;access_z2&quot;</span><span class="p">,</span><span class="s2">&quot;index&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="s2">&quot;job_state&quot;</span><span class="p">:</span><span class="s2">&quot;running&quot;</span><span class="p">,</span><span class="s2">&quot;vitals&quot;</span><span class="p">:{</span><span class="s2">&quot;cpu&quot;</span><span class="p">:{</span><span class="s2">&quot;sys&quot;</span><span class="p">:</span><span class="s2">&quot;0.0&quot;</span><span class="p">,</span><span class="s2">&quot;user&quot;</span><span class="p">:</span><span class="s2">&quot;0.2&quot;</span><span class="p">,</span><span class="s2">&quot;wait&quot;</span><span class="p">:</span><span class="s2">&quot;0.1&quot;</span><span class="p">},</span><span class="s2">&quot;disk&quot;</span><span class="p">:{</span><span class="s2">&quot;ephemeral&quot;</span><span class="p">:{</span><span class="s2">&quot;inode_percent&quot;</span><span class="p">:</span><span class="s2">&quot;3&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;17&quot;</span><span class="p">},</span><span class="s2">&quot;system&quot;</span><span class="p">:{</span><span class="s2">&quot;inode_percent&quot;</span><span class="p">:</span><span class="s2">&quot;31&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;38&quot;</span><span class="p">}},</span><span class="s2">&quot;load&quot;</span><span class="p">:[</span><span class="s2">&quot;0.00&quot;</span><span class="p">,</span><span class="s2">&quot;0.00&quot;</span><span class="p">,</span><span class="s2">&quot;0.00&quot;</span><span class="p">],</span><span class="s2">&quot;mem&quot;</span><span class="p">:{</span><span class="s2">&quot;kb&quot;</span><span class="p">:</span><span class="s2">&quot;117440&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;3&quot;</span><span class="p">},</span><span class="s2">&quot;swap&quot;</span><span class="p">:{</span><span class="s2">&quot;kb&quot;</span><span class="p">:</span><span class="s2">&quot;0&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;0&quot;</span><span class="p">}},</span><span class="s2">&quot;node_id&quot;</span><span class="p">:</span><span class="s2">&quot;813bdd52-2662-4a63-9f20-58a3d9dc44d9&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">hm</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">heartbeat</span><span class="o">.</span><span class="n">f969966b</span><span class="o">-</span><span class="mi">3280</span><span class="o">-</span><span class="mi">4</span><span class="n">da1</span><span class="o">-</span><span class="mi">9126</span><span class="o">-</span><span class="n">f35422afd742</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;deployment&quot;</span><span class="p">:</span><span class="s2">&quot;cf-diego&quot;</span><span class="p">,</span><span class="s2">&quot;job&quot;</span><span class="p">:</span><span class="s2">&quot;access_z1&quot;</span><span class="p">,</span><span class="s2">&quot;index&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="s2">&quot;job_state&quot;</span><span class="p">:</span><span class="s2">&quot;running&quot;</span><span class="p">,</span><span class="s2">&quot;vitals&quot;</span><span class="p">:{</span><span class="s2">&quot;cpu&quot;</span><span class="p">:{</span><span class="s2">&quot;sys&quot;</span><span class="p">:</span><span class="s2">&quot;0.1&quot;</span><span class="p">,</span><span class="s2">&quot;user&quot;</span><span class="p">:</span><span class="s2">&quot;0.1&quot;</span><span class="p">,</span><span class="s2">&quot;wait&quot;</span><span class="p">:</span><span class="s2">&quot;0.0&quot;</span><span class="p">},</span><span class="s2">&quot;disk&quot;</span><span class="p">:{</span><span class="s2">&quot;ephemeral&quot;</span><span class="p">:{</span><span class="s2">&quot;inode_percent&quot;</span><span class="p">:</span><span class="s2">&quot;3&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;16&quot;</span><span class="p">},</span><span class="s2">&quot;system&quot;</span><span class="p">:{</span><span class="s2">&quot;inode_percent&quot;</span><span class="p">:</span><span class="s2">&quot;31&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;38&quot;</span><span class="p">}},</span><span class="s2">&quot;load&quot;</span><span class="p">:[</span><span class="s2">&quot;0.00&quot;</span><span class="p">,</span><span class="s2">&quot;0.00&quot;</span><span class="p">,</span><span class="s2">&quot;0.00&quot;</span><span class="p">],</span><span class="s2">&quot;mem&quot;</span><span class="p">:{</span><span class="s2">&quot;kb&quot;</span><span class="p">:</span><span class="s2">&quot;114576&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;3&quot;</span><span class="p">},</span><span class="s2">&quot;swap&quot;</span><span class="p">:{</span><span class="s2">&quot;kb&quot;</span><span class="p">:</span><span class="s2">&quot;0&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;0&quot;</span><span class="p">}},</span><span class="s2">&quot;node_id&quot;</span><span class="p">:</span><span class="s2">&quot;04571836-b8d3-400c-a15a-c056a26e508e&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">hm</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">heartbeat</span><span class="o">.</span><span class="mf">92981e14</span><span class="o">-</span><span class="mi">1357</span><span class="o">-</span><span class="mi">4</span><span class="n">fbf</span><span class="o">-</span><span class="n">b410</span><span class="o">-</span><span class="mi">6</span><span class="n">b335d4cac99</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;deployment&quot;</span><span class="p">:</span><span class="s2">&quot;cf-diego&quot;</span><span class="p">,</span><span class="s2">&quot;job&quot;</span><span class="p">:</span><span class="s2">&quot;database_z1&quot;</span><span class="p">,</span><span class="s2">&quot;index&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="s2">&quot;job_state&quot;</span><span class="p">:</span><span class="s2">&quot;running&quot;</span><span class="p">,</span><span class="s2">&quot;vitals&quot;</span><span class="p">:{</span><span class="s2">&quot;cpu&quot;</span><span class="p">:{</span><span class="s2">&quot;sys&quot;</span><span class="p">:</span><span class="s2">&quot;0.1&quot;</span><span class="p">,</span><span class="s2">&quot;user&quot;</span><span class="p">:</span><span class="s2">&quot;0.1&quot;</span><span class="p">,</span><span class="s2">&quot;wait&quot;</span><span class="p">:</span><span class="s2">&quot;0.3&quot;</span><span class="p">},</span><span class="s2">&quot;disk&quot;</span><span class="p">:{</span><span class="s2">&quot;ephemeral&quot;</span><span class="p">:{</span><span class="s2">&quot;inode_percent&quot;</span><span class="p">:</span><span class="s2">&quot;1&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;7&quot;</span><span class="p">},</span><span class="s2">&quot;persistent&quot;</span><span class="p">:{</span><span class="s2">&quot;inode_percent&quot;</span><span class="p">:</span><span class="s2">&quot;0&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;17&quot;</span><span class="p">},</span><span class="s2">&quot;system&quot;</span><span class="p">:{</span><span class="s2">&quot;inode_percent&quot;</span><span class="p">:</span><span class="s2">&quot;31&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;38&quot;</span><span class="p">}},</span><span class="s2">&quot;load&quot;</span><span class="p">:[</span><span class="s2">&quot;0.00&quot;</span><span class="p">,</span><span class="s2">&quot;0.01&quot;</span><span class="p">,</span><span class="s2">&quot;0.00&quot;</span><span class="p">],</span><span class="s2">&quot;mem&quot;</span><span class="p">:{</span><span class="s2">&quot;kb&quot;</span><span class="p">:</span><span class="s2">&quot;227868&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;1&quot;</span><span class="p">},</span><span class="s2">&quot;swap&quot;</span><span class="p">:{</span><span class="s2">&quot;kb&quot;</span><span class="p">:</span><span class="s2">&quot;0&quot;</span><span class="p">,</span><span class="s2">&quot;percent&quot;</span><span class="p">:</span><span class="s2">&quot;0&quot;</span><span class="p">}},</span><span class="s2">&quot;node_id&quot;</span><span class="p">:</span><span class="s2">&quot;361</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="bosh2-cli-vm">
+<h2>BOSH2 CLI 로 VM 에 로그인 하기<a class="headerlink" href="#bosh2-cli-vm" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>bosh -e &lt;alias-name&gt; -d &lt;deployment-name&gt; ssh api/... --opts<span class="o">=</span>-v --gw-private-key ./director.key
+</pre></div>
+</div>
+</div>
+<div class="section" id="howto-simply-tcpdump-and-get">
+<h2>HowTo Simply TcpDump and get.<a class="headerlink" href="#howto-simply-tcpdump-and-get" title="Permalink to this headline">¶</a></h2>
+<p>Cloud Controller 와 Gorouter 간 SSL 통신 실패 원인 분석을 위해 TcpDump 를 수행할 때 사용되었음.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="nv">FILE</span><span class="o">=</span>pcap-5-router.pcap <span class="nv">IF</span><span class="o">=</span><span class="sb">`</span>ifconfig -s <span class="p">|</span> grep <span class="s2">&quot;^wc&quot;</span> <span class="p">|</span> awk <span class="s1">&#39;{ print $1}&#39;</span><span class="sb">`</span> <span class="nb">eval</span> <span class="s1">&#39;sudo ./tcpdump -i $IF -w $FILE&#39;</span>
+<span class="nv">FILE</span><span class="o">=</span>pcap-5-api.pcap <span class="nv">IF</span><span class="o">=</span><span class="sb">`</span>ifconfig -s <span class="p">|</span> grep <span class="s2">&quot;^wc&quot;</span> <span class="p">|</span> awk <span class="s1">&#39;{ print $1}&#39;</span><span class="sb">`</span> <span class="nb">eval</span> <span class="s1">&#39;sudo ./tcpdump -i $IF -w $FILE&#39;</span>
+<span class="nv">FILE</span><span class="o">=</span>pcap-5-haproxy.pcap <span class="nv">IF</span><span class="o">=</span><span class="sb">`</span>ifconfig -s <span class="p">|</span> grep <span class="s2">&quot;^wc&quot;</span> <span class="p">|</span> awk <span class="s1">&#39;{ print $1}&#39;</span><span class="sb">`</span> <span class="nb">eval</span> <span class="s1">&#39;sudo ./tcpdump -i $IF -w $FILE&#39;</span>
+</pre></div>
+</div>
+<p>위의 방식과 유사 하지만 bosh-lite 에서 director 는 다른 vm 과 달리 vagrant 내에서 수행하며 NIC name 이 vboxnet0 이다.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="nv">FILE</span><span class="o">=</span>pcap-5-cli.pcap <span class="nv">IF</span><span class="o">=</span>vboxnet0 <span class="nb">eval</span> <span class="s1">&#39;sudo tcpdump -i $IF -w $FILE&#39;</span>
+
+cf create-service-broker p-mysql admin password https://p-mysql.bosh-lite.com:443
+</pre></div>
+</div>
+<p>캡쳐가 끝나면 덤프 데이터를 내 PC 로 가져와야 하는데 원격 로그인을 위한 Public Key 를 생성한 후
+ssh 로 전송한다.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>cat <span class="s">&lt;&lt; EOL &gt; ~/.ssh/id_rsa</span>
+<span class="s">-----BEGIN RSA PRIVATE KEY-----</span>
+<span class="s">MIIEpQIBAAKCAQEAqCXkcoUt4aVnfVw1ToLUZA6OPFZ25AFC5m+ck+7PgtTc7jIn</span>
+<span class="s">.....</span>
+<span class="s">CBxlZtak/RURKlNT0E+K1mVK9YwJPYZ8pt7jtszjjYKaIh+EZEl6YDo=</span>
+<span class="s">-----END RSA PRIVATE KEY-----</span>
+<span class="s">EOL</span>
+chmod go-rwX ~/.ssh/id_rsa
+scp *.pcap &lt;target_server&gt;:~/
+</pre></div>
+</div>
+</div>
+<div class="section" id="inside-cell">
+<h2>Inside Cell<a class="headerlink" href="#inside-cell" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default"><div class="highlight"><pre><span></span># ps -ef | grep garden
+root        5802       1  0 Apr07 ?        00:00:00 /bin/sh -c /var/vcap/jobs/garden/bin/garden_ctl start
+root        5803    5802  1 Apr07 ?        00:52:59 /var/vcap/packages/guardian/bin/gdn server --skip-setup --bind-ip=0.0.0.0 --bind-port=7777 --depot=/var/vcap/data/garden/depot --graph=/var/vcap/data/garden/graph --properties-path=/var/vcap/data/garden/props.json --port-pool-properties-path=/var/vcap/data/garden/port-pool-props.json --runc-bin=/var/vcap/packages/runc/bin/runc --iptables-bin=/var/vcap/packages/iptables/sbin/iptables --iptables-restore-bin=/var/vcap/packages/iptables/sbin/iptables-restore --init-bin=/var/vcap/packages/guardian/bin/init --dadoo-bin=/var/vcap/packages/guardian/bin/dadoo --nstar-bin=/var/vcap/packages/guardian/bin/nstar --tar-bin=/var/vcap/packages/tar/tar --log-level=debug --mtu=0 --network-pool=10.254.0.0/22 --deny-network=0.0.0.0/0 --destroy-containers-on-startup --default-rootfs=/var/vcap/packages/busybox --default-grace-time=0 --default-container-blockio-weight=0 --graph-cleanup-threshold-in-megabytes=0 --max-containers=250 --cpu-quota-per-share=0 --persistent-image=/var/vcap/packages/cflinuxfs2/rootfs --apparmor=garden-default
+root        6098    5803  0 Apr07 ?        00:00:00 /bin/bash -e /var/vcap/jobs/garden/bin/garden_ctl start
+root        6099    5803  0 Apr07 ?        00:00:00 /bin/bash -e /var/vcap/jobs/garden/bin/garden_ctl start
+root        6100    6098  0 Apr07 ?        00:00:36 tee -a /var/vcap/sys/log/garden/garden.stdout.log
+root        6102    6099  0 Apr07 ?        00:00:00 tee -a /var/vcap/sys/log/garden/garden.stderr.log
+root        6103    6098  0 Apr07 ?        00:00:46 logger -p user.info -t vcap.garden
+root        6104    6099  0 Apr07 ?        00:00:00 logger -p user.error -t vcap.garden
+root        7229    5803  0 Apr07 ?        00:00:00 /var/vcap/packages/guardian/bin/dadoo exec /var/vcap/packages/runc/bin/runc /var/vcap/data/garden/depot/3cb958eb-409a-4aa9-48f1-41bb6573ebc6/processes/917004dd-06b3-4bfd-7109-a4d4af17d039 3cb958eb-409a-4aa9-48f1-41bb6573ebc6
+root        7230    5803  0 Apr07 ?        00:00:00 /var/vcap/packages/guardian/bin/dadoo exec /var/vcap/packages/runc/bin/runc /var/vcap/data/garden/depot/3cb958eb-409a-4aa9-48f1-41bb6573ebc6/processes/23d0930f-46fd-4714-76ae-15920ab8acc8 3cb958eb-409a-4aa9-48f1-41bb6573ebc6
+root       41741    5803  0 Apr07 ?        00:00:01 /var/vcap/packages/guardian/bin/dadoo exec /var/vcap/packages/runc/bin/runc /var/vcap/data/garden/depot/763a8367-d7d8-4248-45ea-07448ca40dec/processes/4a2548e6-a284-4e2e-5c2c-25beb0051f47 763a8367-d7d8-4248-45ea-07448ca40dec
+root       41742    5803  0 Apr07 ?        00:00:00 /var/vcap/packages/guardian/bin/dadoo exec /var/vcap/packages/runc/bin/runc /var/vcap/data/garden/depot/763a8367-d7d8-4248-45ea-07448ca40dec/processes/147ddfcc-dca0-40b2-7cd5-1b58de92b6e2 763a8367-d7d8-4248-45ea-07448ca40dec
+root       44182    5803  0 Apr07 ?        00:00:00 /var/vcap/packages/guardian/bin/dadoo exec /var/vcap/packages/runc/bin/runc /var/vcap/data/garden/depot/7406f49c-bb96-4ec9-4cca-95fb910ff80e/processes/4456c089-5f51-4e16-47c4-2c1f57cee164 7406f49c-bb96-4ec9-4cca-95fb910ff80e
+root       44183    5803  0 Apr07 ?        00:00:00 /var/vcap/packages/guardian/bin/dadoo exec /var/vcap/packages/runc/bin/runc /var/vcap/data/garden/depot/7406f49c-bb96-4ec9-4cca-95fb910ff80e/processes/5cdb99ef-6483-4528-4fb1-8195d2741677 7406f49c-bb96-4ec9-4cca-95fb910ff80e
+root       52236    5803  0 Apr07 ?        00:00:00 /var/vcap/packages/guardian/bin/dadoo exec /var/vcap/packages/runc/bin/runc /var/vcap/data/garden/depot/552d04e6-23d4-40fc-4223-2f58ef004c63/processes/c5f7b089-2874-4eab-5b19-647423752496 552d04e6-23d4-40fc-4223-2f58ef004c63
+root       52239    5803  0 Apr07 ?        00:00:00 /var/vcap/packages/guardian/bin/dadoo exec /var/vcap/packages/runc/bin/runc /var/vcap/data/garden/depot/552d04e6-23d4-40fc-4223-2f58ef004c63/processes/dd9dd59e-bb77-4822-5019-5da7b56fda13 552d04e6-23d4-40fc-4223-2f58ef004c63
+
+$ sudo iptables -t nat -L
+Chain PREROUTING (policy ACCEPT)
+target     prot opt source               destination
+w--prerouting  all  --  anywhere             anywhere
+
+Chain INPUT (policy ACCEPT)
+target     prot opt source               destination
+
+Chain OUTPUT (policy ACCEPT)
+target     prot opt source               destination
+w--prerouting  all  --  anywhere             anywhere
+
+Chain POSTROUTING (policy ACCEPT)
+target     prot opt source               destination
+w--postrouting  all  --  anywhere             anywhere
+
+Chain w--instance-coiaggg2s3f (1 references)
+target     prot opt source               destination
+DNAT       tcp  --  anywhere             cell-z1-0.node.dc1.cf.internal  tcp dpt:60036 /* ac4154dd-a2bd-41d8-46bb-c5dfa3c8bfb2 */ to:10.254.0.6:8080
+DNAT       tcp  --  anywhere             cell-z1-0.node.dc1.cf.internal  tcp dpt:60037 /* ac4154dd-a2bd-41d8-46bb-c5dfa3c8bfb2 */ to:10.254.0.6:2222
+
+Chain w--instance-coiaggg2s3l (1 references)
+target     prot opt source               destination
+DNAT       tcp  --  anywhere             cell-z1-0.node.dc1.cf.internal  tcp dpt:60040 /* 74ab1082-7eca-4a09-7364-b266a23a7fdf */ to:10.254.0.2:8080
+DNAT       tcp  --  anywhere             cell-z1-0.node.dc1.cf.internal  tcp dpt:60041 /* 74ab1082-7eca-4a09-7364-b266a23a7fdf */ to:10.254.0.2:2222
+
+Chain w--postrouting (1 references)
+target     prot opt source               destination
+MASQUERADE  all  --  10.254.0.0/30       !10.254.0.0/30        /* executor-healthcheck-8946f5d6-063c-4bae-474d-0032f72b8fcb */
+MASQUERADE  all  --  10.254.0.4/30       !10.254.0.4/30        /* ef658bba-214d-4eef-5228-410e8e8aeb69 */
+MASQUERADE  all  --  10.254.0.8/30       !10.254.0.8/30        /* 3cb958eb-409a-4aa9-48f1-41bb6573ebc6 */
+MASQUERADE  all  --  10.254.0.12/30      !10.254.0.12/30       /* 9600ee8c-9e63-4682-bed3-b14767ea46d3 */
+MASQUERADE  all  --  10.254.0.16/30      !10.254.0.16/30       /* executor-healthcheck-eda5cee2-81be-4890-6d67-2a9f108d6dda */
+
+Chain w--prerouting (2 references)
+target     prot opt source               destination
+w--instance-coiaggg2s3f  all  --  anywhere             anywhere             /* ac4154dd-a2bd-41d8-46bb-c5dfa3c8bfb2 */
+w--instance-coiaggg2s3l  all  --  anywhere             anywhere             /* 74ab1082-7eca-4a09-7364-b266a23a7fdf */
+
+07:49:31.393539 IP (tos 0x0, ttl 63, id 14526, offset 0, flags [DF], proto TCP (6), length 60)
+    10.244.0.22.50958 &gt; 10.244.16.4.60040: Flags [S], seq 2900748470, win 29200, options [mss 1460,sackOK,TS val 92524805 ecr 0,nop,wscale 7], length 0
+07:49:31.393553 IP (tos 0x0, ttl 62, id 14526, offset 0, flags [DF], proto TCP (6), length 60)
+    10.244.0.22.50958 &gt; 10.254.0.2.8080: Flags [S], seq 2900748470, win 29200, options [mss 1460,sackOK,TS val 92524805 ecr 0,nop,wscale 7], length 0
+
+08:13:44.648444 IP (tos 0x0, ttl 63, id 13763, offset 0, flags [DF], proto TCP (6), length 60)
+    10.244.0.22.52922 &gt; 10.244.16.4.60036: Flags [S], seq 729442805, win 29200, options [mss 1460,sackOK,TS val 92888118 ecr 0,nop,wscale 7], length 0
+08:13:44.649227 IP (tos 0x0, ttl 63, id 0, offset 0, flags [DF], proto TCP (6), length 60)
+    10.244.16.4.60036 &gt; 10.244.0.22.52922: Flags [S.], seq 2437756596, ack 729442806, win 28960, options [mss 1460,sackOK,TS val 92888118 ecr 92888118,nop,wscale 7], length 0
+08:13:44.649256 IP (tos 0x0, ttl 63, id 13764, offset 0, flags [DF], proto TCP (6), length 52)
+    10.244.0.22.52922 &gt; 10.244.16.4.60036: Flags [.], seq 1, ack 1, win 229, options [nop,nop,TS val 92888118 ecr 92888118], length 0
+08:13:44.651254 IP (tos 0x0, ttl 63, id 13765, offset 0, flags [DF], proto TCP (6), length 410)
+    10.244.0.22.52922 &gt; 10.244.16.4.60036: Flags [P.], seq 1:359, ack 1, win 229, options [nop,nop,TS val 92888119 ecr 92888118], length 358
+08:13:44.651627 IP (tos 0x0, ttl 63, id 27267, offset 0, flags [DF], proto TCP (6), length 52)
+    10.244.16.4.60036 &gt; 10.244.0.22.52922: Flags [.], seq 1, ack 359, win 235, options [nop,nop,TS val 92888119 ecr 92888119], length 0
+08:13:44.654737 IP (tos 0x0, ttl 63, id 27268, offset 0, flags [DF], proto TCP (6), length 1141)
+    10.244.16.4.60036 &gt; 10.244.0.22.52922: Flags [P.], seq 1:1090, ack 359, win 235, options [nop,nop,TS val 92888120 ecr 92888119], length 1089
+08:13:44.655155 IP (tos 0x0, ttl 63, id 13766, offset 0, flags [DF], proto TCP (6), length 52)
+    10.244.0.22.52922 &gt; 10.244.16.4.60036: Flags [.], seq 359, ack 1090, win 246, options [nop,nop,TS val 92888120 ecr 92888120], length 0
+08:13:47.806685 IP (tos 0x0, ttl 64, id 35651, offset 0, flags [DF], proto UDP (17), length 87)
+    10.244.16.4.8301 &gt; 10.244.0.22.8301: UDP, length 59
+08:13:47.808105 IP (tos 0x0, ttl 63, id 32396, offset 0, flags [DF], proto UDP (17), length 211)
+    10.244.0.22.8301 &gt; 10.244.16.4.8301: UDP, length 183
+
+	$ sudo iptables -t nat -L
+
+	Chain PREROUTING (policy ACCEPT)
+	target     prot opt source               destination
+	w--prerouting  all  --  anywhere             anywhere
+
+	Chain INPUT (policy ACCEPT)
+	target     prot opt source               destination
+
+	Chain OUTPUT (policy ACCEPT)
+	target     prot opt source               destination
+	w--prerouting  all  --  anywhere             anywhere
+
+	Chain POSTROUTING (policy ACCEPT)
+	target     prot opt source               destination
+	w--postrouting  all  --  anywhere             anywhere
+
+	Chain w--instance-coiaggg2s3f (1 references)
+	target     prot opt source               destination
+	DNAT       tcp  --  anywhere             cell-z1-0.node.dc1.cf.internal  tcp dpt:60036 /* ac4154dd-a2bd-41d8-46bb-c5dfa3c8bfb2 */ to:10.254.0.6:8080
+	DNAT       tcp  --  anywhere             cell-z1-0.node.dc1.cf.internal  tcp dpt:60037 /* ac4154dd-a2bd-41d8-46bb-c5dfa3c8bfb2 */ to:10.254.0.6:2222
+
+	Chain w--instance-coiaggg2s3l (1 references)
+	target     prot opt source               destination
+	DNAT       tcp  --  anywhere             cell-z1-0.node.dc1.cf.internal  tcp dpt:60040 /* 74ab1082-7eca-4a09-7364-b266a23a7fdf */ to:10.254.0.2:8080
+	DNAT       tcp  --  anywhere             cell-z1-0.node.dc1.cf.internal  tcp dpt:60041 /* 74ab1082-7eca-4a09-7364-b266a23a7fdf */ to:10.254.0.2:2222
+
+	Chain w--postrouting (1 references)
+	target     prot opt source               destination
+	MASQUERADE  all  --  10.254.0.0/30       !10.254.0.0/30        /* executor-healthcheck-8946f5d6-063c-4bae-474d-0032f72b8fcb */
+	MASQUERADE  all  --  10.254.0.4/30       !10.254.0.4/30        /* ef658bba-214d-4eef-5228-410e8e8aeb69 */
+	MASQUERADE  all  --  10.254.0.8/30       !10.254.0.8/30        /* 3cb958eb-409a-4aa9-48f1-41bb6573ebc6 */
+	MASQUERADE  all  --  10.254.0.12/30      !10.254.0.12/30       /* 9600ee8c-9e63-4682-bed3-b14767ea46d3 */
+	MASQUERADE  all  --  10.254.0.16/30      !10.254.0.16/30       /* executor-healthcheck-eda5cee2-81be-4890-6d67-2a9f108d6dda */
+
+	Chain w--prerouting (2 references)
+	target     prot opt source               destination
+	w--instance-coiaggg2s3f  all  --  anywhere             anywhere             /* ac4154dd-a2bd-41d8-46bb-c5dfa3c8bfb2 */
+	w--instance-coiaggg2s3l  all  --  anywhere             anywhere             /* 74ab1082-7eca-4a09-7364-b266a23a7fdf */
+
+Every 2.0s: route                                                                       Wed Apr 12 01:06:11 2017
+
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+default         10.244.16.1     0.0.0.0         UG    0      0        0 wcl8gbnff7q4-1
+10.244.16.0     *               255.255.255.0   U     0      0        0 wcl8gbnff7q4-1
+10.254.0.0      *               255.255.255.252 U     0      0        0 wbrdg-0afe0000
+10.254.0.4      *               255.255.255.252 U     0      0        0 wbrdg-0afe0004
+10.254.0.8      *               255.255.255.252 U     0      0        0 wbrdg-0afe0008
+10.254.0.12     *               255.255.255.252 U     0      0        0 wbrdg-0afe000c
+10.254.0.16     *               255.255.255.252 U     0      0        0 wbrdg-0afe0010
+10.254.0.20     *               255.255.255.252 U     0      0        0 wbrdg-0afe0014
+
+
+Every 3.0s: iptables -t nat -L                                                                                                                                                     Wed Apr 12 01:06:25 2017
+
+Chain PREROUTING (policy ACCEPT)
+target     prot opt source               destination
+w--prerouting  all  --  anywhere             anywhere
+
+Chain INPUT (policy ACCEPT)
+target     prot opt source               destination
+
+Chain OUTPUT (policy ACCEPT)
+target     prot opt source               destination
+w--prerouting  all  --  anywhere             anywhere
+
+Chain POSTROUTING (policy ACCEPT)
+target     prot opt source               destination
+w--postrouting  all  --  anywhere             anywhere
+
+Chain w--instance-coiaggg2s77 (1 references)
+target     prot opt source               destination
+DNAT       tcp  --  anywhere             cell-z1-0.node.dc1.cf.internal  tcp dpt:60048 /* 0f88d42e-5fcb-49c6-755c-5334d7af3f4b */ to:10.254.0.2:8080
+DNAT       tcp  --  anywhere             cell-z1-0.node.dc1.cf.internal  tcp dpt:60049 /* 0f88d42e-5fcb-49c6-755c-5334d7af3f4b */ to:10.254.0.2:2222
+
+Chain w--instance-coiaggg2s79 (1 references)
+target     prot opt source               destination
+DNAT       tcp  --  anywhere             cell-z1-0.node.dc1.cf.internal  tcp dpt:60050 /* 920ed88f-86f1-4c59-572b-956782cb56f3 */ to:10.254.0.6:8080
+DNAT       tcp  --  anywhere             cell-z1-0.node.dc1.cf.internal  tcp dpt:60051 /* 920ed88f-86f1-4c59-572b-956782cb56f3 */ to:10.254.0.6:2222
+
+Chain w--instance-coiaggg2s7b (1 references)
+target     prot opt source               destination
+DNAT       tcp  --  anywhere             cell-z1-0.node.dc1.cf.internal  tcp dpt:60052 /* bd7b040d-c05e-4be6-671a-82f83a870d81 */ to:10.254.0.10:8080
+DNAT       tcp  --  anywhere             cell-z1-0.node.dc1.cf.internal  tcp dpt:60053 /* bd7b040d-c05e-4be6-671a-82f83a870d81 */ to:10.254.0.10:2222
+
+Chain w--instance-coiaggg2s7f (1 references)
+target     prot opt source               destination
+DNAT       tcp  --  anywhere             cell-z1-0.node.dc1.cf.internal  tcp dpt:60056 /* 90e538b6-ed1d-43bf-6c0b-9daf29c22612 */ to:10.254.0.14:8080
+DNAT       tcp  --  anywhere             cell-z1-0.node.dc1.cf.internal  tcp dpt:60057 /* 90e538b6-ed1d-43bf-6c0b-9daf29c22612 */ to:10.254.0.14:2222
+
+Chain w--instance-coiaggg2s7h (1 references)
+target     prot opt source               destination
+DNAT       tcp  --  anywhere             cell-z1-0.node.dc1.cf.internal  tcp dpt:60058 /* 694b770d-ef7f-4b89-5b48-787ab6f51b33 */ to:10.254.0.18:8080
+DNAT       tcp  --  anywhere             cell-z1-0.node.dc1.cf.internal  tcp dpt:60059 /* 694b770d-ef7f-4b89-5b48-787ab6f51b33 */ to:10.254.0.18:2222
+
+Chain w--instance-coiaggg2scp (1 references)
+target     prot opt source               destination
+DNAT       tcp  --  anywhere             cell-z1-0.node.dc1.cf.internal  tcp dpt:60082 /* 56952bdf-f277-45d8-4baf-f21d24a13a0e */ to:10.254.0.22:8080
+DNAT       tcp  --  anywhere             cell-z1-0.node.dc1.cf.internal  tcp dpt:60083 /* 56952bdf-f277-45d8-4baf-f21d24a13a0e */ to:10.254.0.22:2222
+
+Chain w--postrouting (1 references)
+target     prot opt source               destination
+MASQUERADE  all  --  10.254.0.0/30       !10.254.0.0/30        /* executor-healthcheck-8946f5d6-063c-4bae-474d-0032f72b8fcb */
+MASQUERADE  all  --  10.254.0.4/30       !10.254.0.4/30        /* ef658bba-214d-4eef-5228-410e8e8aeb69 */
+MASQUERADE  all  --  10.254.0.8/30       !10.254.0.8/30        /* 3cb958eb-409a-4aa9-48f1-41bb6573ebc6 */
+MASQUERADE  all  --  10.254.0.12/30      !10.254.0.12/30       /* 9600ee8c-9e63-4682-bed3-b14767ea46d3 */
+MASQUERADE  all  --  10.254.0.16/30      !10.254.0.16/30       /* executor-healthcheck-eda5cee2-81be-4890-6d67-2a9f108d6dda */
+MASQUERADE  all  --  10.254.0.20/30      !10.254.0.20/30       /* executor-healthcheck-f8390a35-10bc-492c-632f-166c30260bc7 */
+MASQUERADE  all  --  10.254.0.24/30      !10.254.0.24/30       /* executor-healthcheck-ea450387-991b-40b5-6e05-1c26cff36878 */
+
+Chain w--prerouting (2 references)
+target     prot opt source               destination
+w--instance-coiaggg2s77  all  --  anywhere             anywhere             /* 0f88d42e-5fcb-49c6-755c-5334d7af3f4b */
+w--instance-coiaggg2s79  all  --  anywhere             anywhere             /* 920ed88f-86f1-4c59-572b-956782cb56f3 */
+w--instance-coiaggg2s7b  all  --  anywhere             anywhere             /* bd7b040d-c05e-4be6-671a-82f83a870d81 */
+w--instance-coiaggg2s7f  all  --  anywhere             anywhere             /* 90e538b6-ed1d-43bf-6c0b-9daf29c22612 */
+w--instance-coiaggg2s7h  all  --  anywhere             anywhere             /* 694b770d-ef7f-4b89-5b48-787ab6f51b33 */
+w--instance-coiaggg2scp  all  --  anywhere             anywhere             /* 56952bdf-f277-45d8-4baf-f21d24a13a0e */
+```
+
+
+```bash
+$ sudo su -
+cell_z1/1f42b1d1-0a0c-4706-8dfc-ab9fd20fa935:~# monit summary
+The Monit daemon 5.2.5 uptime: 3h 18m
+
+Process &#39;consul_agent&#39;              running
+Process &#39;rep&#39;                       running
+Process &#39;garden&#39;                    Connection failed
+Process &#39;metron_agent&#39;              running
+System &#39;system_localhost&#39;           running
+
+SIGQUIT: quit
+cell_z1/1f42b1d1-0a0c-4706-8dfc-ab9fd20fa935:/var/vcap/sys/log/garden$ tail -f garden.stderr.log
+
+PC=0x45ca23 m=2 sigcode=0
+
+goroutine 0 [idle]:
+runtime.futex(0xfd4a78, 0x0, 0x7fe8fd055d88, 0x0, 0x7fe800000000, 0x45c6b6, 0x3c, 0x0, 0x7fe8fd055dd0, 0x40fe50, ...)
+	/var/vcap/data/packages/golang/dea2930bf96d2fec32aceb2df845be37b5f058a2/src/runtime/sys_linux_amd64.s:423 +0x23
+runtime.futexsleep(0xfd4a78, 0x7fe800000000, 0xdf8475800)
+	/var/vcap/data/packages/golang/dea2930bf96d2fec32aceb2df845be37b5f058a2/src/runtime/os_linux.go:62 +0xd7
+runtime.notetsleep_internal(0xfd4a78, 0xdf8475800, 0x0)
+	/var/vcap/data/packages/golang/dea2930bf96d2fec32aceb2df845be37b5f058a2/src/runtime/lock_futex.go:174 +0xd0
+runtime.notetsleep(0xfd4a78, 0xdf8475800, 0x1)
+	/var/vcap/data/packages/golang/dea2930bf96d2fec32aceb2df845be37b5f058a2/src/runtime/lock_futex.go:194 +0x56
+runtime.sysmon()
+	/var/vcap/data/packages/golang/dea2930bf96d2fec32aceb2df845be37b5f058a2/src/runtime/proc.go:3805 +0x135
+runtime.mstart1()
+	/var/vcap/data/packages/golang/dea2930bf96d2fec32aceb2df845be37b5f058a2/src/runtime/proc.go:1179 +0x11e
+runtime.mstart()
+	/var/vcap/data/packages/golang/dea2930bf96d2fec32aceb2df845be37b5f058a2/src/runtime/proc.go:1149 +0x64
+
+goroutine 1 [select]:
+github.com/tedsuo/ifrit.Invoke(0xfa3b60, 0xc42020e810, 0xc420199d40, 0x2)
+	/var/vcap/packages/guardian/src/github.com/tedsuo/ifrit/process.go:29 +0x15b
+code.cloudfoundry.org/guardian/guardiancmd.(*ServerCommand).Execute(0xc420200000, 0xc4201048c0, 0x0, 0x1c, 0xc420200000, 0x1)
+	/var/vcap/packages/guardian/src/code.cloudfoundry.org/guardian/guardiancmd/command.go:293 +0x6e
+github.com/jessevdk/go-flags.(*Parser).ParseArgs(0xc4201f6180, 0xc4200101f0, 0x1c, 0x1d, 0xc4200ee240, 0xc4201f6180, 0x7ffc4ae8fa3c, 0x0, 0x0)
+	/var/vcap/packages/guardian/src/github.com/jessevdk/go-flags/parser.go:316 +0x893
+github.com/jessevdk/go-flags.(*Parser).Parse(0xc4201f6180, 0xc4201f0630, 0x16, 0xc4201f6180, 0x0, 0x0)
+	/var/vcap/packages/guardian/src/github.com/jessevdk/go-flags/parser.go:186 +0x73
+main.main()
+	/var/vcap/packages/guardian/src/code.cloudfoundry.org/guardian/cmd/gdn/main.go:18 +0x9b
+
+goroutine 17 [syscall, locked to thread]:
+runtime.goexit()
+	/var/vcap/data/packages/golang/dea2930bf96d2fec32aceb2df845be37b5f058a2/src/runtime/asm_amd64.s:2197 +0x1
+
+goroutine 5 [syscall]:
+os/signal.signal_recv(0xfaa8e0)
+	/var/vcap/data/packages/golang/dea2930bf96d2fec32aceb2df845be37b5f058a2/src/runtime/sigqueue.go:116 +0x104
+os/signal.loop()
+	/var/vcap/data/packages/golang/dea2930bf96d2fec32aceb2df845be37b5f058a2/src/os/signal/signal_unix.go:22 +0x22
+created by os/signal.init.1
+	/var/vcap/data/packages/golang/dea2930bf96d2fec32aceb2df845be37b5f058a2/src/os/signal/signal_unix.go:28 +0x41
+
+goroutine 67 [select]:
+github.com/tedsuo/ifrit.(*process).Signal.func1(0xc420220000, 0xfaa8e0, 0xc420308ff8)
+	/var/vcap/packages/guardian/src/github.com/tedsuo/ifrit/process.go:92 +0x112
+created by github.com/tedsuo/ifrit.(*process).Signal
+	/var/vcap/packages/guardian/src/github.com/tedsuo/ifrit/process.go:96 +0x53
+
+goroutine 7 [select]:
+github.com/tedsuo/ifrit/sigmon.sigmon.Run(0xc420199d40, 0x2, 0x2, 0xfa2760, 0xc420200000, 0xc4201f61e0, 0xc4201f6240, 0x0, 0x0)
+	/var/vcap/packages/guardian/src/github.com/tedsuo/ifrit/sigmon/sigmon.go:35 +0x317
+github.com/tedsuo/ifrit/sigmon.(*sigmon).Run(0xc42020e810, 0xc4201f61e0, 0xc4201f6240, 0x0, 0x0)
+	&lt;autogenerated&gt;:1 +0x7d
+github.com/tedsuo/ifrit.(*process).run(0xc4201cb2c0)
+	/var/vcap/packages/guardian/src/github.com/tedsuo/ifrit/process.go:71 +0x49
+created by github.com/tedsuo/ifrit.Background
+	/var/vcap/packages/guardian/src/github.com/tedsuo/ifrit/process.go:49 +0x12f
+
+goroutine 8 [chan receive]:
+github.com/tedsuo/ifrit.(*process).Wait.func1(0xc4201cb2c0, 0xc4201f6300)
+	/var/vcap/packages/guardian/src/github.com/tedsuo/ifrit/process.go:83 +0x44
+created by github.com/tedsuo/ifrit.(*process).Wait
+	/var/vcap/packages/guardian/src/github.com/tedsuo/ifrit/process.go:85 +0x67
+
+goroutine 9 [select, locked to thread]:
+runtime.gopark(0xadcf08, 0x0, 0xab2847, 0x6, 0x18, 0x2)
+</pre></div>
+</div>
+</div>
+<div class="section" id="inside-diego-database">
+<h2>Inside Diego Database<a class="headerlink" href="#inside-diego-database" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-none"><div class="highlight"><pre><span></span>postgres://diego:admin@10.244.0.30:5524/diego
+</pre></div>
+</div>
+</div>
+<div class="section" id="router-register-log">
+<h2>Router Register Log<a class="headerlink" href="#router-register-log" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;doppler.bosh-lite.com&quot;</span><span class="p">,</span><span class="s2">&quot;*.doppler.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.0.143&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">8081</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:</span><span class="n">null</span><span class="p">,</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;6194645a-5057-42fb-466d-beaf2119ff16&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;loggregator.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.0.143&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">8080</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:</span><span class="n">null</span><span class="p">,</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;6194645a-5057-42fb-466d-beaf2119ff16&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;uaa.bosh-lite.com&quot;</span><span class="p">,</span><span class="s2">&quot;*.uaa.bosh-lite.com&quot;</span><span class="p">,</span><span class="s2">&quot;login.bosh-lite.com&quot;</span><span class="p">,</span><span class="s2">&quot;*.login.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.0.132&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">8080</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:{</span><span class="s2">&quot;component&quot;</span><span class="p">:</span><span class="s2">&quot;uaa&quot;</span><span class="p">},</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;a4c71f3f-843c-4096-50d8-0034b723fb09&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;blobstore.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.0.133&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">8080</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:{</span><span class="s2">&quot;component&quot;</span><span class="p">:</span><span class="s2">&quot;blobstore&quot;</span><span class="p">},</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;3d95c4e0-b6ad-45b0-6115-9fb24bf1d87a&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.0.138&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">60006</span><span class="p">,</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;u-console.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;app&quot;</span><span class="p">:</span><span class="s2">&quot;c5a9df79-8e6e-4153-9fd6-e833a4e7a035&quot;</span><span class="p">,</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;37735236-41db-46fd-476d-a05a9ceb168a&quot;</span><span class="p">,</span><span class="s2">&quot;private_instance_index&quot;</span><span class="p">:</span><span class="s2">&quot;0&quot;</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:{</span><span class="s2">&quot;component&quot;</span><span class="p">:</span><span class="s2">&quot;route-emitter&quot;</span><span class="p">}}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.0.138&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">60006</span><span class="p">,</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;cf-webui.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;app&quot;</span><span class="p">:</span><span class="s2">&quot;c5a9df79-8e6e-4153-9fd6-e833a4e7a035&quot;</span><span class="p">,</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;37735236-41db-46fd-476d-a05a9ceb168a&quot;</span><span class="p">,</span><span class="s2">&quot;private_instance_index&quot;</span><span class="p">:</span><span class="s2">&quot;0&quot;</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:{</span><span class="s2">&quot;component&quot;</span><span class="p">:</span><span class="s2">&quot;route-emitter&quot;</span><span class="p">}}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;proxy-0-p-mysql.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.7.3&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">8080</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:</span><span class="n">null</span><span class="p">,</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;523e590c-3103-4784-64fc-08de551cf29b&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;p-mysql.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.7.4&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">8081</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:</span><span class="n">null</span><span class="p">,</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;f50ab8f1-0ba5-4de0-736c-1ecef6990a5a&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;api.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.0.134&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">9022</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:</span><span class="n">null</span><span class="p">,</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;b4fafce0-c5ab-450b-674e-f9276d513593&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;proxy-1-p-mysql.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.8.3&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">8080</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:</span><span class="n">null</span><span class="p">,</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;d5d62150-11bb-4f82-798f-da9009698300&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;p-mysql.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.8.4&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">8081</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:</span><span class="n">null</span><span class="p">,</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;37deda6f-b5fe-4754-4f09-77d716d78338&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;uaa.bosh-lite.com&quot;</span><span class="p">,</span><span class="s2">&quot;*.uaa.bosh-lite.com&quot;</span><span class="p">,</span><span class="s2">&quot;login.bosh-lite.com&quot;</span><span class="p">,</span><span class="s2">&quot;*.login.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.0.132&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">8080</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:{</span><span class="s2">&quot;component&quot;</span><span class="p">:</span><span class="s2">&quot;uaa&quot;</span><span class="p">},</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;a4c71f3f-843c-4096-50d8-0034b723fb09&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;proxy-0-p-mysql.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.7.3&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">8080</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:</span><span class="n">null</span><span class="p">,</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;523e590c-3103-4784-64fc-08de551cf29b&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;p-mysql.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.7.4&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">8081</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:</span><span class="n">null</span><span class="p">,</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;f50ab8f1-0ba5-4de0-736c-1ecef6990a5a&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;proxy-1-p-mysql.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.8.3&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">8080</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:</span><span class="n">null</span><span class="p">,</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;d5d62150-11bb-4f82-798f-da9009698300&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;p-mysql.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.8.4&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">8081</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:</span><span class="n">null</span><span class="p">,</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;37deda6f-b5fe-4754-4f09-77d716d78338&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;loggregator.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.0.143&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">8080</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:</span><span class="n">null</span><span class="p">,</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;6194645a-5057-42fb-466d-beaf2119ff16&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;doppler.bosh-lite.com&quot;</span><span class="p">,</span><span class="s2">&quot;*.doppler.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.0.143&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">8081</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:</span><span class="n">null</span><span class="p">,</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;6194645a-5057-42fb-466d-beaf2119ff16&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;uaa.bosh-lite.com&quot;</span><span class="p">,</span><span class="s2">&quot;*.uaa.bosh-lite.com&quot;</span><span class="p">,</span><span class="s2">&quot;login.bosh-lite.com&quot;</span><span class="p">,</span><span class="s2">&quot;*.login.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.0.132&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">8080</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:{</span><span class="s2">&quot;component&quot;</span><span class="p">:</span><span class="s2">&quot;uaa&quot;</span><span class="p">},</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;a4c71f3f-843c-4096-50d8-0034b723fb09&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;blobstore.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.0.133&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">8080</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:{</span><span class="s2">&quot;component&quot;</span><span class="p">:</span><span class="s2">&quot;blobstore&quot;</span><span class="p">},</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;3d95c4e0-b6ad-45b0-6115-9fb24bf1d87a&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.0.138&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">60006</span><span class="p">,</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;u-console.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;app&quot;</span><span class="p">:</span><span class="s2">&quot;c5a9df79-8e6e-4153-9fd6-e833a4e7a035&quot;</span><span class="p">,</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;37735236-41db-46fd-476d-a05a9ceb168a&quot;</span><span class="p">,</span><span class="s2">&quot;private_instance_index&quot;</span><span class="p">:</span><span class="s2">&quot;0&quot;</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:{</span><span class="s2">&quot;component&quot;</span><span class="p">:</span><span class="s2">&quot;route-emitter&quot;</span><span class="p">}}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.0.138&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">60006</span><span class="p">,</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;cf-webui.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;app&quot;</span><span class="p">:</span><span class="s2">&quot;c5a9df79-8e6e-4153-9fd6-e833a4e7a035&quot;</span><span class="p">,</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;37735236-41db-46fd-476d-a05a9ceb168a&quot;</span><span class="p">,</span><span class="s2">&quot;private_instance_index&quot;</span><span class="p">:</span><span class="s2">&quot;0&quot;</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:{</span><span class="s2">&quot;component&quot;</span><span class="p">:</span><span class="s2">&quot;route-emitter&quot;</span><span class="p">}}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;proxy-0-p-mysql.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.7.3&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">8080</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:</span><span class="n">null</span><span class="p">,</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;523e590c-3103-4784-64fc-08de551cf29b&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;p-mysql.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.7.4&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">8081</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:</span><span class="n">null</span><span class="p">,</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;f50ab8f1-0ba5-4de0-736c-1ecef6990a5a&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;api.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.0.134&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">9022</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:</span><span class="n">null</span><span class="p">,</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;b4fafce0-c5ab-450b-674e-f9276d513593&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;proxy-1-p-mysql.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.8.3&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">8080</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:</span><span class="n">null</span><span class="p">,</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;d5d62150-11bb-4f82-798f-da9009698300&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;p-mysql.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.8.4&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">8081</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:</span><span class="n">null</span><span class="p">,</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;37deda6f-b5fe-4754-4f09-77d716d78338&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;uaa.bosh-lite.com&quot;</span><span class="p">,</span><span class="s2">&quot;*.uaa.bosh-lite.com&quot;</span><span class="p">,</span><span class="s2">&quot;login.bosh-lite.com&quot;</span><span class="p">,</span><span class="s2">&quot;*.login.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.0.132&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">8080</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:{</span><span class="s2">&quot;component&quot;</span><span class="p">:</span><span class="s2">&quot;uaa&quot;</span><span class="p">},</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;a4c71f3f-843c-4096-50d8-0034b723fb09&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;proxy-0-p-mysql.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.7.3&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">8080</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:</span><span class="n">null</span><span class="p">,</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;523e590c-3103-4784-64fc-08de551cf29b&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;p-mysql.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.7.4&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">8081</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:</span><span class="n">null</span><span class="p">,</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;f50ab8f1-0ba5-4de0-736c-1ecef6990a5a&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;proxy-1-p-mysql.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.8.3&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">8080</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:</span><span class="n">null</span><span class="p">,</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;d5d62150-11bb-4f82-798f-da9009698300&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;p-mysql.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.8.4&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">8081</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:</span><span class="n">null</span><span class="p">,</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;37deda6f-b5fe-4754-4f09-77d716d78338&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;loggregator.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.0.143&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">8080</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:</span><span class="n">null</span><span class="p">,</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;6194645a-5057-42fb-466d-beaf2119ff16&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;doppler.bosh-lite.com&quot;</span><span class="p">,</span><span class="s2">&quot;*.doppler.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.0.143&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">8081</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:</span><span class="n">null</span><span class="p">,</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;6194645a-5057-42fb-466d-beaf2119ff16&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;uaa.bosh-lite.com&quot;</span><span class="p">,</span><span class="s2">&quot;*.uaa.bosh-lite.com&quot;</span><span class="p">,</span><span class="s2">&quot;login.bosh-lite.com&quot;</span><span class="p">,</span><span class="s2">&quot;*.login.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.0.132&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">8080</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:{</span><span class="s2">&quot;component&quot;</span><span class="p">:</span><span class="s2">&quot;uaa&quot;</span><span class="p">},</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;a4c71f3f-843c-4096-50d8-0034b723fb09&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;blobstore.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.0.133&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">8080</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:{</span><span class="s2">&quot;component&quot;</span><span class="p">:</span><span class="s2">&quot;blobstore&quot;</span><span class="p">},</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;3d95c4e0-b6ad-45b0-6115-9fb24bf1d87a&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.0.138&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">60006</span><span class="p">,</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;u-console.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;app&quot;</span><span class="p">:</span><span class="s2">&quot;c5a9df79-8e6e-4153-9fd6-e833a4e7a035&quot;</span><span class="p">,</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;37735236-41db-46fd-476d-a05a9ceb168a&quot;</span><span class="p">,</span><span class="s2">&quot;private_instance_index&quot;</span><span class="p">:</span><span class="s2">&quot;0&quot;</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:{</span><span class="s2">&quot;component&quot;</span><span class="p">:</span><span class="s2">&quot;route-emitter&quot;</span><span class="p">}}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.0.138&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">60006</span><span class="p">,</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;cf-webui.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;app&quot;</span><span class="p">:</span><span class="s2">&quot;c5a9df79-8e6e-4153-9fd6-e833a4e7a035&quot;</span><span class="p">,</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;37735236-41db-46fd-476d-a05a9ceb168a&quot;</span><span class="p">,</span><span class="s2">&quot;private_instance_index&quot;</span><span class="p">:</span><span class="s2">&quot;0&quot;</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:{</span><span class="s2">&quot;component&quot;</span><span class="p">:</span><span class="s2">&quot;route-emitter&quot;</span><span class="p">}}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.0.138&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">60006</span><span class="p">,</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;u-console.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;app&quot;</span><span class="p">:</span><span class="s2">&quot;c5a9df79-8e6e-4153-9fd6-e833a4e7a035&quot;</span><span class="p">,</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;37735236-41db-46fd-476d-a05a9ceb168a&quot;</span><span class="p">,</span><span class="s2">&quot;private_instance_index&quot;</span><span class="p">:</span><span class="s2">&quot;0&quot;</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:{</span><span class="s2">&quot;component&quot;</span><span class="p">:</span><span class="s2">&quot;route-emitter&quot;</span><span class="p">}}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.0.138&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">60006</span><span class="p">,</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;cf-webui.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;app&quot;</span><span class="p">:</span><span class="s2">&quot;c5a9df79-8e6e-4153-9fd6-e833a4e7a035&quot;</span><span class="p">,</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;37735236-41db-46fd-476d-a05a9ceb168a&quot;</span><span class="p">,</span><span class="s2">&quot;private_instance_index&quot;</span><span class="p">:</span><span class="s2">&quot;0&quot;</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:{</span><span class="s2">&quot;component&quot;</span><span class="p">:</span><span class="s2">&quot;route-emitter&quot;</span><span class="p">}}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;proxy-0-p-mysql.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.7.3&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">8080</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:</span><span class="n">null</span><span class="p">,</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;523e590c-3103-4784-64fc-08de551cf29b&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;p-mysql.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.7.4&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">8081</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:</span><span class="n">null</span><span class="p">,</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;f50ab8f1-0ba5-4de0-736c-1ecef6990a5a&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;api.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.0.134&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">9022</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:</span><span class="n">null</span><span class="p">,</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;b4fafce0-c5ab-450b-674e-f9276d513593&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;proxy-1-p-mysql.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.8.3&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">8080</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:</span><span class="n">null</span><span class="p">,</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;d5d62150-11bb-4f82-798f-da9009698300&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;p-mysql.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.8.4&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">8081</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:</span><span class="n">null</span><span class="p">,</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;37deda6f-b5fe-4754-4f09-77d716d78338&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;uaa.bosh-lite.com&quot;</span><span class="p">,</span><span class="s2">&quot;*.uaa.bosh-lite.com&quot;</span><span class="p">,</span><span class="s2">&quot;login.bosh-lite.com&quot;</span><span class="p">,</span><span class="s2">&quot;*.login.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.0.132&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">8080</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:{</span><span class="s2">&quot;component&quot;</span><span class="p">:</span><span class="s2">&quot;uaa&quot;</span><span class="p">},</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;a4c71f3f-843c-4096-50d8-0034b723fb09&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;proxy-0-p-mysql.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.7.3&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">8080</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:</span><span class="n">null</span><span class="p">,</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;523e590c-3103-4784-64fc-08de551cf29b&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;p-mysql.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.7.4&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">8081</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:</span><span class="n">null</span><span class="p">,</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;f50ab8f1-0ba5-4de0-736c-1ecef6990a5a&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;proxy-1-p-mysql.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.8.3&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">8080</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:</span><span class="n">null</span><span class="p">,</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;d5d62150-11bb-4f82-798f-da9009698300&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;p-mysql.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.8.4&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">8081</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:</span><span class="n">null</span><span class="p">,</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;37deda6f-b5fe-4754-4f09-77d716d78338&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;loggregator.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.0.143&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">8080</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:</span><span class="n">null</span><span class="p">,</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;6194645a-5057-42fb-466d-beaf2119ff16&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;doppler.bosh-lite.com&quot;</span><span class="p">,</span><span class="s2">&quot;*.doppler.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.0.143&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">8081</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:</span><span class="n">null</span><span class="p">,</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;6194645a-5057-42fb-466d-beaf2119ff16&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;uaa.bosh-lite.com&quot;</span><span class="p">,</span><span class="s2">&quot;*.uaa.bosh-lite.com&quot;</span><span class="p">,</span><span class="s2">&quot;login.bosh-lite.com&quot;</span><span class="p">,</span><span class="s2">&quot;*.login.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.0.132&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">8080</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:{</span><span class="s2">&quot;component&quot;</span><span class="p">:</span><span class="s2">&quot;uaa&quot;</span><span class="p">},</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;a4c71f3f-843c-4096-50d8-0034b723fb09&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;blobstore.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.0.133&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">8080</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:{</span><span class="s2">&quot;component&quot;</span><span class="p">:</span><span class="s2">&quot;blobstore&quot;</span><span class="p">},</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;3d95c4e0-b6ad-45b0-6115-9fb24bf1d87a&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.0.138&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">60006</span><span class="p">,</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;u-console.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;app&quot;</span><span class="p">:</span><span class="s2">&quot;c5a9df79-8e6e-4153-9fd6-e833a4e7a035&quot;</span><span class="p">,</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;37735236-41db-46fd-476d-a05a9ceb168a&quot;</span><span class="p">,</span><span class="s2">&quot;private_instance_index&quot;</span><span class="p">:</span><span class="s2">&quot;0&quot;</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:{</span><span class="s2">&quot;component&quot;</span><span class="p">:</span><span class="s2">&quot;route-emitter&quot;</span><span class="p">}}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.0.138&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">60006</span><span class="p">,</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;cf-webui.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;app&quot;</span><span class="p">:</span><span class="s2">&quot;c5a9df79-8e6e-4153-9fd6-e833a4e7a035&quot;</span><span class="p">,</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;37735236-41db-46fd-476d-a05a9ceb168a&quot;</span><span class="p">,</span><span class="s2">&quot;private_instance_index&quot;</span><span class="p">:</span><span class="s2">&quot;0&quot;</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:{</span><span class="s2">&quot;component&quot;</span><span class="p">:</span><span class="s2">&quot;route-emitter&quot;</span><span class="p">}}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;proxy-0-p-mysql.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.7.3&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">8080</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:</span><span class="n">null</span><span class="p">,</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;523e590c-3103-4784-64fc-08de551cf29b&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;p-mysql.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.7.4&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">8081</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:</span><span class="n">null</span><span class="p">,</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;f50ab8f1-0ba5-4de0-736c-1ecef6990a5a&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;api.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.0.134&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">9022</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:</span><span class="n">null</span><span class="p">,</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;b4fafce0-c5ab-450b-674e-f9276d513593&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;proxy-1-p-mysql.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.8.3&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">8080</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:</span><span class="n">null</span><span class="p">,</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;d5d62150-11bb-4f82-798f-da9009698300&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;p-mysql.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.8.4&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">8081</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:</span><span class="n">null</span><span class="p">,</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;37deda6f-b5fe-4754-4f09-77d716d78338&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;uaa.bosh-lite.com&quot;</span><span class="p">,</span><span class="s2">&quot;*.uaa.bosh-lite.com&quot;</span><span class="p">,</span><span class="s2">&quot;login.bosh-lite.com&quot;</span><span class="p">,</span><span class="s2">&quot;*.login.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.0.132&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">8080</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:{</span><span class="s2">&quot;component&quot;</span><span class="p">:</span><span class="s2">&quot;uaa&quot;</span><span class="p">},</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;a4c71f3f-843c-4096-50d8-0034b723fb09&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;proxy-0-p-mysql.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.7.3&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">8080</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:</span><span class="n">null</span><span class="p">,</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;523e590c-3103-4784-64fc-08de551cf29b&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;p-mysql.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.7.4&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">8081</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:</span><span class="n">null</span><span class="p">,</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;f50ab8f1-0ba5-4de0-736c-1ecef6990a5a&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;proxy-1-p-mysql.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.8.3&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">8080</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:</span><span class="n">null</span><span class="p">,</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;d5d62150-11bb-4f82-798f-da9009698300&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;p-mysql.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.8.4&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">8081</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:</span><span class="n">null</span><span class="p">,</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;37deda6f-b5fe-4754-4f09-77d716d78338&quot;</span><span class="p">}</span>
+<span class="p">[</span><span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">]</span> <span class="p">{</span><span class="s2">&quot;uris&quot;</span><span class="p">:[</span><span class="s2">&quot;loggregator.bosh-lite.com&quot;</span><span class="p">],</span><span class="s2">&quot;host&quot;</span><span class="p">:</span><span class="s2">&quot;10.244.0.143&quot;</span><span class="p">,</span><span class="s2">&quot;port&quot;</span><span class="p">:</span><span class="mi">8080</span><span class="p">,</span><span class="s2">&quot;tags&quot;</span><span class="p">:</span><span class="n">null</span><span class="p">,</span><span class="s2">&quot;private_instance_id&quot;</span><span class="p">:</span><span class="s2">&quot;6194645a-5057-42fb-466d-beaf2119ff16&quot;</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="cloud-check-vm">
+<h2>Cloud Check 를 통한 vm 장애 복구<a class="headerlink" href="#cloud-check-vm" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ bosh -e bosh-lite -d cf-warden-diego cck -a
+Using environment &#39;192.168.50.4&#39; as client &#39;admin&#39;
+
+Using deployment &#39;cf-warden-diego&#39;
+
+Task 589
+
+04:39:11 | Scanning 6 VMs: Checking VM states (00:00:11)
+04:39:22 | Scanning 6 VMs: 5 OK, 1 unresponsive, 0 missing, 0 unbound (00:00:00)
+04:39:22 | Scanning 1 persistent disks: Looking for inactive disks (00:00:00)
+04:39:22 | Scanning 1 persistent disks: 1 OK, 0 missing, 0 inactive, 0 mount-info mismatch (00:00:00)
+
+Started  Wed Apr 19 04:39:11 UTC 2017
+Finished Wed Apr 19 04:39:22 UTC 2017
+Duration 00:00:11
+
+Task 589 done
+
+#  Type                Description
+3  unresponsive_agent  cell_z1/0 (1f42b1d1-0a0c-4706-8dfc-ab9fd20fa935) (d0f2ed42-fb05-4039-7b36-5fac08166b50) is not responding
+
+1 problems
+
+Continue? [yN]: y
+
+Task 590
+04:39:42 | Applying problem resolutions: cell_z1/0 (1f42b1d1-0a0c-4706-8dfc-ab9fd20fa935) (d0f2ed42-fb05-4039-7b36-5fac08166b50) is not responding (unresponsive_agent 43): Skip for now (00:00:00)
+
+Started  Wed Apr 19 04:39:11 UTC 2017
+Finished Wed Apr 19 04:39:42 UTC 2017
+Duration 00:00:31
+
+Task 590 done
+
+Succeeded
+
+
+$ bosh -e bosh-lite -d cf-warden-diego vms
+
+access_z1/1b8e9ad7-668f-4035-bf32-dc21ef3732b7          running -       10.244.16.7     50cddbf1-2588-4997-7e3c-5e9be7130ba2    access_z1
+brain_z1/8ba74f5a-672b-4061-8771-e494c3094271           running -       10.244.16.3     227d1b5a-6350-4266-6ba5-51d55d0ecfde    brain_z1
+cc_bridge_z1/aa51c8f0-cc75-49e4-84e6-f350212745d5       running -       10.244.16.5     c03e273f-a246-4560-731f-109f2135cb56    cc_bridge_z1
+cell_z1/1f42b1d1-0a0c-4706-8dfc-ab9fd20fa935            running -       10.244.16.4     1fef8cf3-6734-426f-61de-c9872290b167    cell_z1
+database_z1/6f1bfe49-389d-440e-b93b-d6b3ed153040        running -       10.244.16.2     7e12a04b-da4f-41a9-7f3d-f2d05d4f2a06    database_z1
+route_emitter_z1/56a34b30-db5b-414f-a1ec-1172a12f7116   running -       10.244.16.6     a65819cf-f729-4dbe-66f7-be3b4f475d7c    route_emitter_z1
+</pre></div>
+</div>
+</div>
+<div class="section" id="bosh-init-open-stack-nova-bug">
+<h2>bosh-init 시 Open Stack Nova Bug 관련<a class="headerlink" href="#bosh-init-open-stack-nova-bug" title="Permalink to this headline">¶</a></h2>
+<p>bosh-init 으로 director vm 생성시 다음과 같은 오류가 발생한다면</p>
+<div class="highlight-none"><div class="highlight"><pre><span></span>asn1: structure error: superfluous leading zeros in length
+</pre></div>
+</div>
+<p>오픈 스택 Nova 버그에 기인한 것으로 생각된다.</p>
+<p>관련 issue: <a class="reference external" href="https://bugs.launchpad.net/nova/+bug/1483132">https://bugs.launchpad.net/nova/+bug/1483132</a></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ bosh-init deploy ./bosh.yml
+Deployment manifest: &#39;.../bosh.yml&#39;
+Deployment state: &#39;.../bosh-state.json&#39;
+
+Started validating
+  Downloading release &#39;bosh&#39;... Skipped [Found in local cache] (00:00:00)
+  Validating release &#39;bosh&#39;... Finished (00:00:01)
+  Downloading release &#39;bosh-openstack-cpi&#39;... Skipped [Found in local cache] (00:00:00)
+  Validating release &#39;bosh-openstack-cpi&#39;... Finished (00:00:00)
+  Validating cpi release... Finished (00:00:00)
+  Validating deployment manifest... Finished (00:00:00)
+  Downloading stemcell... Skipped [Found in local cache] (00:00:00)
+  Validating stemcell... Finished (00:00:02)
+Finished validating (00:00:04)
+
+Started installing CPI
+  Compiling package &#39;ruby_openstack_cpi/6f724febcae828dcbfea470faff5b104d48dd944&#39;... Finished (00:00:00)
+  Compiling package &#39;bosh_openstack_cpi/119de5f71bee352cabba8575aa97fc993b974f56&#39;... Finished (00:00:00)
+  Installing packages... Finished (00:00:00)
+  Rendering job templates... Finished (00:00:00)
+  Installing job &#39;openstack_cpi&#39;... Finished (00:00:00)
+Finished installing CPI (00:00:00)
+
+Starting registry... Finished (00:00:00)
+Uploading stemcell &#39;bosh-openstack-kvm-ubuntu-trusty-go_agent-raw/3363.19&#39;... Skipped [Stemcell already uploaded] (00:00:00)
+
+Started deploying
+  Waiting for the agent on VM &#39;225f36f5-ad48-4347-ac4c-44613f753985&#39;... Failed (00:00:09)
+  Deleting VM &#39;225f36f5-ad48-4347-ac4c-44613f753985&#39;... Finished (00:00:07)
+  Creating VM for instance &#39;bosh/0&#39; from stemcell &#39;ea92f9f2-1c18-4acb-8fa8-2e791839caad&#39;... Finished (00:00:41)
+  Waiting for the agent on VM &#39;1973e064-b0f7-4414-8d88-52ca05b6d4de&#39; to be ready... Failed (00:00:00)
+Failed deploying (00:00:59)
+
+Stopping registry... Finished (00:00:00)
+Cleaning up rendered CPI jobs... Finished (00:00:00)
+
+Command &#39;deploy&#39; failed:
+  Deploying:
+    Creating instance &#39;bosh/0&#39;:
+      Waiting until instance is ready:
+        Starting SSH tunnel:
+          Parsing private key file &#39;.../bosh.pem&#39;:
+            asn1: structure error: superfluous leading zeros in length
+</pre></div>
+</div>
+</div>
+<div class="section" id="cf-openstack-validator-floatingip">
+<h2>cf-openstack-validator 실행시 floatingip 관련 오류<a class="headerlink" href="#cf-openstack-validator-floatingip" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">D</span><span class="p">,</span> <span class="p">[</span><span class="mi">2017</span><span class="o">-</span><span class="mi">04</span><span class="o">-</span><span class="mi">20</span><span class="n">T16</span><span class="p">:</span><span class="mi">31</span><span class="p">:</span><span class="mf">01.122112</span> <span class="c1">#26534] DEBUG -- : excon.request {:chunk_size=&gt;1048576, :ciphers=&gt;&quot;HIGH:!SSLv2:!aNULL:!eNULL:!3DES&quot;, :connect_timeout=&gt;60, :debug_request=&gt;false, :debug_response=&gt;true, :headers=&gt;{&quot;User-Agent&quot;=&gt;&quot;fog-core/1.43.0&quot;, &quot;Content-Type&quot;=&gt;&quot;application/json&quot;, &quot;Accept&quot;=&gt;&quot;application/json&quot;, &quot;X-Auth-Token&quot;=&gt;&quot;&lt;redacted&gt;&quot;, &quot;Host&quot;=&gt;&quot;xxx.xxx.xxx.xxx:9696&quot;}, :idempotent=&gt;false, :instrumentor_name=&gt;&quot;excon&quot;, :middlewares=&gt;[Excon::Middleware::ResponseParser, Excon::Middleware::Expects, Excon::Middleware::Idempotent, Excon::Middleware::Instrumentor, Excon::Middleware::Mock], :mock=&gt;false, :nonblock=&gt;true, :omit_default_port=&gt;false, :persistent=&gt;false, :read_timeout=&gt;60, :retry_limit=&gt;4, :ssl_verify_peer=&gt;true, :ssl_uri_schemes=&gt;[&quot;https&quot;], :stubs=&gt;:global, :tcp_nodelay=&gt;false, :thread_safe_sockets=&gt;true, :uri_parser=&gt;URI, :versions=&gt;&quot;excon/0.49.0 (x86_64-linux) ruby/2.1.7&quot;, :write_timeout=&gt;60, :host=&gt;&quot;xxx.xxx.xxx.xxx&quot;, :hostname=&gt;&quot;xxx.xxx.xxx.xxx&quot;, :path=&gt;&quot;/v2.0/floatingips&quot;, :port=&gt;9696, :query=&gt;{&quot;floating_ip_address&quot;=&gt;&quot;xxx.xxx.xxx.xxx&quot;}, :scheme=&gt;&quot;http&quot;, :instrumentor=&gt;Bosh::OpenStackCloud::ExconLoggingInstrumentor, :expects=&gt;200, :method=&gt;&quot;GET&quot;, :retries_remaining=&gt;4, :connection=&gt;#&lt;Excon::Connection:55cabfeb7d98 @data={:chunk_size=&gt;1048576, :ciphers=&gt;&quot;HIGH:!SSLv2:!aNULL:!eNULL:!3DES&quot;, :connect_timeout=&gt;60, :debug_request=&gt;false, :debug_response=&gt;true, :headers=&gt;{&quot;User-Agent&quot;=&gt;&quot;fog-core/1.43.0&quot;}, :idempotent=&gt;false, :instrumentor_name=&gt;&quot;excon&quot;, :middlewares=&gt;[Excon::Middleware::ResponseParser, Excon::Middleware::Expects, Excon::Middleware::Idempotent, Excon::Middleware::Instrumentor, Excon::Middleware::Mock], :mock=&gt;false, :nonblock=&gt;true, :omit_default_port=&gt;false, :persistent=&gt;false, :read_timeout=&gt;60, :retry_limit=&gt;4, :ssl_verify_peer=&gt;true, :ssl_uri_schemes=&gt;[&quot;https&quot;], :stubs=&gt;:global, :tcp_nodelay=&gt;false, :thread_safe_sockets=&gt;true, :uri_parser=&gt;URI, :versions=&gt;&quot;excon/0.49.0 (x86_64-linux) ruby/2.1.7&quot;, :write_timeout=&gt;60, :host=&gt;&quot;xxx.xxx.xxx.xxx&quot;, :hostname=&gt;&quot;xxx.xxx.xxx.xxx&quot;, :path=&gt;&quot;&quot;, :port=&gt;9696, :query=&gt;nil, :scheme=&gt;&quot;http&quot;, :instrumentor=&gt;Bosh::OpenStackCloud::ExconLoggingInstrumentor} @socket_key=&quot;http://xxx.xxx.xxx.xxx:9696&quot;&gt;, :stack=&gt;#&lt;Excon::Middleware::ResponseParser:0x0055cabfc1c4a8 @stack=#&lt;Excon::Middleware::Expects:0x0055cabfc1c4d0 @stack=#&lt;Excon::Middleware::Idempotent:0x0055cabfc1c4f8 @stack=#&lt;Excon::Middleware::Instrumentor:0x0055cabfc1c520 @stack=#&lt;Excon::Middleware::Mock:0x0055cabfc1c548 @stack=#&lt;Excon::Connection:55cabfeb7d98 @data={:chunk_size=&gt;1048576, :ciphers=&gt;&quot;HIGH:!SSLv2:!aNULL:!eNULL:!3DES&quot;, :connect_timeout=&gt;60, :debug_request=&gt;false, :debug_response=&gt;true, :headers=&gt;{&quot;User-Agent&quot;=&gt;&quot;fog-core/1.43.0&quot;}, :idempotent=&gt;false, :instrumentor_name=&gt;&quot;excon&quot;, :middlewares=&gt;[Excon::Middleware::ResponseParser, Excon::Middleware::Expects, Excon::Middleware::Idempotent, Excon::Middleware::Instrumentor, Excon::Middleware::Mock], :mock=&gt;false, :nonblock=&gt;true, :omit_default_port=&gt;false, :persistent=&gt;false, :read_timeout=&gt;60, :retry_limit=&gt;4, :ssl_verify_peer=&gt;true, :ssl_uri_schemes=&gt;[&quot;https&quot;], :stubs=&gt;:global, :tcp_nodelay=&gt;false, :thread_safe_sockets=&gt;true, :uri_parser=&gt;URI, :versions=&gt;&quot;excon/0.49.0 (x86_64-linux) ruby/2.1.7&quot;, :write_timeout=&gt;60, :host=&gt;&quot;xxx.xxx.xxx.xxx&quot;, :hostname=&gt;&quot;1xxx.xxx.xxx.xxx&quot;, :path=&gt;&quot;&quot;, :port=&gt;9696, :query=&gt;nil, :scheme=&gt;&quot;http&quot;, :instrumentor=&gt;Bosh::OpenStackCloud::ExconLoggingInstrumentor} @socket_key=&quot;http://xxx.xxx.xxx.xxx:9696&quot;&gt;&gt;&gt;&gt;&gt;&gt;}</span>
+<span class="n">D</span><span class="p">,</span> <span class="p">[</span><span class="mi">2017</span><span class="o">-</span><span class="mi">04</span><span class="o">-</span><span class="mi">20</span><span class="n">T16</span><span class="p">:</span><span class="mi">31</span><span class="p">:</span><span class="mf">01.175334</span> <span class="c1">#26534] DEBUG -- : excon.response {:body=&gt;&quot;{\&quot;floatingips\&quot;:[]}&quot;, :cookies=&gt;[], :host=&gt;&quot;xxx.xxx.xxx.xxx&quot;, :headers=&gt;{&quot;Content-Type&quot;=&gt;&quot;application/json&quot;, &quot;Content-Length&quot;=&gt;&quot;19&quot;, &quot;X-Openstack-Request-Id&quot;=&gt;&quot;req-bdbf7664-44db-4166-a0c6-f25771e1591c&quot;, &quot;Date&quot;=&gt;&quot;Thu, 20 Apr 2017 07:31:01 GMT&quot;, &quot;X-Auth-Token&quot;=&gt;&quot;&lt;redacted&gt;&quot;}, :path=&gt;&quot;/v2.0/floatingips&quot;, :port=&gt;9696, :status=&gt;200, :status_line=&gt;&quot;HTTP/1.1 200 OK\r\n&quot;, :reason_phrase=&gt;&quot;OK&quot;, :remote_ip=&gt;&quot;xxx.xxx.xxx.xxx&quot;, :local_port=&gt;41270, :local_address=&gt;&quot;xxx.xxx.xxx.xxx&quot;}</span>
+<span class="n">W</span><span class="p">,</span> <span class="p">[</span><span class="mi">2017</span><span class="o">-</span><span class="mi">04</span><span class="o">-</span><span class="mi">20</span><span class="n">T16</span><span class="p">:</span><span class="mi">31</span><span class="p">:</span><span class="mf">01.175563</span> <span class="c1">#26534]  WARN -- : Failed to create server: Floating IP &#39;xxx.xxx.xxx.xxx&#39; not allocated</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="uncategorized">
+<h2>Uncategorized<a class="headerlink" href="#uncategorized" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>[Running Cloud Foundry’s Micro BOSH On Latest DevStack](<a class="reference external" href="https://davanum.wordpress.com/2014/06/24/running-cloud-foundrys-micro-bosh-on-latest-devstack/">https://davanum.wordpress.com/2014/06/24/running-cloud-foundrys-micro-bosh-on-latest-devstack/</a>)</li>
+<li><a class="reference external" href="http://www.websequencediagrams.com/?lz=YnJvd3Nlci0-cG9ydGFsOiBjbGljayBsb2dpbgoADgYtPgAeBzogc2V0IHNlc3Npb24gY29va2llLCByZWRpcmVjdAoAQgkAOAU6IGdldCAvYXV0aG9yaXplCgBOBQBBC2JsYW5rIGZvcm0AKRFwb3N0IGNyZWRlbnRpYWxzADQIdWFhAAoTdWFhAGsJAGcIYXQAgR0GZABmEgAREgCBMBQAggcIcHJlc2VudABFFACCFggAgREFAGYTbm90ZSBvdmVyIACBMwVleGNoYW5nZQCBEQUgZm9yIHJlZnJlc2ggYW5kIGFjY2VzcyB0b2tlbgCBTAcAgwoIAA0aAFgKAIM2CGFzc29jaWF0ZQBDByB3aXRoAIMrCACDPhJhZG1pbiBwYWdl&amp;s=roundgreen">http://www.websequencediagrams.com/?lz=YnJvd3Nlci0-cG9ydGFsOiBjbGljayBsb2dpbgoADgYtPgAeBzogc2V0IHNlc3Npb24gY29va2llLCByZWRpcmVjdAoAQgkAOAU6IGdldCAvYXV0aG9yaXplCgBOBQBBC2JsYW5rIGZvcm0AKRFwb3N0IGNyZWRlbnRpYWxzADQIdWFhAAoTdWFhAGsJAGcIYXQAgR0GZABmEgAREgCBMBQAggcIcHJlc2VudABFFACCFggAgREFAGYTbm90ZSBvdmVyIACBMwVleGNoYW5nZQCBEQUgZm9yIHJlZnJlc2ggYW5kIGFjY2VzcyB0b2tlbgCBTAcAgwoIAA0aAFgKAIM2CGFzc29jaWF0ZQBDByB3aXRoAIMrCACDPhJhZG1pbiBwYWdl&amp;s=roundgreen</a></li>
+<li><a class="reference external" href="https://github.com/cloudfoundry/omniauth-uaa-oauth2">https://github.com/cloudfoundry/omniauth-uaa-oauth2</a></li>
+<li><a class="reference external" href="https://github.com/omniauth/omniauth">https://github.com/omniauth/omniauth</a></li>
+<li><a class="reference external" href="https://docs.cloudfoundry.org/services/dashboard-sso.html">https://docs.cloudfoundry.org/services/dashboard-sso.html</a></li>
+<li><a class="reference external" href="https://bosh.io/docs/init-openstack.html">https://bosh.io/docs/init-openstack.html</a></li>
+<li></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../3-openstack/index.html" class="btn btn-neutral float-right" title="Open Stack" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../1-bosh/ch-02-02.html" class="btn btn-neutral" title="Trouble Shoot case 6 OpenStack" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, me.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

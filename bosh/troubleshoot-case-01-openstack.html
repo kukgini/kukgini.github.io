@@ -1,0 +1,145 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>OpenStack Case 1 &#8212; my.sphinx  documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="OpenStack Case 2" href="troubleshoot-case-02-openstack.html" />
+    <link rel="prev" title="BOSH Inside" href="bosh-inside.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="openstack-case-1">
+<span id="openstack-case-1"></span><h1>OpenStack Case 1<a class="headerlink" href="#openstack-case-1" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goal">
+<span id="goal"></span><h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<p>I'm tring to deploy bosh director using bosh cli v2 (2.0.16) on Openstack(mikata) from external network.
+This guide (https://bosh.io/docs/init-external-ip.html) says external_ip variable can do this.</p>
+</div>
+<div class="section" id="problem">
+<span id="problem"></span><h2>Problem<a class="headerlink" href="#problem" title="Permalink to this headline">¶</a></h2>
+<p>But, actually I got this :</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>    <span class="n">Starting</span> <span class="n">registry</span><span class="o">...</span> <span class="n">Finished</span> <span class="p">(</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">)</span>
+    <span class="n">Uploading</span> <span class="n">stemcell</span> <span class="s1">&#39;bosh-openstack-kvm-ubuntu-trusty-go_agent-raw/3363.20&#39;</span><span class="o">...</span> <span class="n">Finished</span> <span class="p">(</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">49</span><span class="p">)</span>
+
+    <span class="n">Started</span> <span class="n">deploying</span>
+    <span class="n">Deleting</span> <span class="n">VM</span> <span class="s1">&#39;cd5b0f1c-8a33-494a-b539-df3c646af8d6&#39;</span><span class="o">...</span> <span class="n">Finished</span> <span class="p">(</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">)</span>
+    <span class="n">Creating</span> <span class="n">VM</span> <span class="k">for</span> <span class="n">instance</span> <span class="s1">&#39;bosh/0&#39;</span> <span class="kn">from</span> <span class="nn">stemcell</span> <span class="s1">&#39;df4a4001-3334-4d28-8172-6966033250d1&#39;</span><span class="o">...</span> <span class="n">Finished</span> <span class="p">(</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">58</span><span class="p">)</span>
+    <span class="n">Waiting</span> <span class="k">for</span> <span class="n">the</span> <span class="n">agent</span> <span class="n">on</span> <span class="n">VM</span> <span class="s1">&#39;1c3dc920-09d7-4718-89ac-520aa0689e18&#39;</span> <span class="n">to</span> <span class="n">be</span> <span class="n">ready</span><span class="o">...</span> <span class="n">Failed</span> <span class="p">(</span><span class="mi">00</span><span class="p">:</span><span class="mi">08</span><span class="p">:</span><span class="mi">30</span><span class="p">)</span>
+    <span class="n">Failed</span> <span class="n">deploying</span> <span class="p">(</span><span class="mi">00</span><span class="p">:</span><span class="mi">09</span><span class="p">:</span><span class="mi">30</span><span class="p">)</span>
+
+    <span class="n">Stopping</span> <span class="n">registry</span><span class="o">...</span> <span class="n">Finished</span> <span class="p">(</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">)</span>
+    <span class="n">Cleaning</span> <span class="n">up</span> <span class="n">rendered</span> <span class="n">CPI</span> <span class="n">jobs</span><span class="o">...</span> <span class="n">Finished</span> <span class="p">(</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">)</span>
+
+    <span class="n">Deploying</span><span class="p">:</span>
+    <span class="n">Creating</span> <span class="n">instance</span> <span class="s1">&#39;bosh/0&#39;</span><span class="p">:</span>
+        <span class="n">Waiting</span> <span class="n">until</span> <span class="n">instance</span> <span class="ow">is</span> <span class="n">ready</span><span class="p">:</span>
+        <span class="n">Starting</span> <span class="n">SSH</span> <span class="n">tunnel</span><span class="p">:</span>
+            <span class="n">Starting</span> <span class="n">SSH</span> <span class="n">tunnel</span><span class="p">:</span>
+            <span class="n">Failed</span> <span class="n">to</span> <span class="n">connect</span> <span class="n">to</span> <span class="n">remote</span> <span class="n">server</span><span class="p">:</span>
+                <span class="n">dial</span> <span class="n">tcp</span> <span class="n">xx</span><span class="o">.</span><span class="n">xx</span><span class="o">.</span><span class="n">xx</span><span class="o">.</span><span class="n">xx</span><span class="p">:</span><span class="mi">22</span><span class="p">:</span> <span class="n">getsockopt</span><span class="p">:</span> <span class="n">connection</span> <span class="n">timed</span> <span class="n">out</span>
+</pre></div>
+</div>
+<p>xx.xx.xx.xx is internal ip not external. What went wrong?</p>
+</div>
+<div class="section" id="solution">
+<span id="solution"></span><h2>Solution<a class="headerlink" href="#solution" title="Permalink to this headline">¶</a></h2>
+<p>It's because I missed operation : external-ip-with-registry-not-recommended.yml</p>
+<p>'-not-recommended' means bosh develepment team don't want to use this operation. Instead, encourage to use sandbox machine.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">OpenStack Case 1</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#problem">Problem</a></li>
+<li><a class="reference internal" href="#solution">Solution</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="bosh-inside.html" title="previous chapter">BOSH Inside</a></li>
+      <li>Next: <a href="troubleshoot-case-02-openstack.html" title="next chapter">OpenStack Case 2</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/bosh/troubleshoot-case-01-openstack.md.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, me.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="../_sources/bosh/troubleshoot-case-01-openstack.md.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
