@@ -140,9 +140,9 @@ var _ = Describe("AwsS3API", func() {
 	    mockS3 = &mocks.S3API{}
     })
 
-    Describe("S3 test", func() {
-        Context("in some context", func() {
-            It("should be like this....", func() {
+    Describe("AWS S3 API Test", func() {
+        Context("listing objects On common prefix is set", func() {
+            It("should have fixed prefix even if input data does not have prefix.", func() {
 	            mockResultFn := func(input *s3.ListObjectsInput) *s3.ListObjectsOutput {
 		            output := &s3.ListObjectsOutput{}
 		            output.SetCommonPrefixes([]*s3.CommonPrefix{
