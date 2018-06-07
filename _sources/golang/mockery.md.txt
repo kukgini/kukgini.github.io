@@ -57,7 +57,7 @@ func (m *Stringer) String() string {
 
 AWS S3 API 를 테스트하는 코드를 작성해보자. 파일명은 `aws-s3-mock-test.go` 로 하자.
 
-```
+```go
 package main
 
 import (
@@ -112,11 +112,11 @@ common prefix: {
 }
 ```
 
-### Working with Ginkgo
+### Go further : Working with Ginkgo
 
 이제 golang 의 대표젹인 BDD 도구인 ginkgo 와 함께 해보자. mockResultFn 에서 Prefix 를 고정 (2017-01-01)하였기 때문에 mockS3.ListObjects() 의 결과에서 Prefix 는 2017-01-01 임을 확인할 수 있다. 마지막 줄에서 Expect 가 2018-01-01 을 기대하기 때문에 테스트가 실패할 것이다.
 
-```
+```go
 package main_test
 
 import (

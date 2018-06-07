@@ -93,47 +93,47 @@
 <div class="section" id="next-level">
 <span id="next-level"></span><h3>Next Level<a class="headerlink" href="#next-level" title="Permalink to this headline">¶</a></h3>
 <p>AWS S3 API 를 테스트하는 코드를 작성해보자. 파일명은 <code class="docutils literal"><span class="pre">aws-s3-mock-test.go</span></code> 로 하자.</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">package</span> <span class="n">main</span>
+<div class="highlight-go"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">main</span>
 
 <span class="kn">import</span> <span class="p">(</span>
-    <span class="s2">&quot;fmt&quot;</span>
+    <span class="s">&quot;fmt&quot;</span>
 
-    <span class="s2">&quot;github.com/aws/aws-sdk-go/aws&quot;</span>
-    <span class="s2">&quot;github.com/aws/aws-sdk-go/service/s3&quot;</span>
-    <span class="s2">&quot;github.com/jaytaylor/mockery-example/mocks&quot;</span>
-    <span class="s2">&quot;github.com/stretchr/testify/mock&quot;</span>
+    <span class="s">&quot;github.com/aws/aws-sdk-go/aws&quot;</span>
+    <span class="s">&quot;github.com/aws/aws-sdk-go/service/s3&quot;</span>
+    <span class="s">&quot;github.com/jaytaylor/mockery-example/mocks&quot;</span>
+    <span class="s">&quot;github.com/stretchr/testify/mock&quot;</span>
 <span class="p">)</span>
 
-<span class="n">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">mockS3</span> <span class="p">:</span><span class="o">=</span> <span class="o">&amp;</span><span class="n">mocks</span><span class="o">.</span><span class="n">S3API</span><span class="p">{}</span>
+<span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">mockS3</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">mocks</span><span class="p">.</span><span class="nx">S3API</span><span class="p">{}</span>
 
-    <span class="n">mockResultFn</span> <span class="p">:</span><span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="nb">input</span> <span class="o">*</span><span class="n">s3</span><span class="o">.</span><span class="n">ListObjectsInput</span><span class="p">)</span> <span class="o">*</span><span class="n">s3</span><span class="o">.</span><span class="n">ListObjectsOutput</span> <span class="p">{</span>
-        <span class="n">output</span> <span class="p">:</span><span class="o">=</span> <span class="o">&amp;</span><span class="n">s3</span><span class="o">.</span><span class="n">ListObjectsOutput</span><span class="p">{}</span>
-        <span class="n">output</span><span class="o">.</span><span class="n">SetCommonPrefixes</span><span class="p">([]</span><span class="o">*</span><span class="n">s3</span><span class="o">.</span><span class="n">CommonPrefix</span><span class="p">{</span>
-            <span class="o">&amp;</span><span class="n">s3</span><span class="o">.</span><span class="n">CommonPrefix</span><span class="p">{</span>
-                <span class="n">Prefix</span><span class="p">:</span> <span class="n">aws</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="s2">&quot;2017-01-01&quot;</span><span class="p">),</span>
+    <span class="nx">mockResultFn</span> <span class="o">:=</span> <span class="kd">func</span><span class="p">(</span><span class="nx">input</span> <span class="o">*</span><span class="nx">s3</span><span class="p">.</span><span class="nx">ListObjectsInput</span><span class="p">)</span> <span class="o">*</span><span class="nx">s3</span><span class="p">.</span><span class="nx">ListObjectsOutput</span> <span class="p">{</span>
+        <span class="nx">output</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">s3</span><span class="p">.</span><span class="nx">ListObjectsOutput</span><span class="p">{}</span>
+        <span class="nx">output</span><span class="p">.</span><span class="nx">SetCommonPrefixes</span><span class="p">([]</span><span class="o">*</span><span class="nx">s3</span><span class="p">.</span><span class="nx">CommonPrefix</span><span class="p">{</span>
+            <span class="o">&amp;</span><span class="nx">s3</span><span class="p">.</span><span class="nx">CommonPrefix</span><span class="p">{</span>
+                <span class="nx">Prefix</span><span class="p">:</span> <span class="nx">aws</span><span class="p">.</span><span class="nx">String</span><span class="p">(</span><span class="s">&quot;2017-01-01&quot;</span><span class="p">),</span>
             <span class="p">},</span>
         <span class="p">})</span>
-        <span class="k">return</span> <span class="n">output</span>
+        <span class="k">return</span> <span class="nx">output</span>
     <span class="p">}</span>
 
-    <span class="o">//</span> <span class="n">NB</span><span class="p">:</span> <span class="o">.</span><span class="n">Return</span><span class="p">(</span><span class="o">...</span><span class="p">)</span> <span class="n">must</span> <span class="k">return</span> <span class="n">the</span> <span class="n">same</span> <span class="n">signature</span> <span class="k">as</span> <span class="n">the</span> <span class="n">method</span> <span class="n">being</span> <span class="n">mocked</span><span class="o">.</span>
-    <span class="o">//</span>     <span class="n">In</span> <span class="n">this</span> <span class="n">case</span> <span class="n">it</span><span class="s1">&#39;s (*s3.ListObjectsOutput, error).</span>
-    <span class="n">mockS3</span><span class="o">.</span><span class="n">On</span><span class="p">(</span><span class="s2">&quot;ListObjects&quot;</span><span class="p">,</span> <span class="n">mock</span><span class="o">.</span><span class="n">MatchedBy</span><span class="p">(</span><span class="n">func</span><span class="p">(</span><span class="nb">input</span> <span class="o">*</span><span class="n">s3</span><span class="o">.</span><span class="n">ListObjectsInput</span><span class="p">)</span> <span class="nb">bool</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="nb">input</span><span class="o">.</span><span class="n">Delimiter</span> <span class="o">!=</span> <span class="n">nil</span> <span class="o">&amp;&amp;</span> <span class="o">*</span><span class="nb">input</span><span class="o">.</span><span class="n">Delimiter</span> <span class="o">==</span> <span class="s2">&quot;/&quot;</span> <span class="o">&amp;&amp;</span> <span class="nb">input</span><span class="o">.</span><span class="n">Prefix</span> <span class="o">==</span> <span class="n">nil</span>
-    <span class="p">}))</span><span class="o">.</span><span class="n">Return</span><span class="p">(</span><span class="n">mockResultFn</span><span class="p">,</span> <span class="n">nil</span><span class="p">)</span>
+    <span class="c1">// NB: .Return(...) must return the same signature as the method being mocked.</span>
+    <span class="c1">//     In this case it&#39;s (*s3.ListObjectsOutput, error).</span>
+    <span class="nx">mockS3</span><span class="p">.</span><span class="nx">On</span><span class="p">(</span><span class="s">&quot;ListObjects&quot;</span><span class="p">,</span> <span class="nx">mock</span><span class="p">.</span><span class="nx">MatchedBy</span><span class="p">(</span><span class="kd">func</span><span class="p">(</span><span class="nx">input</span> <span class="o">*</span><span class="nx">s3</span><span class="p">.</span><span class="nx">ListObjectsInput</span><span class="p">)</span> <span class="kt">bool</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">input</span><span class="p">.</span><span class="nx">Delimiter</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="o">&amp;&amp;</span> <span class="o">*</span><span class="nx">input</span><span class="p">.</span><span class="nx">Delimiter</span> <span class="o">==</span> <span class="s">&quot;/&quot;</span> <span class="o">&amp;&amp;</span> <span class="nx">input</span><span class="p">.</span><span class="nx">Prefix</span> <span class="o">==</span> <span class="kc">nil</span>
+    <span class="p">})).</span><span class="nx">Return</span><span class="p">(</span><span class="nx">mockResultFn</span><span class="p">,</span> <span class="kc">nil</span><span class="p">)</span>
 
-    <span class="n">listingInput</span> <span class="p">:</span><span class="o">=</span> <span class="o">&amp;</span><span class="n">s3</span><span class="o">.</span><span class="n">ListObjectsInput</span><span class="p">{</span>
-        <span class="n">Bucket</span><span class="p">:</span>    <span class="n">aws</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="s2">&quot;foo&quot;</span><span class="p">),</span>
-        <span class="n">Delimiter</span><span class="p">:</span> <span class="n">aws</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">),</span>
+    <span class="nx">listingInput</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">s3</span><span class="p">.</span><span class="nx">ListObjectsInput</span><span class="p">{</span>
+        <span class="nx">Bucket</span><span class="p">:</span>    <span class="nx">aws</span><span class="p">.</span><span class="nx">String</span><span class="p">(</span><span class="s">&quot;foo&quot;</span><span class="p">),</span>
+        <span class="nx">Delimiter</span><span class="p">:</span> <span class="nx">aws</span><span class="p">.</span><span class="nx">String</span><span class="p">(</span><span class="s">&quot;/&quot;</span><span class="p">),</span>
     <span class="p">}</span>
-    <span class="n">listingOutput</span><span class="p">,</span> <span class="n">err</span> <span class="p">:</span><span class="o">=</span> <span class="n">mockS3</span><span class="o">.</span><span class="n">ListObjects</span><span class="p">(</span><span class="n">listingInput</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="n">nil</span> <span class="p">{</span>
-        <span class="n">panic</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+    <span class="nx">listingOutput</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">mockS3</span><span class="p">.</span><span class="nx">ListObjects</span><span class="p">(</span><span class="nx">listingInput</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="nb">panic</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
     <span class="p">}</span>
 
-    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">x</span> <span class="p">:</span><span class="o">=</span> <span class="nb">range</span> <span class="n">listingOutput</span><span class="o">.</span><span class="n">CommonPrefixes</span> <span class="p">{</span>
-        <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s2">&quot;common prefix: %+v</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">x</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">listingOutput</span><span class="p">.</span><span class="nx">CommonPrefixes</span> <span class="p">{</span>
+        <span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;common prefix: %+v\n&quot;</span><span class="p">,</span> <span class="o">*</span><span class="nx">x</span><span class="p">)</span>
     <span class="p">}</span>
 </pre></div>
 </div>
@@ -145,63 +145,63 @@ common prefix: {
 </pre></div>
 </div>
 </div>
-<div class="section" id="working-with-ginkgo">
-<span id="working-with-ginkgo"></span><h3>Working with Ginkgo<a class="headerlink" href="#working-with-ginkgo" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="go-further-working-with-ginkgo">
+<span id="go-further-working-with-ginkgo"></span><h3>Go further : Working with Ginkgo<a class="headerlink" href="#go-further-working-with-ginkgo" title="Permalink to this headline">¶</a></h3>
 <p>이제 golang 의 대표젹인 BDD 도구인 ginkgo 와 함께 해보자. mockResultFn 에서 Prefix 를 고정 (2017-01-01)하였기 때문에 mockS3.ListObjects() 의 결과에서 Prefix 는 2017-01-01 임을 확인할 수 있다. 마지막 줄에서 Expect 가 2018-01-01 을 기대하기 때문에 테스트가 실패할 것이다.</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">package</span> <span class="n">main_test</span>
+<div class="highlight-go"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nx">main_test</span>
 
 <span class="kn">import</span> <span class="p">(</span>
-    <span class="o">.</span> <span class="s2">&quot;github.com/onsi/ginkgo&quot;</span>
-    <span class="o">.</span> <span class="s2">&quot;github.com/onsi/gomega&quot;</span>
+    <span class="p">.</span> <span class="s">&quot;github.com/onsi/ginkgo&quot;</span>
+    <span class="p">.</span> <span class="s">&quot;github.com/onsi/gomega&quot;</span>
 
-    <span class="s2">&quot;fmt&quot;</span>
+    <span class="s">&quot;fmt&quot;</span>
 
-    <span class="s2">&quot;github.com/aws/aws-sdk-go/aws&quot;</span>
-    <span class="s2">&quot;github.com/aws/aws-sdk-go/service/s3&quot;</span>
-    <span class="s2">&quot;github.com/jaytaylor/mockery-example/mocks&quot;</span>
-    <span class="s2">&quot;github.com/stretchr/testify/mock&quot;</span>
+    <span class="s">&quot;github.com/aws/aws-sdk-go/aws&quot;</span>
+    <span class="s">&quot;github.com/aws/aws-sdk-go/service/s3&quot;</span>
+    <span class="s">&quot;github.com/jaytaylor/mockery-example/mocks&quot;</span>
+    <span class="s">&quot;github.com/stretchr/testify/mock&quot;</span>
 <span class="p">)</span>
 
-<span class="n">var</span> <span class="n">_</span> <span class="o">=</span> <span class="n">Describe</span><span class="p">(</span><span class="s2">&quot;AwsS3API&quot;</span><span class="p">,</span> <span class="n">func</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">var</span> <span class="p">(</span>
-        <span class="n">mockS3</span> <span class="o">*</span><span class="n">mocks</span><span class="o">.</span><span class="n">S3API</span>
+<span class="kd">var</span> <span class="nx">_</span> <span class="p">=</span> <span class="nx">Describe</span><span class="p">(</span><span class="s">&quot;AwsS3API&quot;</span><span class="p">,</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="p">(</span>
+        <span class="nx">mockS3</span> <span class="o">*</span><span class="nx">mocks</span><span class="p">.</span><span class="nx">S3API</span>
     <span class="p">)</span>
 
-    <span class="n">BeforeEach</span><span class="p">(</span><span class="n">func</span><span class="p">()</span> <span class="p">{</span>
-        <span class="n">mockS3</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">mocks</span><span class="o">.</span><span class="n">S3API</span><span class="p">{}</span>
+    <span class="nx">BeforeEach</span><span class="p">(</span><span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">mockS3</span> <span class="p">=</span> <span class="o">&amp;</span><span class="nx">mocks</span><span class="p">.</span><span class="nx">S3API</span><span class="p">{}</span>
     <span class="p">})</span>
 
-    <span class="n">Describe</span><span class="p">(</span><span class="s2">&quot;S3 test&quot;</span><span class="p">,</span> <span class="n">func</span><span class="p">()</span> <span class="p">{</span>
-        <span class="n">Context</span><span class="p">(</span><span class="s2">&quot;in some context&quot;</span><span class="p">,</span> <span class="n">func</span><span class="p">()</span> <span class="p">{</span>
-            <span class="n">It</span><span class="p">(</span><span class="s2">&quot;should be like this....&quot;</span><span class="p">,</span> <span class="n">func</span><span class="p">()</span> <span class="p">{</span>
-                <span class="n">mockResultFn</span> <span class="p">:</span><span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="nb">input</span> <span class="o">*</span><span class="n">s3</span><span class="o">.</span><span class="n">ListObjectsInput</span><span class="p">)</span> <span class="o">*</span><span class="n">s3</span><span class="o">.</span><span class="n">ListObjectsOutput</span> <span class="p">{</span>
-                    <span class="n">output</span> <span class="p">:</span><span class="o">=</span> <span class="o">&amp;</span><span class="n">s3</span><span class="o">.</span><span class="n">ListObjectsOutput</span><span class="p">{}</span>
-                    <span class="n">output</span><span class="o">.</span><span class="n">SetCommonPrefixes</span><span class="p">([]</span><span class="o">*</span><span class="n">s3</span><span class="o">.</span><span class="n">CommonPrefix</span><span class="p">{</span>
-                        <span class="o">&amp;</span><span class="n">s3</span><span class="o">.</span><span class="n">CommonPrefix</span><span class="p">{</span>
-                            <span class="n">Prefix</span><span class="p">:</span> <span class="n">aws</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="s2">&quot;2017-01-01&quot;</span><span class="p">),</span>
+    <span class="nx">Describe</span><span class="p">(</span><span class="s">&quot;S3 test&quot;</span><span class="p">,</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">Context</span><span class="p">(</span><span class="s">&quot;in some context&quot;</span><span class="p">,</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nx">It</span><span class="p">(</span><span class="s">&quot;should be like this....&quot;</span><span class="p">,</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+                <span class="nx">mockResultFn</span> <span class="o">:=</span> <span class="kd">func</span><span class="p">(</span><span class="nx">input</span> <span class="o">*</span><span class="nx">s3</span><span class="p">.</span><span class="nx">ListObjectsInput</span><span class="p">)</span> <span class="o">*</span><span class="nx">s3</span><span class="p">.</span><span class="nx">ListObjectsOutput</span> <span class="p">{</span>
+                    <span class="nx">output</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">s3</span><span class="p">.</span><span class="nx">ListObjectsOutput</span><span class="p">{}</span>
+                    <span class="nx">output</span><span class="p">.</span><span class="nx">SetCommonPrefixes</span><span class="p">([]</span><span class="o">*</span><span class="nx">s3</span><span class="p">.</span><span class="nx">CommonPrefix</span><span class="p">{</span>
+                        <span class="o">&amp;</span><span class="nx">s3</span><span class="p">.</span><span class="nx">CommonPrefix</span><span class="p">{</span>
+                            <span class="nx">Prefix</span><span class="p">:</span> <span class="nx">aws</span><span class="p">.</span><span class="nx">String</span><span class="p">(</span><span class="s">&quot;2017-01-01&quot;</span><span class="p">),</span>
                         <span class="p">},</span>
                     <span class="p">})</span>
-                    <span class="k">return</span> <span class="n">output</span>
+                    <span class="k">return</span> <span class="nx">output</span>
                 <span class="p">}</span>
 
-                <span class="o">//</span> <span class="n">NB</span><span class="p">:</span> <span class="o">.</span><span class="n">Return</span><span class="p">(</span><span class="o">...</span><span class="p">)</span> <span class="n">must</span> <span class="k">return</span> <span class="n">the</span> <span class="n">same</span> <span class="n">signature</span> <span class="k">as</span> <span class="n">the</span> <span class="n">method</span> <span class="n">being</span> <span class="n">mocked</span><span class="o">.</span>
-                <span class="o">//</span>     <span class="n">In</span> <span class="n">this</span> <span class="n">case</span> <span class="n">it</span><span class="s1">&#39;s (*s3.ListObjectsOutput, error).</span>
-                <span class="n">mockS3</span><span class="o">.</span><span class="n">On</span><span class="p">(</span><span class="s2">&quot;ListObjects&quot;</span><span class="p">,</span> <span class="n">mock</span><span class="o">.</span><span class="n">MatchedBy</span><span class="p">(</span><span class="n">func</span><span class="p">(</span><span class="nb">input</span> <span class="o">*</span><span class="n">s3</span><span class="o">.</span><span class="n">ListObjectsInput</span><span class="p">)</span> <span class="nb">bool</span> <span class="p">{</span>
-                    <span class="k">return</span> <span class="nb">input</span><span class="o">.</span><span class="n">Delimiter</span> <span class="o">!=</span> <span class="n">nil</span> <span class="o">&amp;&amp;</span> <span class="o">*</span><span class="nb">input</span><span class="o">.</span><span class="n">Delimiter</span> <span class="o">==</span> <span class="s2">&quot;/&quot;</span> <span class="o">&amp;&amp;</span> <span class="nb">input</span><span class="o">.</span><span class="n">Prefix</span> <span class="o">==</span> <span class="n">nil</span>
-                <span class="p">}))</span><span class="o">.</span><span class="n">Return</span><span class="p">(</span><span class="n">mockResultFn</span><span class="p">,</span> <span class="n">nil</span><span class="p">)</span>
+                <span class="c1">// NB: .Return(...) must return the same signature as the method being mocked.</span>
+                <span class="c1">//     In this case it&#39;s (*s3.ListObjectsOutput, error).</span>
+                <span class="nx">mockS3</span><span class="p">.</span><span class="nx">On</span><span class="p">(</span><span class="s">&quot;ListObjects&quot;</span><span class="p">,</span> <span class="nx">mock</span><span class="p">.</span><span class="nx">MatchedBy</span><span class="p">(</span><span class="kd">func</span><span class="p">(</span><span class="nx">input</span> <span class="o">*</span><span class="nx">s3</span><span class="p">.</span><span class="nx">ListObjectsInput</span><span class="p">)</span> <span class="kt">bool</span> <span class="p">{</span>
+                    <span class="k">return</span> <span class="nx">input</span><span class="p">.</span><span class="nx">Delimiter</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="o">&amp;&amp;</span> <span class="o">*</span><span class="nx">input</span><span class="p">.</span><span class="nx">Delimiter</span> <span class="o">==</span> <span class="s">&quot;/&quot;</span> <span class="o">&amp;&amp;</span> <span class="nx">input</span><span class="p">.</span><span class="nx">Prefix</span> <span class="o">==</span> <span class="kc">nil</span>
+                <span class="p">})).</span><span class="nx">Return</span><span class="p">(</span><span class="nx">mockResultFn</span><span class="p">,</span> <span class="kc">nil</span><span class="p">)</span>
 
-                <span class="n">listingInput</span> <span class="p">:</span><span class="o">=</span> <span class="o">&amp;</span><span class="n">s3</span><span class="o">.</span><span class="n">ListObjectsInput</span><span class="p">{</span>
-                    <span class="n">Bucket</span><span class="p">:</span>    <span class="n">aws</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="s2">&quot;foo&quot;</span><span class="p">),</span>
-                    <span class="n">Delimiter</span><span class="p">:</span> <span class="n">aws</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">),</span>
+                <span class="nx">listingInput</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">s3</span><span class="p">.</span><span class="nx">ListObjectsInput</span><span class="p">{</span>
+                    <span class="nx">Bucket</span><span class="p">:</span>    <span class="nx">aws</span><span class="p">.</span><span class="nx">String</span><span class="p">(</span><span class="s">&quot;foo&quot;</span><span class="p">),</span>
+                    <span class="nx">Delimiter</span><span class="p">:</span> <span class="nx">aws</span><span class="p">.</span><span class="nx">String</span><span class="p">(</span><span class="s">&quot;/&quot;</span><span class="p">),</span>
                 <span class="p">}</span>
 
-                <span class="n">listingOutput</span><span class="p">,</span> <span class="n">err</span> <span class="p">:</span><span class="o">=</span> <span class="n">mockS3</span><span class="o">.</span><span class="n">ListObjects</span><span class="p">(</span><span class="n">listingInput</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="n">nil</span> <span class="p">{</span>
-                    <span class="n">panic</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+                <span class="nx">listingOutput</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">mockS3</span><span class="p">.</span><span class="nx">ListObjects</span><span class="p">(</span><span class="nx">listingInput</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+                    <span class="nb">panic</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
                 <span class="p">}</span>
 
-                <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">x</span> <span class="p">:</span><span class="o">=</span> <span class="nb">range</span> <span class="n">listingOutput</span><span class="o">.</span><span class="n">CommonPrefixes</span> <span class="p">{</span>
-                    <span class="n">Expect</span><span class="p">(</span><span class="o">*</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">To</span><span class="p">(</span><span class="n">Equal</span><span class="p">(</span><span class="s2">&quot;2018-01-01&quot;</span><span class="p">))</span>
+                <span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">x</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">listingOutput</span><span class="p">.</span><span class="nx">CommonPrefixes</span> <span class="p">{</span>
+                    <span class="nx">Expect</span><span class="p">(</span><span class="o">*</span><span class="nx">x</span><span class="p">).</span><span class="nx">To</span><span class="p">(</span><span class="nx">Equal</span><span class="p">(</span><span class="s">&quot;2018-01-01&quot;</span><span class="p">))</span>
                 <span class="p">}</span>
             <span class="p">})</span>
         <span class="p">})</span>
@@ -226,7 +226,7 @@ common prefix: {
 <li><a class="reference internal" href="#examples">Examples</a><ul>
 <li><a class="reference internal" href="#simplest-case">Simplest case</a></li>
 <li><a class="reference internal" href="#next-level">Next Level</a></li>
-<li><a class="reference internal" href="#working-with-ginkgo">Working with Ginkgo</a></li>
+<li><a class="reference internal" href="#go-further-working-with-ginkgo">Go further : Working with Ginkgo</a></li>
 </ul>
 </li>
 </ul>
