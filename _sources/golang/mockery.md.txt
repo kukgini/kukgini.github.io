@@ -4,13 +4,13 @@ mockery 는 golang interface 로 부터 mock 의 생성을 자동화 한 도구�
 
 ## Installation
 
-```
+```bash
 go get github.com/vektra/mockery/.../
 ```
 
 그럼 다음 위치에 실행파일이 만들어진다.
 
-```
+```bash
 $GOPATH/bin/mockery
 ```
 
@@ -105,7 +105,7 @@ func main() {
 
 실행해보자. 다음과 같은 결과를 확인할 수 있을것이다.
 
-```
+```bash
 $ go run aws-s3-mock-test.go
 common prefix: {
   Prefix: "2017-01-01"

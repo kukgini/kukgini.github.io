@@ -46,11 +46,11 @@
 <p>mockery 는 golang interface 로 부터 mock 의 생성을 자동화 한 도구이다. 이것을 통해 mock 기반의 테스트를 위해 불필요한 상용구 (boilerplate code) 를 작성하지 않아도 된다. 어떻게 쓰는 것인지 살펴보자.</p>
 <div class="section" id="installation">
 <span id="installation"></span><h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">go</span> <span class="n">get</span> <span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">vektra</span><span class="o">/</span><span class="n">mockery</span><span class="o">/.../</span>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>go get github.com/vektra/mockery/.../
 </pre></div>
 </div>
 <p>그럼 다음 위치에 실행파일이 만들어진다.</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>$GOPATH/bin/mockery
+<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="nv">$GOPATH</span>/bin/mockery
 </pre></div>
 </div>
 </div>
@@ -138,10 +138,10 @@
 </pre></div>
 </div>
 <p>실행해보자. 다음과 같은 결과를 확인할 수 있을것이다.</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>$ go run aws-s3-mock-test.go
-common prefix: {
-  Prefix: &quot;2017-01-01&quot;
-}
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ go run aws-s3-mock-test.go
+common prefix: <span class="o">{</span>
+  Prefix: <span class="s2">&quot;2017-01-01&quot;</span>
+<span class="o">}</span>
 </pre></div>
 </div>
 </div>
