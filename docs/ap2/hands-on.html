@@ -421,6 +421,20 @@ document.write(`
 <p>DCP 시나리오는 EUID Wallet 표준과 여러 측면에서 밀접하게 연관 있음</p>
 <section id="oid4vp-openid-for-verifiable-presentaiton">
 <h3>OID4VP (OpenID for Verifiable Presentaiton) 프로토콜 사용<a class="headerlink" href="#oid4vp-openid-for-verifiable-presentaiton" title="Link to this heading">#</a></h3>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">DcpHelper.kt (110~118 라인)</span><a class="headerlink" href="#id1" title="Link to this code">#</a></div>
+<div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="kd">val</span><span class="w"> </span><span class="nv">dcRequest</span><span class="w"> </span><span class="o">=</span>
+<span class="w">  </span><span class="n">Request</span><span class="p">(</span>
+<span class="w">    </span><span class="n">responseType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;vp_token&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">responseMode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;dc_api&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">nonce</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nonce</span><span class="p">,</span>
+<span class="w">    </span><span class="n">dcqlQuery</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dcqlQuery</span><span class="p">,</span>
+<span class="w">    </span><span class="n">transactionData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">listOf</span><span class="p">(</span><span class="n">encodedTransactionData</span><span class="p">),</span>
+<span class="w">    </span><span class="n">clientMetadata</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">clientMetadata</span><span class="p">,</span>
+<span class="w">  </span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
 </section>
 </section>
 <section id="next-steps">

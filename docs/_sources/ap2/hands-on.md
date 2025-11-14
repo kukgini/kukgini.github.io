@@ -22,6 +22,19 @@ DCP 시나리오는 EUID Wallet 표준과 여러 측면에서 밀접하게 연�
 
 ### OID4VP (OpenID for Verifiable Presentaiton) 프로토콜 사용
 
+```{code-block} kotlin
+:caption: DcpHelper.kt (110~118 라인)
+
+val dcRequest =
+  Request(
+    responseType = "vp_token",
+    responseMode = "dc_api",
+    nonce = nonce,
+    dcqlQuery = dcqlQuery,
+    transactionData = listOf(encodedTransactionData),
+    clientMetadata = clientMetadata,
+  )
+```
 
 ## Next Steps
 
