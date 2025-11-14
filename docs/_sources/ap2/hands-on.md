@@ -1,4 +1,4 @@
-# Agent Payment Protocol (AP2) - Hands On
+# Samples Hands On
 
 ## Introduction
 
