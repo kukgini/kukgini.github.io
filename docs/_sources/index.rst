@@ -12,11 +12,7 @@ Welcome to my.sphinx's documentation!
 
    ap2/hands-on.md
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Golang
 
-   golang/mockery.md
 
 .. toctree::
    :maxdepth: 2
@@ -60,9 +56,9 @@ Welcome to my.sphinx's documentation!
 
 .. toctree::
    :maxdepth: 2
-   :caption: Operating System
+   :caption: IaaS
 
-   os/ch1.1.rst
+   iaas/ch1.1.rst
 
 .. toctree::
    :maxdepth: 2
@@ -71,6 +67,12 @@ Welcome to my.sphinx's documentation!
    git/git-flow.md
    git/git-push.md
    git/git-status.md
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Golang
+
+   golang/mockery.md
 
 .. toctree::
    :maxdepth: 2
