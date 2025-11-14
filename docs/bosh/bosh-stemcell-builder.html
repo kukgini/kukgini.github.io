@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>build_os_image &#8212; my.sphinx  documentation</title>
+    <title>BOSH linux stemcell builder &#8212; my.sphinx  documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
@@ -14,8 +14,8 @@
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="end" href="bosh-lite-resizing.html" />
-    <link rel="prev" title="&lt;no title&gt;" href="bosh-agent-dev-setup.html" />
+    <link rel="next" title="BOSH lite resizing" href="bosh-lite-resizing.html" />
+    <link rel="prev" title="BOSH Agent Development Setup" href="bosh-agent-dev-setup.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
@@ -33,78 +33,84 @@
 
           <div class="body" role="main">
             
-  <p># BOSH linux stemcell builder</p>
-<p>Repository: <a class="reference external" href="https://github.com/cloudfoundry/bosh-linux-stemcell-builder">https://github.com/cloudfoundry/bosh-linux-stemcell-builder</a></p>
+  <section id="bosh-linux-stemcell-builder">
+<h1>BOSH linux stemcell builder<a class="headerlink" href="#bosh-linux-stemcell-builder" title="Link to this heading">¶</a></h1>
+<p>Repository: https://github.com/cloudfoundry/bosh-linux-stemcell-builder</p>
 <p>기본적으로 프로젝트에 Vagrantfile 이 포함되어 있기 때문에 build 에 필요한 환경을 만들기 위해서는 VirtualBox 와 Vagrant 가 깔려 있으면 된다.
 하지만 이를 자동화된 방식으로 반복하기 위해서는 CI 를 활용하는게 나은 방법일 것이고 다음은 Cuncourse CI 를 통한 Build 절차이다.</p>
-<p>## Concourse workflow</p>
-<p>To create a stemcell on concourse instead of locally on virtualbox, you can execute the build-stemcell task.
-<a href="#id1"><span class="problematic" id="id2">``</span></a>`
-mkdir /tmp/version
-cat &lt;&lt;EOF &gt;/tmp/version/number
-0.0
-EOF
-cd /tmp/version
-git init</p>
-<p>pushd ~/workspace/bosh-linux-stemcell-builder
-fly -t production login
-IAAS=vsphere HYPERVISOR=esxi OS_NAME=ubuntu OS_VERSION=trusty time fly -t production execute -p -x -i version=/tmp/version -i bosh-linux-stemcell-builder=. -c ./ci/tasks/build.yml -o stemcell=/tmp/vsphere/dev/
-popd
-<a href="#id3"><span class="problematic" id="id4">``</span></a>`
-Q: 내 local /tmp/version 에 version 정보가 관리되어야 하는가? 지워지면 어떻하지? 버전번호 업데이트는 알아서 해주나?</p>
-<p>## Periodic bump</p>
-<p>OS images are stored in S3 bucket [bosh-os-images](<a class="reference external" href="http://s3.amazonaws.com/bosh-os-images/">http://s3.amazonaws.com/bosh-os-images/</a>).</p>
+<section id="concourse-workflow">
+<h2>Concourse workflow<a class="headerlink" href="#concourse-workflow" title="Link to this heading">¶</a></h2>
+<p>To create a stemcell on concourse instead of locally on virtualbox, you can execute the build-stemcell task.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mkdir</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">version</span>
+<span class="n">cat</span> <span class="o">&lt;&lt;</span><span class="n">EOF</span> <span class="o">&gt;/</span><span class="n">tmp</span><span class="o">/</span><span class="n">version</span><span class="o">/</span><span class="n">number</span>
+<span class="mf">0.0</span>
+<span class="n">EOF</span>
+<span class="n">cd</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">version</span>
+<span class="n">git</span> <span class="n">init</span>
+
+<span class="n">pushd</span> <span class="o">~/</span><span class="n">workspace</span><span class="o">/</span><span class="n">bosh</span><span class="o">-</span><span class="n">linux</span><span class="o">-</span><span class="n">stemcell</span><span class="o">-</span><span class="n">builder</span>
+<span class="n">fly</span> <span class="o">-</span><span class="n">t</span> <span class="n">production</span> <span class="n">login</span>
+<span class="n">IAAS</span><span class="o">=</span><span class="n">vsphere</span> <span class="n">HYPERVISOR</span><span class="o">=</span><span class="n">esxi</span> <span class="n">OS_NAME</span><span class="o">=</span><span class="n">ubuntu</span> <span class="n">OS_VERSION</span><span class="o">=</span><span class="n">trusty</span> <span class="n">time</span> <span class="n">fly</span> <span class="o">-</span><span class="n">t</span> <span class="n">production</span> <span class="n">execute</span> <span class="o">-</span><span class="n">p</span> <span class="o">-</span><span class="n">x</span> <span class="o">-</span><span class="n">i</span> <span class="n">version</span><span class="o">=/</span><span class="n">tmp</span><span class="o">/</span><span class="n">version</span> <span class="o">-</span><span class="n">i</span> <span class="n">bosh</span><span class="o">-</span><span class="n">linux</span><span class="o">-</span><span class="n">stemcell</span><span class="o">-</span><span class="n">builder</span><span class="o">=.</span> <span class="o">-</span><span class="n">c</span> <span class="o">./</span><span class="n">ci</span><span class="o">/</span><span class="n">tasks</span><span class="o">/</span><span class="n">build</span><span class="o">.</span><span class="n">yml</span> <span class="o">-</span><span class="n">o</span> <span class="n">stemcell</span><span class="o">=/</span><span class="n">tmp</span><span class="o">/</span><span class="n">vsphere</span><span class="o">/</span><span class="n">dev</span><span class="o">/</span>
+<span class="n">popd</span>
+</pre></div>
+</div>
+<p>Q: 내 local /tmp/version 에 version 정보가 관리되어야 하는가? 지워지면 어떻하지? 버전번호 업데이트는 알아서 해주나?</p>
+</section>
+<section id="periodic-bump">
+<h2>Periodic bump<a class="headerlink" href="#periodic-bump" title="Link to this heading">¶</a></h2>
+<p>OS images are stored in S3 bucket <a class="reference external" href="http://s3.amazonaws.com/bosh-os-images/">bosh-os-images</a>.</p>
 <p>stemcell 에 사용되는 OS Image 는 항상 중요 보안 문제와 심각한 버그들로 부터 안전하게 시스템이 지켜지도록 자동화된 방식으로 지속 업데이트 된다.
 특별한 수정사항이 발생한 업데이트의 경우 패치 내용이 기술되지만 정기적인 자동 업데이트의 경우는 Periodic bump 로 기술된다.</p>
-<p>## Rakefile</p>
-<p>참조: <a class="reference external" href="https://github.com/cloudfoundry/bosh-linux-stemcell-builder">https://github.com/cloudfoundry/bosh-linux-stemcell-builder</a></p>
+</section>
+<section id="rakefile">
+<h2>Rakefile<a class="headerlink" href="#rakefile" title="Link to this heading">¶</a></h2>
+<p>참조: https://github.com/cloudfoundry/bosh-linux-stemcell-builder</p>
 <p>프로젝트 최상단에 위치한 Rakefile 은 Stemcell Build Process 의 전체 구조를 살펴보는데 도움이 될 것이다.
 Rakefile 에 의하면 총 4 단계를 거쳐 stemcell 이 제작되는 것을 알 수 있다. 만약 S3 와 같은 원격 저장소를
 활용하지 않는다면 이를 2 단계로 간소화 할 수 있다.</p>
-<p>Rakefile 에 기술된 stemcell build process
-1. build_os_image
-1. upload_os_image (optional)
-1. download_os_image (optional)
-1. build(_with_local_os_image)</p>
-<p>S3 를 사용하지 않을때의 stemcell build process
-1. build_os_image
-1. build_woth_local_os_image</p>
+<p>Rakefile 에 기술된 stemcell build process</p>
+<ol class="arabic simple">
+<li><p>build_os_image</p></li>
+<li><p>upload_os_image (optional)</p></li>
+<li><p>download_os_image (optional)</p></li>
+<li><p>build(_with_local_os_image)</p></li>
+</ol>
+<p>S3 를 사용하지 않을때의 stemcell build process</p>
+<ol class="arabic simple">
+<li><p>build_os_image</p></li>
+<li><p>build_woth_local_os_image</p></li>
+</ol>
+</section>
 <section id="build-os-image">
-<h1>build_os_image<a class="headerlink" href="#build-os-image" title="Link to this heading">¶</a></h1>
+<h2>build_os_image<a class="headerlink" href="#build-os-image" title="Link to this heading">¶</a></h2>
 <p>stemcell 의 모체가 되는 OS Image 를 생성한다. 옵션에 따라 Ubuntu / CentOS / ReadHat 등을
 선택할 수 있으며 Public 으로 배포되는 ISO Image 에 약간의 hardning 작업을 가해 보안성을 강화하고
 bosh 와 관련된 모듈들을 추가 설치한 Image File 이 생성된다</p>
-<p>![Stemcell Build Sequence image](bosh-stemcell-builder/stemcell-build-sequence-build-os-iamge.png “”)
-<a href="#id5"><span class="problematic" id="id6">``</span></a>`
-title Stemcell Build Sequence (build_os_iamge)
-Rake-&gt;OSImageBuilder:buildn[:environmentn:collectionn:runnern:archive_handler]
-OSImageBuilder-&gt;BuildEnvironment:prepare_build</p>
-<blockquote>
-<div><dl class="simple">
-<dt>alt resume_from == nil</dt><dd><p>BuildEnvironment-&gt;BuildEnvironment:sanitize
-BuildEnvironment-&gt;BuildEnvironment:prepare_build_path</p>
-</dd>
-</dl>
-<p>end
-BuildEnvironment-&gt;BuildEnvironment:copy_stemcell_buildern_to_build_path
-BuildEnvironment-&gt;BuildEnvironment:prepare_work_root
-BuildEnvironment-&gt;BuildEnvironment:prepare_stemcell_path
-BuildEnvironment-&gt;BuildEnvironment:persist_settings_for_bash</p>
-</div></blockquote>
-<dl class="simple">
-<dt>OSImageBuilder-&gt;StageRunner:configure_and_applyn(operation_system_stages, ENV[‘resume_from’])</dt><dd><p>StageRunner-&gt;StageRunner:check_corrent_uid
-StageRunner-&gt;StageRunner:resume_fromn(stages, resume_from_stage)
-StageRunner-&gt;StageRunner:configure(stages)
-StageRunner-&gt;StageRunner:apply(stages)</p>
-</dd>
-<dt>OSImageBuilder-&gt;ArchiveHandler:compress(chroot_dir, os_image_path)</dt><dd><p>ArchiveHandler-&gt;&#64;shell:sudo tar -cz n-f #{archive_filename} n-C #{directory} .”</p>
-</dd>
-</dl>
-<p><a href="#id7"><span class="problematic" id="id8">``</span></a><a href="#id9"><span class="problematic" id="id10">`</span></a></p>
+<p><img alt="Stemcell Build Sequence image" src="../_images/stemcell-build-sequence-build-os-iamge.png" /></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">title</span> <span class="n">Stemcell</span> <span class="n">Build</span> <span class="n">Sequence</span> <span class="p">(</span><span class="n">build_os_iamge</span><span class="p">)</span>
+<span class="n">Rake</span><span class="o">-&gt;</span><span class="n">OSImageBuilder</span><span class="p">:</span><span class="n">build</span>\<span class="n">n</span><span class="p">[:</span><span class="n">environment</span>\<span class="n">n</span><span class="p">:</span><span class="n">collection</span>\<span class="n">n</span><span class="p">:</span><span class="n">runner</span>\<span class="n">n</span><span class="p">:</span><span class="n">archive_handler</span><span class="p">]</span>
+<span class="n">OSImageBuilder</span><span class="o">-&gt;</span><span class="n">BuildEnvironment</span><span class="p">:</span><span class="n">prepare_build</span>
+    <span class="n">alt</span> <span class="n">resume_from</span> <span class="o">==</span> <span class="n">nil</span>
+        <span class="n">BuildEnvironment</span><span class="o">-&gt;</span><span class="n">BuildEnvironment</span><span class="p">:</span><span class="n">sanitize</span>
+        <span class="n">BuildEnvironment</span><span class="o">-&gt;</span><span class="n">BuildEnvironment</span><span class="p">:</span><span class="n">prepare_build_path</span>
+    <span class="n">end</span>
+    <span class="n">BuildEnvironment</span><span class="o">-&gt;</span><span class="n">BuildEnvironment</span><span class="p">:</span><span class="n">copy_stemcell_builder</span>\<span class="n">n_to_build_path</span>
+    <span class="n">BuildEnvironment</span><span class="o">-&gt;</span><span class="n">BuildEnvironment</span><span class="p">:</span><span class="n">prepare_work_root</span>
+    <span class="n">BuildEnvironment</span><span class="o">-&gt;</span><span class="n">BuildEnvironment</span><span class="p">:</span><span class="n">prepare_stemcell_path</span>
+    <span class="n">BuildEnvironment</span><span class="o">-&gt;</span><span class="n">BuildEnvironment</span><span class="p">:</span><span class="n">persist_settings_for_bash</span>
+<span class="n">OSImageBuilder</span><span class="o">-&gt;</span><span class="n">StageRunner</span><span class="p">:</span><span class="n">configure_and_apply</span>\<span class="n">n</span><span class="p">(</span><span class="n">operation_system_stages</span><span class="p">,</span> <span class="n">ENV</span><span class="p">[</span><span class="s1">&#39;resume_from&#39;</span><span class="p">])</span>
+    <span class="n">StageRunner</span><span class="o">-&gt;</span><span class="n">StageRunner</span><span class="p">:</span><span class="n">check_corrent_uid</span>
+    <span class="n">StageRunner</span><span class="o">-&gt;</span><span class="n">StageRunner</span><span class="p">:</span><span class="n">resume_from</span>\<span class="n">n</span><span class="p">(</span><span class="n">stages</span><span class="p">,</span> <span class="n">resume_from_stage</span><span class="p">)</span>
+    <span class="n">StageRunner</span><span class="o">-&gt;</span><span class="n">StageRunner</span><span class="p">:</span><span class="n">configure</span><span class="p">(</span><span class="n">stages</span><span class="p">)</span>
+    <span class="n">StageRunner</span><span class="o">-&gt;</span><span class="n">StageRunner</span><span class="p">:</span><span class="n">apply</span><span class="p">(</span><span class="n">stages</span><span class="p">)</span>
+<span class="n">OSImageBuilder</span><span class="o">-&gt;</span><span class="n">ArchiveHandler</span><span class="p">:</span><span class="n">compress</span><span class="p">(</span><span class="n">chroot_dir</span><span class="p">,</span> <span class="n">os_image_path</span><span class="p">)</span>
+    <span class="n">ArchiveHandler</span><span class="o">-&gt;</span><span class="nd">@shell</span><span class="p">:</span><span class="n">sudo</span> <span class="n">tar</span> <span class="o">-</span><span class="n">cz</span> \<span class="n">n</span><span class="o">-</span><span class="n">f</span> <span class="c1">#{archive_filename} \n-C #{directory} .&quot;</span>
+</pre></div>
+</div>
 <p>stemcell 은 StageCollection class 에 정의된 stages 라고 불리우는 묶음을 StateRunner class 를 통해 순차적으로 수행함으로써 OS 이미지를 생성한다. OSImageBuilder 가 StageRunner 를 초기화 할때 StageCollection.operation_system_stages 를 전달하므로 이 states 를 순차적으로 수행할 것이다. IaaS/OS 별로 서로 다른 stages 가 정의되어 있으며 상황에 맞는 state 묶음인 stages 를 정의해 둔 소스가 다음 위치에 있다.</p>
-<p><code class="docutils literal notranslate"><span class="pre">`</span>
-<span class="pre">bosh_stemcell/lib/bosh/stemcell/state_collection.rb</span>
-<span class="pre">`</span></code></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bosh_stemcell</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">bosh</span><span class="o">/</span><span class="n">stemcell</span><span class="o">/</span><span class="n">state_collection</span><span class="o">.</span><span class="n">rb</span>
+</pre></div>
+</div>
 <p>Stage 는 ‘apply.sh’ 에 의해 실행되며 100% 독립적으로 실행될 수 있도록 Stage 간에 의존성이 있으면 안된다. states/ 디렉터리의 하부는 다음과 같이 이루어져 있다.</p>
 <ul class="simple">
 <li><p>apply.sh   state 실행 스크립트</p></li>
@@ -112,46 +118,49 @@ StageRunner-&gt;StageRunner:apply(stages)</p>
 <li><p>config.sh  stage 내에서 필요한 local configuration 저장소.</p></li>
 </ul>
 <p>StageCollection.operation_system_stages 를 분석하여 Ubuntu OS Image 를 위한 stages 는 다음과 같이 구성되어 있음을 알게 되었다.</p>
-<p>1. base_debootstrap,
-1. base_ubuntu_firstboot,
-1. base_apt,
-1. base_ubuntu_build_essential,
-1. base_ubuntu_packages,
-1. base_file_permission,
-1. base_ssh,
-1. bosh_sysstat,
-1. system_kernel,
-1. system_kernel_modules,
-1. system_ixgbevf (Arch.ppc64le 인 경우 생략)
-1. <strong>bosh_steps</strong></p>
-<blockquote>
-<div><p>1. bosh_sysctl,
-1. bosh_limits,
-1. bosh_users,
-1. bosh_monit,
-1. bosh_ntpdate,
-1. bosh_sudoers,</p>
-</div></blockquote>
-<p>1. password_policies,
-1. restrict_su_command,
-1. tty_config,
-1. rsyslog_config,
-1. delay_monit_start,
-1. system_grub,
-1. vim_tiny,
-1. cron_config,
-1. escape_ctrl_alt_del,
-1. system_users,
-1. bosh_audit_ubuntu,
-1. bosh_log_audit_start,</p>
+<ol class="arabic simple">
+<li><p>base_debootstrap,</p></li>
+<li><p>base_ubuntu_firstboot,</p></li>
+<li><p>base_apt,</p></li>
+<li><p>base_ubuntu_build_essential,</p></li>
+<li><p>base_ubuntu_packages,</p></li>
+<li><p>base_file_permission,</p></li>
+<li><p>base_ssh,</p></li>
+<li><p>bosh_sysstat,</p></li>
+<li><p>system_kernel,</p></li>
+<li><p>system_kernel_modules,</p></li>
+<li><p>system_ixgbevf (Arch.ppc64le 인 경우 생략)</p></li>
+<li><p><strong>bosh_steps</strong></p>
+<ol class="arabic simple">
+<li><p>bosh_sysctl,</p></li>
+<li><p>bosh_limits,</p></li>
+<li><p>bosh_users,</p></li>
+<li><p>bosh_monit,</p></li>
+<li><p>bosh_ntpdate,</p></li>
+<li><p>bosh_sudoers,</p></li>
+</ol>
+</li>
+<li><p>password_policies,</p></li>
+<li><p>restrict_su_command,</p></li>
+<li><p>tty_config,</p></li>
+<li><p>rsyslog_config,</p></li>
+<li><p>delay_monit_start,</p></li>
+<li><p>system_grub,</p></li>
+<li><p>vim_tiny,</p></li>
+<li><p>cron_config,</p></li>
+<li><p>escape_ctrl_alt_del,</p></li>
+<li><p>system_users,</p></li>
+<li><p>bosh_audit_ubuntu,</p></li>
+<li><p>bosh_log_audit_start,</p></li>
+</ol>
 </section>
 <section id="upload-os-image-download-os-image">
-<h1>upload_os_image / download_os_image<a class="headerlink" href="#upload-os-image-download-os-image" title="Link to this heading">¶</a></h1>
+<h2>upload_os_image / download_os_image<a class="headerlink" href="#upload-os-image-download-os-image" title="Link to this heading">¶</a></h2>
 <p>build_os_image 에 의해 생성된 image 를 upload/download 한다. 한번 만들어 둔 것을 upload 해
 두면 stemcell 제작시 재활용 할 수 있게 된다. local_os_image 를 사용한다면 필요하지 않다.</p>
 </section>
 <section id="build-with-local-os-image">
-<h1>build(_with_local_os_image)<a class="headerlink" href="#build-with-local-os-image" title="Link to this heading">¶</a></h1>
+<h2>build(_with_local_os_image)<a class="headerlink" href="#build-with-local-os-image" title="Link to this heading">¶</a></h2>
 <p>upload_os_image 에 의해 저장된 원격 저장소를 이용하지 않는다면 build_with_local_os_image 를
 사용하면 된다. 만들어진 OS Image 를 Bosh 가 인식할 수 있는 stemcell 이라는 형태로 한번 더 감싸는
 작업을 하게 된다.</p>
@@ -172,78 +181,62 @@ StageRunner-&gt;StageRunner:apply(stages)</p>
 <li><p>agent</p></li>
 </ul>
 <p>이제 이렇게 분류해 놓은 stages 는 StemcellBuilder 와 StemcellPackager 에 의해 build 되는데 build 순서는 다음과 같다.</p>
-<ol class="arabic">
-<li><dl>
-<dt>StemcellBuilder</dt><dd><ol class="arabic simple">
-<li><dl class="simple">
-<dt>extract_operating_system_stages</dt><dd><ol class="arabic simple">
+<ol class="arabic simple">
+<li><p>StemcellBuilder</p>
+<ol class="arabic simple">
+<li><p>extract_operating_system_stages</p>
+<ol class="arabic simple">
 <li><p>untar_base_os_image</p></li>
 </ol>
-</dd>
-</dl>
 </li>
-</ol>
+<li><p>agent_stages</p>
 <ol class="arabic simple">
-<li><dl class="simple">
-<dt>agent_stages</dt><dd><p>1. bosh_libyaml
-1. bosh_go_agent
-1. aws_cli
-1. logrotate_config
-1. dev_tools_config
-1. static_libraries_config</p>
-</dd>
-</dl>
-</li>
+<li><p>bosh_libyaml</p></li>
+<li><p>bosh_go_agent</p></li>
+<li><p>aws_cli</p></li>
+<li><p>logrotate_config</p></li>
+<li><p>dev_tools_config</p></li>
+<li><p>static_libraries_config</p></li>
 </ol>
-<ol class="arabic">
-<li><dl>
-<dt>build_stemcell_image_stages</dt><dd><p>1. system_network
-1. system_openstack_clock
-1. system_openstack_modules
-1. system_parameters
-1. bosh_clean
-1. bosh_harden
-1. bosh_openstack_agent_settings
-1. bosh_clean_ssh
-1. image_create
-1. image_install_grub
-1. finish_stemcell_stages</p>
-<blockquote>
-<div><ol class="arabic simple">
+</li>
+<li><p>build_stemcell_image_stages</p>
+<ol class="arabic simple">
+<li><p>system_network</p></li>
+<li><p>system_openstack_clock</p></li>
+<li><p>system_openstack_modules</p></li>
+<li><p>system_parameters</p></li>
+<li><p>bosh_clean</p></li>
+<li><p>bosh_harden</p></li>
+<li><p>bosh_openstack_agent_settings</p></li>
+<li><p>bosh_clean_ssh</p></li>
+<li><p>image_create</p></li>
+<li><p>image_install_grub</p></li>
+<li><p>finish_stemcell_stages</p>
+<ol class="arabic simple">
 <li><p>bosh_package_list</p></li>
 </ol>
-</div></blockquote>
-</dd>
-</dl>
 </li>
 </ol>
-</dd>
-</dl>
 </li>
 </ol>
-<ol class="arabic">
-<li><dl>
-<dt>StemcellPackager</dt><dd><ol class="arabic simple">
-<li><dl class="simple">
-<dt>package_stemcell_stages</dt><dd><ol class="arabic simple">
-<li><dl class="simple">
-<dt>raw_package_stages</dt><dd><ol class="arabic simple">
+</li>
+<li><p>StemcellPackager</p>
+<ol class="arabic simple">
+<li><p>package_stemcell_stages</p>
+<ol class="arabic simple">
+<li><p>raw_package_stages</p>
+<ol class="arabic simple">
 <li><p>prepare_raw_image_stemcell</p></li>
 </ol>
-</dd>
-</dl>
 </li>
 </ol>
-</dd>
-</dl>
+</li>
+<li><p>write_manifest</p></li>
+<li><p>create_tarball</p></li>
+</ol>
 </li>
 </ol>
-<p>1. write_manifest
-1. create_tarball</p>
-</dd>
-</dl>
-</li>
-</ol>
+</section>
 </section>
 
 
@@ -273,19 +266,22 @@ StageRunner-&gt;StageRunner:apply(stages)</p>
 </search>
 <script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../golang/mockery.html">}</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../golang/mockery.html#id10">}</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../golang/mockery.html#id35">}</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../golang/mockery.html#id54">})</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">build_os_image</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#upload-os-image-download-os-image">upload_os_image / download_os_image</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#build-with-local-os-image">build(_with_local_os_image)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="bosh-lite-resizing.html">end</a></li>
-<li class="toctree-l1"><a class="reference internal" href="using-upstart.html">오래 돌아야 하는 서버 또는 워커를 관리하는 스마트하지 않은 방법</a></li>
-<li class="toctree-l1"><a class="reference internal" href="using-upstart.html#id2">스마트하지 않은 방법의 문제점</a></li>
-<li class="toctree-l1"><a class="reference internal" href="using-upstart.html#upstart">우분투에서 기본으로 제공되는 upstart 를 사용하는 스마트한 방법</a></li>
-<li class="toctree-l1"><a class="reference internal" href="troubleshoot-case-05-galera-cluster.html">## 장애 원인</a></li>
-<li class="toctree-l1"><a class="reference internal" href="troubleshoot-case-05-galera-cluster.html#id14">## 작업 내역</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../golang/mockery.html">mockery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bosh-agent-dev-setup.html">BOSH Agent Development Setup</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">BOSH linux stemcell builder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bosh-lite-resizing.html">BOSH lite resizing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-upstart.html">Using upstart on ubuntu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reverse-ssh-port-forwarding.html">Bypassing corporate firewall with reverse ssh port forwarding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bosh-task.html">BOSH task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bosh-inside.html">BOSH Inside</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshoot-case-01-openstack.html">OpenStack Case 1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshoot-case-02-openstack.html">OpenStack Case 2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshoot-case-03-aws.html">Case 3 AWS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshoot-case-04-aws.html">Case 4 AWS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshoot-case-05-galera-cluster.html">IaaS 네트워크 장비 교체 작업 후 mariadb galera cluster 장애</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshoot-case-06-openstack.html">Trouble Shoot case 6 OpenStack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/locket.html">Locket</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/cups.html">Custom User Provided Service (CUPS)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../cf/ch3.html">CF-Extensions projects in incubation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../cf/ch1.1.html">Custom User Provided Service (CUPS)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../cf/ch1.2.html">Cloud Native Application</a></li>
@@ -303,15 +299,19 @@ StageRunner-&gt;StageRunner:apply(stages)</p>
 <li class="toctree-l1"><a class="reference internal" href="../cf/ch1.z.html">Uncategorized</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../os/ch1.1.html">Chapter 1 Command-Line Interface (CLI)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../os/ch1.1.html#uncategorized">Uncategorized</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../md/markdown_examples.html">An h1 header</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../git/git-flow.html">git flow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../git/git-push.html">git push</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../git/git-status.html">git status</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../md/markdown_examples.html">Markdown Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../md/markdown_examples.html#an-h1-header">An h1 header</a></li>
 </ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="bosh-agent-dev-setup.html" title="previous chapter">&lt;no title&gt;</a></li>
-      <li>Next: <a href="bosh-lite-resizing.html" title="next chapter">end</a></li>
+      <li>Previous: <a href="bosh-agent-dev-setup.html" title="previous chapter">BOSH Agent Development Setup</a></li>
+      <li>Next: <a href="bosh-lite-resizing.html" title="next chapter">BOSH lite resizing</a></li>
   </ul></li>
 </ul>
 </div>

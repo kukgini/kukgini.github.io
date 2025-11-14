@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>&lt;no title&gt; &#8212; my.sphinx  documentation</title>
+    <title>git push &#8212; my.sphinx  documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
@@ -14,8 +14,8 @@
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="&lt;no title&gt;" href="git-status.html" />
-    <link rel="prev" title="&lt;no title&gt;" href="git-flow.html" />
+    <link rel="next" title="git status" href="git-status.html" />
+    <link rel="prev" title="git flow" href="git-flow.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
@@ -33,34 +33,37 @@
 
           <div class="body" role="main">
             
-  <p># git push</p>
-<p><code class="docutils literal notranslate"><span class="pre">`</span>
-<span class="pre">Pushing</span> <span class="pre">to</span> <span class="pre">...</span>
-<span class="pre">To</span> <span class="pre">...</span>
-<span class="pre">!</span> <span class="pre">[rejected]</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">lg-master</span> <span class="pre">-&gt;</span> <span class="pre">lg-master</span> <span class="pre">(non-fast-forward)</span>
-<span class="pre">error:</span> <span class="pre">failed</span> <span class="pre">to</span> <span class="pre">push</span> <span class="pre">some</span> <span class="pre">refs</span> <span class="pre">to</span> <span class="pre">'http://soominlee&#64;smartdev.lgcns.com/bitbucket/scm/paas/git-test.git'</span>
-<span class="pre">hint:</span> <span class="pre">Updates</span> <span class="pre">were</span> <span class="pre">rejected</span> <span class="pre">because</span> <span class="pre">the</span> <span class="pre">tip</span> <span class="pre">of</span> <span class="pre">your</span> <span class="pre">current</span> <span class="pre">branch</span> <span class="pre">is</span> <span class="pre">behind</span>
-<span class="pre">hint:</span> <span class="pre">its</span> <span class="pre">remote</span> <span class="pre">counterpart.</span> <span class="pre">Integrate</span> <span class="pre">the</span> <span class="pre">remote</span> <span class="pre">changes</span> <span class="pre">(e.g.</span>
-<span class="pre">hint:</span> <span class="pre">'git</span> <span class="pre">pull</span> <span class="pre">...')</span> <span class="pre">before</span> <span class="pre">pushing</span> <span class="pre">again.</span>
-<span class="pre">hint:</span> <span class="pre">See</span> <span class="pre">the</span> <span class="pre">'Note</span> <span class="pre">about</span> <span class="pre">fast-forwards'</span> <span class="pre">in</span> <span class="pre">'git</span> <span class="pre">push</span> <span class="pre">--help'</span> <span class="pre">for</span> <span class="pre">details.</span>
-<span class="pre">`</span></code>
-당황하지 말고 자세히 봅시다.</p>
+  <section id="git-push">
+<h1>git push<a class="headerlink" href="#git-push" title="Link to this heading">¶</a></h1>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Pushing to ...
+To ...
+! [rejected]        lg-master -&gt; lg-master (non-fast-forward)
+error: failed to push some refs to &#39;http://soominlee@smartdev.lgcns.com/bitbucket/scm/paas/git-test.git&#39;
+hint: Updates were rejected because the tip of your current branch is behind
+hint: its remote counterpart. Integrate the remote changes (e.g.
+hint: &#39;git pull ...&#39;) before pushing again.
+hint: See the &#39;Note about fast-forwards&#39; in &#39;git push --help&#39; for details.
+</pre></div>
+</div>
+<p>당황하지 말고 자세히 봅시다.</p>
 <p>error: failed to push</p>
 <p>으응… push 에 실패했네.</p>
 <p>hint: Updates were rejected because the tip of your current branch is behind its remote conterpart.</p>
 <p>너의 현재 브렌치가 원격의 다른 사람보다 뒤에 있기 때문에 실패한거야… 으응?</p>
 <p>hint: Integrate the remote changes (e.g. ‘git pull …’) before pushing again.</p>
 <p>원격 변경 사항을 통합하고 다시 해 보시라 (예를 들어 git pull 로)</p>
-<p><a href="#id1"><span class="problematic" id="id2">``</span></a>`
-hint: Updates were rejected because the remote contains work that you do
-hint: not have locally. This is usually caused by another repository pushing
-hint: to the same ref. You may want to first integrate the remote changes
-hint: (e.g., ‘git pull …’) before pushing again.
-hint: See the ‘Note about fast-forwards’ in ‘git push –help’ for details.</p>
-<p>error: You have not concluded your merge (MERGE_HEAD exists).
-hint: Please, commit your changes before merging.
-fatal: Exiting because of unfinished merge.
-<a href="#id3"><span class="problematic" id="id4">``</span></a><a href="#id5"><span class="problematic" id="id6">`</span></a></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">hint</span><span class="p">:</span> <span class="n">Updates</span> <span class="n">were</span> <span class="n">rejected</span> <span class="n">because</span> <span class="n">the</span> <span class="n">remote</span> <span class="n">contains</span> <span class="n">work</span> <span class="n">that</span> <span class="n">you</span> <span class="n">do</span>
+<span class="n">hint</span><span class="p">:</span> <span class="ow">not</span> <span class="n">have</span> <span class="n">locally</span><span class="o">.</span> <span class="n">This</span> <span class="ow">is</span> <span class="n">usually</span> <span class="n">caused</span> <span class="n">by</span> <span class="n">another</span> <span class="n">repository</span> <span class="n">pushing</span>
+<span class="n">hint</span><span class="p">:</span> <span class="n">to</span> <span class="n">the</span> <span class="n">same</span> <span class="n">ref</span><span class="o">.</span> <span class="n">You</span> <span class="n">may</span> <span class="n">want</span> <span class="n">to</span> <span class="n">first</span> <span class="n">integrate</span> <span class="n">the</span> <span class="n">remote</span> <span class="n">changes</span>
+<span class="n">hint</span><span class="p">:</span> <span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">g</span><span class="o">.</span><span class="p">,</span> <span class="s1">&#39;git pull ...&#39;</span><span class="p">)</span> <span class="n">before</span> <span class="n">pushing</span> <span class="n">again</span><span class="o">.</span>
+<span class="n">hint</span><span class="p">:</span> <span class="n">See</span> <span class="n">the</span> <span class="s1">&#39;Note about fast-forwards&#39;</span> <span class="ow">in</span> <span class="s1">&#39;git push --help&#39;</span> <span class="k">for</span> <span class="n">details</span><span class="o">.</span>
+
+<span class="n">error</span><span class="p">:</span> <span class="n">You</span> <span class="n">have</span> <span class="ow">not</span> <span class="n">concluded</span> <span class="n">your</span> <span class="n">merge</span> <span class="p">(</span><span class="n">MERGE_HEAD</span> <span class="n">exists</span><span class="p">)</span><span class="o">.</span>
+<span class="n">hint</span><span class="p">:</span> <span class="n">Please</span><span class="p">,</span> <span class="n">commit</span> <span class="n">your</span> <span class="n">changes</span> <span class="n">before</span> <span class="n">merging</span><span class="o">.</span>
+<span class="n">fatal</span><span class="p">:</span> <span class="n">Exiting</span> <span class="n">because</span> <span class="n">of</span> <span class="n">unfinished</span> <span class="n">merge</span><span class="o">.</span>
+</pre></div>
+</div>
+</section>
 
 
           </div>
@@ -88,20 +91,23 @@ fatal: Exiting because of unfinished merge.
     </div>
 </search>
 <script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../golang/mockery.html">}</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../golang/mockery.html#id10">}</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../golang/mockery.html#id35">}</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../golang/mockery.html#id54">})</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../bosh/bosh-stemcell-builder.html">build_os_image</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../bosh/bosh-stemcell-builder.html#upload-os-image-download-os-image">upload_os_image / download_os_image</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../bosh/bosh-stemcell-builder.html#build-with-local-os-image">build(_with_local_os_image)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../bosh/bosh-lite-resizing.html">end</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../bosh/using-upstart.html">오래 돌아야 하는 서버 또는 워커를 관리하는 스마트하지 않은 방법</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../bosh/using-upstart.html#id2">스마트하지 않은 방법의 문제점</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../bosh/using-upstart.html#upstart">우분투에서 기본으로 제공되는 upstart 를 사용하는 스마트한 방법</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../bosh/troubleshoot-case-05-galera-cluster.html">## 장애 원인</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../bosh/troubleshoot-case-05-galera-cluster.html#id14">## 작업 내역</a></li>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../golang/mockery.html">mockery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bosh/bosh-agent-dev-setup.html">BOSH Agent Development Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bosh/bosh-stemcell-builder.html">BOSH linux stemcell builder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bosh/bosh-lite-resizing.html">BOSH lite resizing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bosh/using-upstart.html">Using upstart on ubuntu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bosh/reverse-ssh-port-forwarding.html">Bypassing corporate firewall with reverse ssh port forwarding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bosh/bosh-task.html">BOSH task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bosh/bosh-inside.html">BOSH Inside</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bosh/troubleshoot-case-01-openstack.html">OpenStack Case 1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bosh/troubleshoot-case-02-openstack.html">OpenStack Case 2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bosh/troubleshoot-case-03-aws.html">Case 3 AWS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bosh/troubleshoot-case-04-aws.html">Case 4 AWS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bosh/troubleshoot-case-05-galera-cluster.html">IaaS 네트워크 장비 교체 작업 후 mariadb galera cluster 장애</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bosh/troubleshoot-case-06-openstack.html">Trouble Shoot case 6 OpenStack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/locket.html">Locket</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/cups.html">Custom User Provided Service (CUPS)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../cf/ch3.html">CF-Extensions projects in incubation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../cf/ch1.1.html">Custom User Provided Service (CUPS)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../cf/ch1.2.html">Cloud Native Application</a></li>
@@ -119,15 +125,19 @@ fatal: Exiting because of unfinished merge.
 <li class="toctree-l1"><a class="reference internal" href="../cf/ch1.z.html">Uncategorized</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../os/ch1.1.html">Chapter 1 Command-Line Interface (CLI)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../os/ch1.1.html#uncategorized">Uncategorized</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../md/markdown_examples.html">An h1 header</a></li>
+<li class="toctree-l1"><a class="reference internal" href="git-flow.html">git flow</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">git push</a></li>
+<li class="toctree-l1"><a class="reference internal" href="git-status.html">git status</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../md/markdown_examples.html">Markdown Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../md/markdown_examples.html#an-h1-header">An h1 header</a></li>
 </ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="git-flow.html" title="previous chapter">&lt;no title&gt;</a></li>
-      <li>Next: <a href="git-status.html" title="next chapter">&lt;no title&gt;</a></li>
+      <li>Previous: <a href="git-flow.html" title="previous chapter">git flow</a></li>
+      <li>Next: <a href="git-status.html" title="next chapter">git status</a></li>
   </ul></li>
 </ul>
 </div>

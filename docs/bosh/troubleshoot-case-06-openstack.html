@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>&lt;no title&gt; &#8212; my.sphinx  documentation</title>
+    <title>Trouble Shoot case 6 OpenStack &#8212; my.sphinx  documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
@@ -14,8 +14,8 @@
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="&lt;no title&gt;" href="../cf/locket.html" />
-    <link rel="prev" title="## 장애 원인" href="troubleshoot-case-05-galera-cluster.html" />
+    <link rel="next" title="Locket" href="../cf/locket.html" />
+    <link rel="prev" title="IaaS 네트워크 장비 교체 작업 후 mariadb galera cluster 장애" href="troubleshoot-case-05-galera-cluster.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
@@ -33,188 +33,28 @@
 
           <div class="body" role="main">
             
-  <p># Trouble Shoot case 6 OpenStack</p>
+  <section id="trouble-shoot-case-6-openstack">
+<h1>Trouble Shoot case 6 OpenStack<a class="headerlink" href="#trouble-shoot-case-6-openstack" title="Link to this heading">¶</a></h1>
 <ul class="simple">
 <li><p>bosh cli Ver 2.0.16</p></li>
 <li><p>bosh-deployment Ver</p></li>
 </ul>
 <p>include({{ch-02-02.files/cmd.log}})</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Deployment</span> <span class="n">manifest</span><span class="p">:</span> <span class="s1">&#39;/../../bosh.yml&#39;</span>
-<span class="n">Deployment</span> <span class="n">state</span><span class="p">:</span> <span class="s1">&#39;./state.json&#39;</span>
-
-<span class="n">Started</span> <span class="n">validating</span>
-<span class="n">Downloading</span> <span class="n">release</span> <span class="s1">&#39;bosh&#39;</span><span class="o">...</span> <span class="n">Skipped</span> <span class="p">[</span><span class="n">Found</span> <span class="ow">in</span> <span class="n">local</span> <span class="n">cache</span><span class="p">]</span> <span class="p">(</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">)</span>
-<span class="n">Validating</span> <span class="n">release</span> <span class="s1">&#39;bosh&#39;</span><span class="o">...</span> <span class="n">Finished</span> <span class="p">(</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">)</span>
-<span class="n">Downloading</span> <span class="n">release</span> <span class="s1">&#39;bosh-openstack-cpi&#39;</span><span class="o">...</span> <span class="n">Skipped</span> <span class="p">[</span><span class="n">Found</span> <span class="ow">in</span> <span class="n">local</span> <span class="n">cache</span><span class="p">]</span> <span class="p">(</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">)</span>
-<span class="n">Validating</span> <span class="n">release</span> <span class="s1">&#39;bosh-openstack-cpi&#39;</span><span class="o">...</span> <span class="n">Finished</span> <span class="p">(</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">)</span>
-<span class="n">Validating</span> <span class="n">cpi</span> <span class="n">release</span><span class="o">...</span> <span class="n">Finished</span> <span class="p">(</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">)</span>
-<span class="n">Validating</span> <span class="n">deployment</span> <span class="n">manifest</span><span class="o">...</span> <span class="n">Finished</span> <span class="p">(</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">)</span>
-<span class="n">Downloading</span> <span class="n">stemcell</span><span class="o">...</span> <span class="n">Skipped</span> <span class="p">[</span><span class="n">Found</span> <span class="ow">in</span> <span class="n">local</span> <span class="n">cache</span><span class="p">]</span> <span class="p">(</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">)</span>
-<span class="n">Validating</span> <span class="n">stemcell</span><span class="o">...</span> <span class="n">Finished</span> <span class="p">(</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">02</span><span class="p">)</span>
-<span class="n">Finished</span> <span class="n">validating</span> <span class="p">(</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">03</span><span class="p">)</span>
-
-<span class="n">Started</span> <span class="n">installing</span> <span class="n">CPI</span>
-<span class="n">Compiling</span> <span class="n">package</span> <span class="s1">&#39;ruby_openstack_cpi/9485b5753d4609e92e1491ff991cb28fbde81445&#39;</span><span class="o">...</span> <span class="n">Finished</span> <span class="p">(</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">)</span>
-<span class="n">Compiling</span> <span class="n">package</span> <span class="s1">&#39;bosh_openstack_cpi/dd0bab98dbb820af3ec59b364badfed02ffe3f3b&#39;</span><span class="o">...</span> <span class="n">Finished</span> <span class="p">(</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">)</span>
-<span class="n">Installing</span> <span class="n">packages</span><span class="o">...</span> <span class="n">Finished</span> <span class="p">(</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">)</span>
-<span class="n">Rendering</span> <span class="n">job</span> <span class="n">templates</span><span class="o">...</span> <span class="n">Finished</span> <span class="p">(</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">)</span>
-<span class="n">Installing</span> <span class="n">job</span> <span class="s1">&#39;openstack_cpi&#39;</span><span class="o">...</span> <span class="n">Finished</span> <span class="p">(</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">)</span>
-<span class="n">Finished</span> <span class="n">installing</span> <span class="n">CPI</span> <span class="p">(</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">)</span>
-
-<span class="n">Starting</span> <span class="n">registry</span><span class="o">...</span> <span class="n">Finished</span> <span class="p">(</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">)</span>
-<span class="n">Uploading</span> <span class="n">stemcell</span> <span class="s1">&#39;bosh-openstack-kvm-ubuntu-trusty-go_agent-raw/3363.20&#39;</span><span class="o">...</span> <span class="n">Skipped</span> <span class="p">[</span><span class="n">Stemcell</span> <span class="n">already</span> <span class="n">uploaded</span><span class="p">]</span> <span class="p">(</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">)</span>
-
-<span class="n">Started</span> <span class="n">deploying</span>
-<span class="n">Deleting</span> <span class="n">VM</span> <span class="s1">&#39;a4a8113d-9f30-4908-891d-b82a705e260d&#39;</span><span class="o">...</span> <span class="n">Finished</span> <span class="p">(</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">)</span>
-<span class="n">Creating</span> <span class="n">VM</span> <span class="k">for</span> <span class="n">instance</span> <span class="s1">&#39;bosh/0&#39;</span> <span class="kn">from</span><span class="w"> </span><span class="nn">stemcell</span> <span class="s1">&#39;df4a4001-3334-4d28-8172-6966033250d1&#39;</span><span class="o">...</span> <span class="n">Finished</span> <span class="p">(</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">39</span><span class="p">)</span>
-<span class="n">Waiting</span> <span class="k">for</span> <span class="n">the</span> <span class="n">agent</span> <span class="n">on</span> <span class="n">VM</span> <span class="s1">&#39;b9f59d2d-fa97-4e6c-a48f-94b522b59bbf&#39;</span> <span class="n">to</span> <span class="n">be</span> <span class="n">ready</span><span class="o">...</span> <span class="n">Failed</span> <span class="p">(</span><span class="mi">00</span><span class="p">:</span><span class="mi">02</span><span class="p">:</span><span class="mi">01</span><span class="p">)</span>
-<span class="n">Failed</span> <span class="n">deploying</span> <span class="p">(</span><span class="mi">00</span><span class="p">:</span><span class="mi">02</span><span class="p">:</span><span class="mi">42</span><span class="p">)</span>
-
-<span class="n">Stopping</span> <span class="n">registry</span><span class="o">...</span> <span class="n">Finished</span> <span class="p">(</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">)</span>
-<span class="n">Cleaning</span> <span class="n">up</span> <span class="n">rendered</span> <span class="n">CPI</span> <span class="n">jobs</span><span class="o">...</span> <span class="n">Finished</span> <span class="p">(</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">)</span>
-
-<span class="n">Deploying</span><span class="p">:</span>
-<span class="n">Creating</span> <span class="n">instance</span> <span class="s1">&#39;bosh/0&#39;</span><span class="p">:</span>
-    <span class="n">Waiting</span> <span class="n">until</span> <span class="n">instance</span> <span class="ow">is</span> <span class="n">ready</span><span class="p">:</span>
-    <span class="n">Starting</span> <span class="n">SSH</span> <span class="n">tunnel</span><span class="p">:</span>
-        <span class="n">Starting</span> <span class="n">SSH</span> <span class="n">tunnel</span><span class="p">:</span>
-        <span class="n">Failed</span> <span class="n">to</span> <span class="n">connect</span> <span class="n">to</span> <span class="n">remote</span> <span class="n">server</span><span class="p">:</span>
-            <span class="n">ssh</span><span class="p">:</span> <span class="n">handshake</span> <span class="n">failed</span><span class="p">:</span> <span class="n">ssh</span><span class="p">:</span> <span class="n">unable</span> <span class="n">to</span> <span class="n">authenticate</span><span class="p">,</span> <span class="n">attempted</span> <span class="n">methods</span> <span class="p">[</span><span class="n">none</span> <span class="n">publickey</span><span class="p">],</span> <span class="n">no</span> <span class="n">supported</span> <span class="n">methods</span> <span class="n">remain</span>
-
-<span class="n">Exit</span> <span class="n">code</span> <span class="mi">1</span>
-</pre></div>
-</div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ ssh -vvv -i bosh.pem vcap@10.62.149.26
-OpenSSH_7.2p2 Ubuntu-4ubuntu2.1, OpenSSL 1.0.2g  1 Mar 2016
-debug1: Reading configuration data /home/lgcns/.ssh/config
-debug1: Reading configuration data /etc/ssh/ssh_config
-debug1: /etc/ssh/ssh_config line 19: Applying options for *
-debug2: resolving &quot;10.62.149.26&quot; port 22
-debug2: ssh_connect_direct: needpriv 0
-debug1: Connecting to 10.62.149.26 [10.62.149.26] port 22.
-debug1: Connection established.
-debug1: key_load_public: No such file or directory
-debug1: identity file bosh.pem type -1
-debug1: key_load_public: No such file or directory
-debug1: identity file bosh.pem-cert type -1
-debug1: Enabling compatibility mode for protocol 2.0
-debug1: Local version string SSH-2.0-OpenSSH_7.2p2 Ubuntu-4ubuntu2.1
-debug1: Remote protocol version 2.0, remote software version OpenSSH_6.6.1p1 Ubuntu-2ubuntu2.8
-debug1: match: OpenSSH_6.6.1p1 Ubuntu-2ubuntu2.8 pat OpenSSH_6.6.1* compat 0x04000000
-debug2: fd 3 setting O_NONBLOCK
-debug1: Authenticating to 10.62.149.26:22 as &#39;vcap&#39;
-debug3: hostkeys_foreach: reading file &quot;/home/lgcns/.ssh/known_hosts&quot;
-debug3: record_hostkey: found key type ECDSA in file /home/lgcns/.ssh/known_hosts:1
-debug3: load_hostkeys: loaded 1 keys from 10.62.149.26
-debug3: order_hostkeyalgs: prefer hostkeyalgs: ecdsa-sha2-nistp256-cert-v01@openssh.com,ecdsa-sha2-nistp384-cert-v01@openssh.com,ecdsa-sha2-nistp521-cert-v01@openssh.com,ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521
-debug3: send packet: type 20
-debug1: SSH2_MSG_KEXINIT sent
-debug3: receive packet: type 20
-debug1: SSH2_MSG_KEXINIT received
-debug2: local client KEXINIT proposal
-debug2: KEX algorithms: curve25519-sha256@libssh.org,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group-exchange-sha256,diffie-hellman-group-exchange-sha1,diffie-hellman-group14-sha1,ext-info-c
-debug2: host key algorithms: ecdsa-sha2-nistp256-cert-v01@openssh.com,ecdsa-sha2-nistp384-cert-v01@openssh.com,ecdsa-sha2-nistp521-cert-v01@openssh.com,ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,ssh-ed25519-cert-v01@openssh.com,ssh-rsa-cert-v01@openssh.com,ssh-ed25519,rsa-sha2-512,rsa-sha2-256,ssh-rsa
-debug2: ciphers ctos: chacha20-poly1305@openssh.com,aes128-ctr,aes192-ctr,aes256-ctr,aes128-gcm@openssh.com,aes256-gcm@openssh.com,aes128-cbc,aes192-cbc,aes256-cbc,3des-cbc
-debug2: ciphers stoc: chacha20-poly1305@openssh.com,aes128-ctr,aes192-ctr,aes256-ctr,aes128-gcm@openssh.com,aes256-gcm@openssh.com,aes128-cbc,aes192-cbc,aes256-cbc,3des-cbc
-debug2: MACs ctos: umac-64-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com,hmac-sha1-etm@openssh.com,umac-64@openssh.com,umac-128@openssh.com,hmac-sha2-256,hmac-sha2-512,hmac-sha1
-debug2: MACs stoc: umac-64-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com,hmac-sha1-etm@openssh.com,umac-64@openssh.com,umac-128@openssh.com,hmac-sha2-256,hmac-sha2-512,hmac-sha1
-debug2: compression ctos: none,zlib@openssh.com,zlib
-debug2: compression stoc: none,zlib@openssh.com,zlib
-debug2: languages ctos:
-debug2: languages stoc:
-debug2: first_kex_follows 0
-debug2: reserved 0
-debug2: peer server KEXINIT proposal
-debug2: KEX algorithms: curve25519-sha256@libssh.org,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group-exchange-sha256,diffie-hellman-group-exchange-sha1,diffie-hellman-group14-sha1,diffie-hellman-group1-sha1
-debug2: host key algorithms: ssh-rsa,ecdsa-sha2-nistp256,ssh-ed25519
-debug2: ciphers ctos: aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr
-debug2: ciphers stoc: aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr
-debug2: MACs ctos: hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-ripemd160-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512,hmac-sha2-256,hmac-ripemd160,hmac-sha1
-debug2: MACs stoc: hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-ripemd160-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512,hmac-sha2-256,hmac-ripemd160,hmac-sha1
-debug2: compression ctos: none,zlib@openssh.com
-debug2: compression stoc: none,zlib@openssh.com
-debug2: languages ctos:
-debug2: languages stoc:
-debug2: first_kex_follows 0
-debug2: reserved 0
-debug1: kex: algorithm: curve25519-sha256@libssh.org
-debug1: kex: host key algorithm: ecdsa-sha2-nistp256
-debug1: kex: server-&gt;client cipher: aes128-ctr MAC: umac-128-etm@openssh.com compression: none
-debug1: kex: client-&gt;server cipher: aes128-ctr MAC: umac-128-etm@openssh.com compression: none
-debug3: send packet: type 30
-debug1: expecting SSH2_MSG_KEX_ECDH_REPLY
-debug3: receive packet: type 31
-debug1: Server host key: ecdsa-sha2-nistp256 SHA256:1H9wlKrd6+RZ1Kvlt5TFoq9/6ymrZx4gMlwiPgdWFQE
-debug3: hostkeys_foreach: reading file &quot;/home/lgcns/.ssh/known_hosts&quot;
-debug3: record_hostkey: found key type ECDSA in file /home/lgcns/.ssh/known_hosts:1
-debug3: load_hostkeys: loaded 1 keys from 10.62.149.26
-debug1: Host &#39;10.62.149.26&#39; is known and matches the ECDSA host key.
-debug1: Found key in /home/lgcns/.ssh/known_hosts:1
-debug3: send packet: type 21
-debug2: set_newkeys: mode 1
-debug1: rekey after 4294967296 blocks
-debug1: SSH2_MSG_NEWKEYS sent
-debug1: expecting SSH2_MSG_NEWKEYS
-debug3: receive packet: type 21
-debug2: set_newkeys: mode 0
-debug1: rekey after 4294967296 blocks
-debug1: SSH2_MSG_NEWKEYS received
-debug2: key: bosh.pem ((nil)), explicit
-debug3: send packet: type 5
-debug3: receive packet: type 6
-debug2: service_accept: ssh-userauth
-debug1: SSH2_MSG_SERVICE_ACCEPT received
-debug3: send packet: type 50
-debug3: receive packet: type 53
-debug3: input_userauth_banner
-Unauthorized use is strictly prohibited. All access and activity
-is subject to logging and monitoring.
-debug3: receive packet: type 51
-debug1: Authentications that can continue: publickey
-debug3: start over, passed a different list publickey
-debug3: preferred gssapi-keyex,gssapi-with-mic,publickey,keyboard-interactive,password
-debug3: authmethod_lookup publickey
-debug3: remaining preferred: keyboard-interactive,password
-debug3: authmethod_is_enabled publickey
-debug1: Next authentication method: publickey
-debug1: Trying private key: bosh.pem
-debug3: sign_and_send_pubkey: RSA SHA256:HDtAzhZDOGJ9mPfSNI3ghREIUusFpGcv0TJ9/EyFzGg
-debug3: send packet: type 50
-debug2: we sent a publickey packet, wait for reply
-debug3: receive packet: type 51
-debug1: Authentications that can continue: publickey
-debug2: we did not send a packet, disable method
-debug1: No more authentication methods to try.
-Permission denied (publickey).
-</pre></div>
-</div>
+<p>.. literalinclude:: ch-02-02.files/res.log</p>
+<p>.. literalinclude:: ch-02-02.files/manual_ssh.log</p>
 <p>KeyPair 가 손상 되었을 가능성은 다음 명령으로 확인 가능하다:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$
-$
-$ cat bosh.pub
-ssh-rsa .... bosh
-
-$
-$
-$ ssh-keygen -y -e -f bosh.pem
----- BEGIN SSH2 PUBLIC KEY ----
-Comment: &quot;4096-bit RSA, converted by ... from OpenSSH&quot;
-...
-...
-...
----- END SSH2 PUBLIC KEY ----
-</pre></div>
-</div>
+<p>.. literalinclude:: ch-02-02.files/validate_key.log</p>
 <p>이렇게 출력한 2개의 값이 서로 같으면 public/private KeyPair 는 서로 맞는 짝이다.</p>
 <p>검색 키워드: openstack unable to ssh keypair</p>
 <p>정확한 원인은 IaaS 운영자가 알려주지 않았으나 Provisioning 도구를 통해 수동으로 생성한 VM 들의 부팅 과정에서
 meta-data 서버에 접근이 안되는 로그가 찍히는 것으로 보아 meta-data 서버에 장애가 발생한 듯 보임.</p>
 <p>참고자료:</p>
 <ul class="simple">
-<li><p><a class="reference external" href="https://lists.cloudfoundry.org/archives/list/cf-bosh&#64;lists.cloudfoundry.org/thread/TVMRTEMK2TS6JMPTHFFSIWAU6AULXPKT/">https://lists.cloudfoundry.org/archives/list/cf-bosh&#64;lists.cloudfoundry.org/thread/TVMRTEMK2TS6JMPTHFFSIWAU6AULXPKT/</a></p></li>
-<li><p><a class="reference external" href="https://bosh.io/docs/openstack-cpi.html#errors">https://bosh.io/docs/openstack-cpi.html#errors</a></p></li>
-<li><p><a class="reference external" href="https://ask.openstack.org/en/question/52898/unable-to-ssh-instance-with-keypair/">https://ask.openstack.org/en/question/52898/unable-to-ssh-instance-with-keypair/</a></p></li>
+<li><p>https://lists.cloudfoundry.org/archives/list/cf-bosh&#64;lists.cloudfoundry.org/thread/TVMRTEMK2TS6JMPTHFFSIWAU6AULXPKT/</p></li>
+<li><p>https://bosh.io/docs/openstack-cpi.html#errors</p></li>
+<li><p>https://ask.openstack.org/en/question/52898/unable-to-ssh-instance-with-keypair/</p></li>
 </ul>
+</section>
 
 
           </div>
@@ -242,20 +82,23 @@ meta-data 서버에 접근이 안되는 로그가 찍히는 것으로 보아 met
     </div>
 </search>
 <script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../golang/mockery.html">}</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../golang/mockery.html#id10">}</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../golang/mockery.html#id35">}</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../golang/mockery.html#id54">})</a></li>
-<li class="toctree-l1"><a class="reference internal" href="bosh-stemcell-builder.html">build_os_image</a></li>
-<li class="toctree-l1"><a class="reference internal" href="bosh-stemcell-builder.html#upload-os-image-download-os-image">upload_os_image / download_os_image</a></li>
-<li class="toctree-l1"><a class="reference internal" href="bosh-stemcell-builder.html#build-with-local-os-image">build(_with_local_os_image)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="bosh-lite-resizing.html">end</a></li>
-<li class="toctree-l1"><a class="reference internal" href="using-upstart.html">오래 돌아야 하는 서버 또는 워커를 관리하는 스마트하지 않은 방법</a></li>
-<li class="toctree-l1"><a class="reference internal" href="using-upstart.html#id2">스마트하지 않은 방법의 문제점</a></li>
-<li class="toctree-l1"><a class="reference internal" href="using-upstart.html#upstart">우분투에서 기본으로 제공되는 upstart 를 사용하는 스마트한 방법</a></li>
-<li class="toctree-l1"><a class="reference internal" href="troubleshoot-case-05-galera-cluster.html">## 장애 원인</a></li>
-<li class="toctree-l1"><a class="reference internal" href="troubleshoot-case-05-galera-cluster.html#id14">## 작업 내역</a></li>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../golang/mockery.html">mockery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bosh-agent-dev-setup.html">BOSH Agent Development Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bosh-stemcell-builder.html">BOSH linux stemcell builder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bosh-lite-resizing.html">BOSH lite resizing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-upstart.html">Using upstart on ubuntu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reverse-ssh-port-forwarding.html">Bypassing corporate firewall with reverse ssh port forwarding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bosh-task.html">BOSH task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bosh-inside.html">BOSH Inside</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshoot-case-01-openstack.html">OpenStack Case 1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshoot-case-02-openstack.html">OpenStack Case 2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshoot-case-03-aws.html">Case 3 AWS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshoot-case-04-aws.html">Case 4 AWS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshoot-case-05-galera-cluster.html">IaaS 네트워크 장비 교체 작업 후 mariadb galera cluster 장애</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Trouble Shoot case 6 OpenStack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/locket.html">Locket</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/cups.html">Custom User Provided Service (CUPS)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../cf/ch3.html">CF-Extensions projects in incubation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../cf/ch1.1.html">Custom User Provided Service (CUPS)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../cf/ch1.2.html">Cloud Native Application</a></li>
@@ -273,15 +116,19 @@ meta-data 서버에 접근이 안되는 로그가 찍히는 것으로 보아 met
 <li class="toctree-l1"><a class="reference internal" href="../cf/ch1.z.html">Uncategorized</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../os/ch1.1.html">Chapter 1 Command-Line Interface (CLI)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../os/ch1.1.html#uncategorized">Uncategorized</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../md/markdown_examples.html">An h1 header</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../git/git-flow.html">git flow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../git/git-push.html">git push</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../git/git-status.html">git status</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../md/markdown_examples.html">Markdown Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../md/markdown_examples.html#an-h1-header">An h1 header</a></li>
 </ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="troubleshoot-case-05-galera-cluster.html" title="previous chapter">## 장애 원인</a></li>
-      <li>Next: <a href="../cf/locket.html" title="next chapter">&lt;no title&gt;</a></li>
+      <li>Previous: <a href="troubleshoot-case-05-galera-cluster.html" title="previous chapter">IaaS 네트워크 장비 교체 작업 후 mariadb galera cluster 장애</a></li>
+      <li>Next: <a href="../cf/locket.html" title="next chapter">Locket</a></li>
   </ul></li>
 </ul>
 </div>

@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>&lt;no title&gt; &#8212; my.sphinx  documentation</title>
+    <title>Case 3 AWS &#8212; my.sphinx  documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
@@ -14,8 +14,8 @@
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="&lt;no title&gt;" href="troubleshoot-case-04-aws.html" />
-    <link rel="prev" title="&lt;no title&gt;" href="troubleshoot-case-02-openstack.html" />
+    <link rel="next" title="Case 4 AWS" href="troubleshoot-case-04-aws.html" />
+    <link rel="prev" title="OpenStack Case 2" href="troubleshoot-case-02-openstack.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
@@ -33,45 +33,54 @@
 
           <div class="body" role="main">
             
-  <p># Case 3 AWS</p>
-<p>## Goal</p>
+  <section id="case-3-aws">
+<h1>Case 3 AWS<a class="headerlink" href="#case-3-aws" title="Link to this heading">¶</a></h1>
+<section id="goal">
+<h2>Goal<a class="headerlink" href="#goal" title="Link to this heading">¶</a></h2>
 <p>ssh log in into VM which is bosh created.</p>
-<p>## Problem
-<a href="#id1"><span class="problematic" id="id2">``</span></a><a href="#id3"><span class="problematic" id="id4">`</span></a></p>
-<blockquote>
-<div><p>$ bosh -e aws-us -d cf ssh diego-cell/fb512f76-xxxx
-Using environment ‘<a class="reference external" href="https://xx.xx.xx.xx:25555">https://xx.xx.xx.xx:25555</a>’ as client ‘admin’</p>
-<p>Using deployment ‘cf’</p>
-<p>Task 324. Done
-Warning: Permanently added ‘xx.xx.xx.xx’ (ECDSA) to the list of known hosts.
-Unauthorized use is strictly prohibited. All access and activity
-is subject to logging and monitoring.
-Permission denied (publickey).
-ssh_exchange_identification: Connection closed by remote host</p>
-<p>Running SSH:
-1 error(s) occurred:</p>
+</section>
+<section id="problem">
+<h2>Problem<a class="headerlink" href="#problem" title="Link to this heading">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    $ bosh -e aws-us -d cf ssh diego-cell/fb512f76-xxxx
+    Using environment &#39;https://xx.xx.xx.xx:25555&#39; as client &#39;admin&#39;
+
+    Using deployment &#39;cf&#39;
+
+    Task 324. Done
+    Warning: Permanently added &#39;xx.xx.xx.xx&#39; (ECDSA) to the list of known hosts.
+    Unauthorized use is strictly prohibited. All access and activity
+    is subject to logging and monitoring.
+    Permission denied (publickey).
+    ssh_exchange_identification: Connection closed by remote host
+
+    Running SSH:
+    1 error(s) occurred:
+
+    * Running command: &#39;ssh -tt -o ServerAliveInterval=30 -o ForwardAgent=no -o PasswordAuthentication=no -o IdentitiesOnly=yes -o IdentityFile=/home/.../.bosh/tmp/ssh-priv-key263879026 -o StrictHostKeyChecking=yes -o UserKnownHostsFile=/home/.../.bosh/tmp/ssh-known-hosts663697449 -o ProxyCommand=ssh -tt -W %!h(MISSING):%!p(MISSING) -l vcap xx.xx.xx.xx -o ServerAliveInterval=30 -o ForwardAgent=no -o ClearAllForwardings=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null 10.0.16.14 -l bosh_a1da6765d1fc4866&#39;, stdout: &#39;&#39;, stderr: &#39;&#39;: exit status 255
+
+    Exit code 1
+</pre></div>
+</div>
+</section>
+<section id="solution">
+<h2>Solution<a class="headerlink" href="#solution" title="Link to this heading">¶</a></h2>
+<p>Specifying a private key for the <code class="docutils literal notranslate"><span class="pre">bosh</span> <span class="pre">ssh</span></code> session via the <code class="docutils literal notranslate"><span class="pre">--gw-private-key</span></code> flag or the equivalent <code class="docutils literal notranslate"><span class="pre">BOSH_GW_PRIVATE_KEY</span></code> environment variable.</p>
+<p>If you created bosh environment using bbl, You can run <code class="docutils literal notranslate"><span class="pre">eval</span> <span class="pre">&quot;$(bbl</span> <span class="pre">print-env)&quot;</span></code> to get gateway and private key set, that should fix your <code class="docutils literal notranslate"><span class="pre">bosh</span> <span class="pre">ssh</span></code></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    $ bbl ssh-key
+    -----BEGIN RSA PRIVATE KEY-----
+    MIIEowIBAAKCAQEA73eXEMQMAqgsYWSNcqPTZVPNIscX3Gljf2CPs9C5mI0KaV3ePXi+alPY6o3P
+    ...
+</pre></div>
+</div>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">¶</a></h2>
 <ul class="simple">
-<li><p>Running command: ‘ssh -tt -o ServerAliveInterval=30 -o ForwardAgent=no -o PasswordAuthentication=no -o IdentitiesOnly=yes -o IdentityFile=/home/…/.bosh/tmp/ssh-priv-key263879026 -o StrictHostKeyChecking=yes -o UserKnownHostsFile=/home/…/.bosh/tmp/ssh-known-hosts663697449 -o ProxyCommand=ssh -tt -W %!h(MISSING):%!p(MISSING) -l vcap xx.xx.xx.xx -o ServerAliveInterval=30 -o ForwardAgent=no -o ClearAllForwardings=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null 10.0.16.14 -l bosh_a1da6765d1fc4866’, stdout: ‘’, stderr: ‘’: exit status 255</p></li>
+<li><p>https://github.com/cloudfoundry/bosh-cli/issues/128</p></li>
+<li><p>https://cloudfoundry.slack.com/archives/C2DBC3YGZ/p1494894883740994</p></li>
 </ul>
-<p>Exit code 1</p>
-</div></blockquote>
-<p><a href="#id5"><span class="problematic" id="id6">``</span></a><a href="#id7"><span class="problematic" id="id8">`</span></a></p>
-<p>## Solution</p>
-<p>Specifying a private key for the <cite>bosh ssh</cite> session via the <cite>–gw-private-key</cite> flag or the equivalent <cite>BOSH_GW_PRIVATE_KEY</cite> environment variable.</p>
-<p>If you created bosh environment using bbl, You can run <cite>eval “$(bbl print-env)”</cite> to get gateway and private key set, that should fix your <cite>bosh ssh</cite></p>
-<dl class="simple">
-<dt><a href="#id9"><span class="problematic" id="id10">``</span></a><a href="#id11"><span class="problematic" id="id12">`</span></a></dt><dd><p>$ bbl ssh-key
-—–BEGIN RSA PRIVATE KEY—–
-MIIEowIBAAKCAQEA73eXEMQMAqgsYWSNcqPTZVPNIscX3Gljf2CPs9C5mI0KaV3ePXi+alPY6o3P
-…</p>
-</dd>
-</dl>
-<p><a href="#id13"><span class="problematic" id="id14">``</span></a><a href="#id15"><span class="problematic" id="id16">`</span></a></p>
-<p>## References</p>
-<ul class="simple">
-<li><p><a class="reference external" href="https://github.com/cloudfoundry/bosh-cli/issues/128">https://github.com/cloudfoundry/bosh-cli/issues/128</a></p></li>
-<li><p><a class="reference external" href="https://cloudfoundry.slack.com/archives/C2DBC3YGZ/p1494894883740994">https://cloudfoundry.slack.com/archives/C2DBC3YGZ/p1494894883740994</a></p></li>
-</ul>
+</section>
+</section>
 
 
           </div>
@@ -99,20 +108,23 @@ MIIEowIBAAKCAQEA73eXEMQMAqgsYWSNcqPTZVPNIscX3Gljf2CPs9C5mI0KaV3ePXi+alPY6o3P
     </div>
 </search>
 <script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../golang/mockery.html">}</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../golang/mockery.html#id10">}</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../golang/mockery.html#id35">}</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../golang/mockery.html#id54">})</a></li>
-<li class="toctree-l1"><a class="reference internal" href="bosh-stemcell-builder.html">build_os_image</a></li>
-<li class="toctree-l1"><a class="reference internal" href="bosh-stemcell-builder.html#upload-os-image-download-os-image">upload_os_image / download_os_image</a></li>
-<li class="toctree-l1"><a class="reference internal" href="bosh-stemcell-builder.html#build-with-local-os-image">build(_with_local_os_image)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="bosh-lite-resizing.html">end</a></li>
-<li class="toctree-l1"><a class="reference internal" href="using-upstart.html">오래 돌아야 하는 서버 또는 워커를 관리하는 스마트하지 않은 방법</a></li>
-<li class="toctree-l1"><a class="reference internal" href="using-upstart.html#id2">스마트하지 않은 방법의 문제점</a></li>
-<li class="toctree-l1"><a class="reference internal" href="using-upstart.html#upstart">우분투에서 기본으로 제공되는 upstart 를 사용하는 스마트한 방법</a></li>
-<li class="toctree-l1"><a class="reference internal" href="troubleshoot-case-05-galera-cluster.html">## 장애 원인</a></li>
-<li class="toctree-l1"><a class="reference internal" href="troubleshoot-case-05-galera-cluster.html#id14">## 작업 내역</a></li>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../golang/mockery.html">mockery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bosh-agent-dev-setup.html">BOSH Agent Development Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bosh-stemcell-builder.html">BOSH linux stemcell builder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bosh-lite-resizing.html">BOSH lite resizing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-upstart.html">Using upstart on ubuntu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reverse-ssh-port-forwarding.html">Bypassing corporate firewall with reverse ssh port forwarding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bosh-task.html">BOSH task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bosh-inside.html">BOSH Inside</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshoot-case-01-openstack.html">OpenStack Case 1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshoot-case-02-openstack.html">OpenStack Case 2</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Case 3 AWS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshoot-case-04-aws.html">Case 4 AWS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshoot-case-05-galera-cluster.html">IaaS 네트워크 장비 교체 작업 후 mariadb galera cluster 장애</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshoot-case-06-openstack.html">Trouble Shoot case 6 OpenStack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/locket.html">Locket</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/cups.html">Custom User Provided Service (CUPS)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../cf/ch3.html">CF-Extensions projects in incubation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../cf/ch1.1.html">Custom User Provided Service (CUPS)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../cf/ch1.2.html">Cloud Native Application</a></li>
@@ -130,15 +142,19 @@ MIIEowIBAAKCAQEA73eXEMQMAqgsYWSNcqPTZVPNIscX3Gljf2CPs9C5mI0KaV3ePXi+alPY6o3P
 <li class="toctree-l1"><a class="reference internal" href="../cf/ch1.z.html">Uncategorized</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../os/ch1.1.html">Chapter 1 Command-Line Interface (CLI)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../os/ch1.1.html#uncategorized">Uncategorized</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../md/markdown_examples.html">An h1 header</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../git/git-flow.html">git flow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../git/git-push.html">git push</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../git/git-status.html">git status</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../md/markdown_examples.html">Markdown Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../md/markdown_examples.html#an-h1-header">An h1 header</a></li>
 </ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="troubleshoot-case-02-openstack.html" title="previous chapter">&lt;no title&gt;</a></li>
-      <li>Next: <a href="troubleshoot-case-04-aws.html" title="next chapter">&lt;no title&gt;</a></li>
+      <li>Previous: <a href="troubleshoot-case-02-openstack.html" title="previous chapter">OpenStack Case 2</a></li>
+      <li>Next: <a href="troubleshoot-case-04-aws.html" title="next chapter">Case 4 AWS</a></li>
   </ul></li>
 </ul>
 </div>

@@ -1,4 +1,4 @@
-## BOSH Agent Development Setup
+# BOSH Agent Development Setup
 
 ```
 PATH=.../s3cli/out:$PATH bin/run -P ubuntu -C path_to_config.json

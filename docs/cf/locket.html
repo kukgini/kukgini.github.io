@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>&lt;no title&gt; &#8212; my.sphinx  documentation</title>
+    <title>Locket &#8212; my.sphinx  documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
@@ -14,8 +14,8 @@
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="&lt;no title&gt;" href="cups.html" />
-    <link rel="prev" title="&lt;no title&gt;" href="../bosh/troubleshoot-case-06-openstack.html" />
+    <link rel="next" title="Custom User Provided Service (CUPS)" href="cups.html" />
+    <link rel="prev" title="Trouble Shoot case 6 OpenStack" href="../bosh/troubleshoot-case-06-openstack.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
@@ -33,21 +33,26 @@
 
           <div class="body" role="main">
             
-  <p># Locket</p>
-<p><a class="reference external" href="https://github.com/cloudfoundry/locket">https://github.com/cloudfoundry/locket</a></p>
-<p>## Overview</p>
-<p>Locket 은 grpc 서버이다. golang 으로 작성되었으며 [LocketClient][1] 를 통해 커뮤니케이션 할 수 있다. grpc 의 통신 프로토콜이 ProtocolBuffer 이므로 다른 언어로 통신하려면 [.proto files][2] 로 client 를 생성할 수 있다.</p>
-<p>## Lfrit Runners</p>
-<p>[lfrit][3] 은 단일 목적의 작업 단위로 더 큰 프로그램으로 구성하기 위한 작은 Interface 세트이다. 개발자는 자신의 프로그램을 하나의 작은 단위로 나누 후 각 작업 단위에서 Runner 인터페이스를 구현한다. 각 Runner Interface 를 호출함으로써 모니터하고 중지 신호를 보낼 수 있는 프로세스를 만들 수 있다.</p>
-<p>## Locket lock runner</p>
-<p>[LockRunner][4] 는 lock 을 획득하기 위해 사용된다. 주위할 점은 이 Runner 는 lock 이 획득되기 전까지는 준비되지 않지만, lock 이 소실(lost) 된 순간 즉시 종료 (exit) 한다.</p>
-<p>## Locket presence runner</p>
-<p>[PresenceRunner][5] 는 현존하는 Service 를 등록 (Register) 하는데 사용된다. PresenceRunner 와 LockRunner 의 차이는 PresenceRunner 는 lock 이 소실 (lost) 될 경우 종료 (exit) 하는 대신 background 로 retry 를 한다는 접이다.</p>
-<p>[1]: <a class="reference external" href="https://godoc.org/code.cloudfoundry.org/locket/models#LocketClient">https://godoc.org/code.cloudfoundry.org/locket/models#LocketClient</a>
-[2]: <a class="reference external" href="https://github.com/cloudfoundry/locket/blob/master/models/locket.proto">https://github.com/cloudfoundry/locket/blob/master/models/locket.proto</a>
-[3]: <a class="reference external" href="https://github.com/tedsuo/ifrit">https://github.com/tedsuo/ifrit</a>
-[4]: <a class="reference external" href="https://godoc.org/code.cloudfoundry.org/locket/lock#NewLockRunner">https://godoc.org/code.cloudfoundry.org/locket/lock#NewLockRunner</a>
-[5]: <a class="reference external" href="https://godoc.org/code.cloudfoundry.org/locket/lock#NewPresenceRunner">https://godoc.org/code.cloudfoundry.org/locket/lock#NewPresenceRunner</a></p>
+  <section id="locket">
+<h1>Locket<a class="headerlink" href="#locket" title="Link to this heading">¶</a></h1>
+<p>https://github.com/cloudfoundry/locket</p>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">¶</a></h2>
+<p>Locket 은 grpc 서버이다. golang 으로 작성되었으며 <a class="reference external" href="https://godoc.org/code.cloudfoundry.org/locket/models#LocketClient">LocketClient</a> 를 통해 커뮤니케이션 할 수 있다. grpc 의 통신 프로토콜이 ProtocolBuffer 이므로 다른 언어로 통신하려면 <a class="reference external" href="https://github.com/cloudfoundry/locket/blob/master/models/locket.proto">.proto files</a> 로 client 를 생성할 수 있다.</p>
+</section>
+<section id="lfrit-runners">
+<h2>Lfrit Runners<a class="headerlink" href="#lfrit-runners" title="Link to this heading">¶</a></h2>
+<p><a class="reference external" href="https://github.com/tedsuo/ifrit">lfrit</a> 은 단일 목적의 작업 단위로 더 큰 프로그램으로 구성하기 위한 작은 Interface 세트이다. 개발자는 자신의 프로그램을 하나의 작은 단위로 나누 후 각 작업 단위에서 Runner 인터페이스를 구현한다. 각 Runner Interface 를 호출함으로써 모니터하고 중지 신호를 보낼 수 있는 프로세스를 만들 수 있다.</p>
+</section>
+<section id="locket-lock-runner">
+<h2>Locket lock runner<a class="headerlink" href="#locket-lock-runner" title="Link to this heading">¶</a></h2>
+<p><a class="reference external" href="https://godoc.org/code.cloudfoundry.org/locket/lock#NewLockRunner">LockRunner</a> 는 lock 을 획득하기 위해 사용된다. 주위할 점은 이 Runner 는 lock 이 획득되기 전까지는 준비되지 않지만, lock 이 소실(lost) 된 순간 즉시 종료 (exit) 한다.</p>
+</section>
+<section id="locket-presence-runner">
+<h2>Locket presence runner<a class="headerlink" href="#locket-presence-runner" title="Link to this heading">¶</a></h2>
+<p><a class="reference external" href="https://godoc.org/code.cloudfoundry.org/locket/lock#NewPresenceRunner">PresenceRunner</a> 는 현존하는 Service 를 등록 (Register) 하는데 사용된다. PresenceRunner 와 LockRunner 의 차이는 PresenceRunner 는 lock 이 소실 (lost) 될 경우 종료 (exit) 하는 대신 background 로 retry 를 한다는 접이다.</p>
+</section>
+</section>
 
 
           </div>
@@ -75,20 +80,23 @@
     </div>
 </search>
 <script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../golang/mockery.html">}</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../golang/mockery.html#id10">}</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../golang/mockery.html#id35">}</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../golang/mockery.html#id54">})</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../bosh/bosh-stemcell-builder.html">build_os_image</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../bosh/bosh-stemcell-builder.html#upload-os-image-download-os-image">upload_os_image / download_os_image</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../bosh/bosh-stemcell-builder.html#build-with-local-os-image">build(_with_local_os_image)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../bosh/bosh-lite-resizing.html">end</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../bosh/using-upstart.html">오래 돌아야 하는 서버 또는 워커를 관리하는 스마트하지 않은 방법</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../bosh/using-upstart.html#id2">스마트하지 않은 방법의 문제점</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../bosh/using-upstart.html#upstart">우분투에서 기본으로 제공되는 upstart 를 사용하는 스마트한 방법</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../bosh/troubleshoot-case-05-galera-cluster.html">## 장애 원인</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../bosh/troubleshoot-case-05-galera-cluster.html#id14">## 작업 내역</a></li>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../golang/mockery.html">mockery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bosh/bosh-agent-dev-setup.html">BOSH Agent Development Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bosh/bosh-stemcell-builder.html">BOSH linux stemcell builder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bosh/bosh-lite-resizing.html">BOSH lite resizing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bosh/using-upstart.html">Using upstart on ubuntu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bosh/reverse-ssh-port-forwarding.html">Bypassing corporate firewall with reverse ssh port forwarding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bosh/bosh-task.html">BOSH task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bosh/bosh-inside.html">BOSH Inside</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bosh/troubleshoot-case-01-openstack.html">OpenStack Case 1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bosh/troubleshoot-case-02-openstack.html">OpenStack Case 2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bosh/troubleshoot-case-03-aws.html">Case 3 AWS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bosh/troubleshoot-case-04-aws.html">Case 4 AWS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bosh/troubleshoot-case-05-galera-cluster.html">IaaS 네트워크 장비 교체 작업 후 mariadb galera cluster 장애</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bosh/troubleshoot-case-06-openstack.html">Trouble Shoot case 6 OpenStack</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Locket</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cups.html">Custom User Provided Service (CUPS)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ch3.html">CF-Extensions projects in incubation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ch1.1.html">Custom User Provided Service (CUPS)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ch1.2.html">Cloud Native Application</a></li>
@@ -106,15 +114,19 @@
 <li class="toctree-l1"><a class="reference internal" href="ch1.z.html">Uncategorized</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../os/ch1.1.html">Chapter 1 Command-Line Interface (CLI)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../os/ch1.1.html#uncategorized">Uncategorized</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../md/markdown_examples.html">An h1 header</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../git/git-flow.html">git flow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../git/git-push.html">git push</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../git/git-status.html">git status</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../md/markdown_examples.html">Markdown Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../md/markdown_examples.html#an-h1-header">An h1 header</a></li>
 </ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="../bosh/troubleshoot-case-06-openstack.html" title="previous chapter">&lt;no title&gt;</a></li>
-      <li>Next: <a href="cups.html" title="next chapter">&lt;no title&gt;</a></li>
+      <li>Previous: <a href="../bosh/troubleshoot-case-06-openstack.html" title="previous chapter">Trouble Shoot case 6 OpenStack</a></li>
+      <li>Next: <a href="cups.html" title="next chapter">Custom User Provided Service (CUPS)</a></li>
   </ul></li>
 </ul>
 </div>
