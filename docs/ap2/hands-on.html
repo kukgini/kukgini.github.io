@@ -382,6 +382,7 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dcphelper-kt">DcpHelper.kt</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#euid-wallet-eu-digital-identity-wallet">EUID Wallet (EU Digital Identity Wallet) 표준 연관성</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#oid4vp-openid-for-verifiable-presentaiton">OID4VP (OpenID for Verifiable Presentaiton) 프로토콜 사용</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#iso-iec-18013-5-mode">ISO/IEC 18013-5 mode 형식 지원</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#next-steps">Next Steps</a></li>
@@ -422,7 +423,7 @@ document.write(`
 <section id="oid4vp-openid-for-verifiable-presentaiton">
 <h3>OID4VP (OpenID for Verifiable Presentaiton) 프로토콜 사용<a class="headerlink" href="#oid4vp-openid-for-verifiable-presentaiton" title="Link to this heading">#</a></h3>
 <div class="literal-block-wrapper docutils container" id="id1">
-<div class="code-block-caption"><span class="caption-text">DcpHelper.kt (110~118 라인)</span><a class="headerlink" href="#id1" title="Link to this code">#</a></div>
+<div class="code-block-caption"><span class="caption-text">DcpHelper.kt:110~120</span><a class="headerlink" href="#id1" title="Link to this code">#</a></div>
 <div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="kd">val</span><span class="w"> </span><span class="nv">dcRequest</span><span class="w"> </span><span class="o">=</span>
 <span class="w">  </span><span class="n">Request</span><span class="p">(</span>
 <span class="w">    </span><span class="n">responseType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;vp_token&quot;</span><span class="p">,</span>
@@ -432,6 +433,38 @@ document.write(`
 <span class="w">    </span><span class="n">transactionData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">listOf</span><span class="p">(</span><span class="n">encodedTransactionData</span><span class="p">),</span>
 <span class="w">    </span><span class="n">clientMetadata</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">clientMetadata</span><span class="p">,</span>
 <span class="w">  </span><span class="p">)</span>
+
+<span class="kd">val</span><span class="w"> </span><span class="nv">dpcRequest</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DpcRequest</span><span class="p">(</span><span class="n">protocol</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;openid4vp-v1-unsigned&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">request</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dcRequest</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<ul class="simple">
+<li><p>EUDI Wallet 표준의 핵심: EUDI Wallet 은 OpenID4VP 를 주요 프로토콜로 사용함.</p></li>
+<li><p>Protocol = “openid4vp-v1-unsigned” - EUDI Wallet 도 동일한 프로토콜을 사용하여 Verifiable Presentation 을 요청</p></li>
+<li><p>responseType = “vp_token”</p></li>
+</ul>
+</section>
+<section id="iso-iec-18013-5-mode">
+<h3>ISO/IEC 18013-5 mode 형식 지원<a class="headerlink" href="#iso-iec-18013-5-mode" title="Link to this heading">#</a></h3>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">DcpHelper.kt:85~91</span><a class="headerlink" href="#id2" title="Link to this code">#</a></div>
+<div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="kd">val</span><span class="w"> </span><span class="nv">credentialQuery</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="n">CredentialQuery</span><span class="p">(</span>
+<span class="w">        </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">credId</span><span class="p">,</span>
+<span class="w">        </span><span class="n">format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mdocIdentifier</span><span class="p">,</span>
+<span class="w">        </span><span class="n">meta</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Meta</span><span class="p">(</span><span class="n">doctypeValue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;com.emvco.payment_card&quot;</span><span class="p">),</span>
+<span class="w">        </span><span class="n">claims</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">claims</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-text">DcpHelper.kt:96~100</span><a class="headerlink" href="#id3" title="Link to this code">#</a></div>
+<div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="kd">val</span><span class="w"> </span><span class="nv">mdocFormatsSupported</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="n">MdocFormatsSupported</span><span class="p">(</span>
+<span class="w">        </span><span class="n">issuerauthAlgValues</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">listOf</span><span class="p">(</span><span class="o">-</span><span class="m">7</span><span class="p">),</span><span class="w"> </span><span class="c1">// ES256</span>
+<span class="w">        </span><span class="n">deviceauthAlgValues</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">listOf</span><span class="p">(</span><span class="o">-</span><span class="m">7</span><span class="p">),</span>
+<span class="w">    </span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -507,6 +540,7 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dcphelper-kt">DcpHelper.kt</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#euid-wallet-eu-digital-identity-wallet">EUID Wallet (EU Digital Identity Wallet) 표준 연관성</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#oid4vp-openid-for-verifiable-presentaiton">OID4VP (OpenID for Verifiable Presentaiton) 프로토콜 사용</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#iso-iec-18013-5-mode">ISO/IEC 18013-5 mode 형식 지원</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#next-steps">Next Steps</a></li>
