@@ -51,7 +51,7 @@ window.addEventListener("load", () => mermaid.run());
     <script>DOCUMENTATION_OPTIONS.pagename = 'ap2/ap2-samples';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="CMWallet" href="cmwallet.html" />
+    <link rel="next" title="BOSH Agent Development Setup" href="../paas/bosh/bosh-agent-dev-setup.html" />
     <link rel="prev" title="Knowledge Utility Kit for Global Intelligence Integration" href="../index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -167,7 +167,6 @@ window.addEventListener("load", () => mermaid.run());
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Agent Payment Protocol (AP2)</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Agent Payment Protocol Samples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cmwallet.html">CMWallet</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">PaaS</span></p>
 <ul class="nav bd-sidenav">
@@ -408,8 +407,8 @@ document.write(`
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">주요 특징</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">사용 사례</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id14">기술 상세</a><ul class="nav section-nav flex-column">
-<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#cmwallet">CMWallet 구조</a></li>
-<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#android-credential-manager-api">Android Credential Manager API 통합</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#cmwallet">CMWallet 개요</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#android-credential-manager-api">Android Credential Manager API 통합 흐름</a></li>
 </ul>
 </li>
 </ul>
@@ -636,16 +635,49 @@ document.write(`
 <section id="id14">
 <h4>기술 상세<a class="headerlink" href="#id14" title="Link to this heading">#</a></h4>
 <section id="cmwallet">
-<h5>CMWallet 구조<a class="headerlink" href="#cmwallet" title="Link to this heading">#</a></h5>
-<p>CMWallet은 Digital Credential을 관리하는 전용 앱으로, 샘플에서는 2개의 가상 신용카드를 제공합니다:</p>
+<h5>CMWallet 개요<a class="headerlink" href="#cmwallet" title="Link to this heading">#</a></h5>
+<p>CMWallet은 Android Credential Manager 생태계에서 <strong>Credential Provider</strong> 역할을 하는 앱입니다. Digital Credential을 관리하는 전용 앱으로, 샘플에서는 2개의 가상 신용카드를 제공합니다.</p>
+<p><img alt="CMWallet Architecture" src="../_images/cmwallet-architecture.png" /></p>
+<p><strong>핵심 기능:</strong></p>
+<ul class="simple">
+<li><p><strong>Digital Payment Credentials (DPC) 보관</strong>: 사용자의 결제 카드 정보를 디지털 자격 증명서로 보관합니다</p></li>
+<li><p><strong>Credential Manager 통합</strong>: Android 시스템의 Credential Manager API를 통해 다른 앱에 자격 증명을 제공합니다</p></li>
+<li><p><strong>사용자 승인 UI</strong>: 결제 승인 시 거래 세부 정보를 표시하고 사용자 확인을 요청합니다</p></li>
+<li><p><strong>암호화 서명</strong>: 기기의 보안 요소를 사용하여 거래에 암호화 서명을 생성합니다</p></li>
+</ul>
+<p><strong>기술 사양:</strong></p>
 <ul class="simple">
 <li><p>사용자는 결제 시 복수의 카드 중 선택 가능</p></li>
 <li><p>각 카드는 ISO 18013-5 mDOC 형식으로 저장</p></li>
 <li><p>ES256 알고리즘으로 서명되어 위변조 방지</p></li>
 </ul>
+<p><strong>왜 별도 앱인가?</strong></p>
+<ul class="simple">
+<li><p><strong>역할 분리</strong>: Shopping Agent는 쇼핑 경험에 집중, CMWallet은 결제 자격 증명 관리 역할에 집중합니다</p></li>
+<li><p><strong>보안 격리</strong>: 민감한 결제 정보를 별도 앱에서 관리하여 보안을 강화합니다</p></li>
+<li><p><strong>재사용성</strong>: 하나의 CMWallet이 여러 쇼핑 앱에서 사용 가능합니다</p></li>
+<li><p><strong>표준 준수</strong>: Android Credential Manager의 표준 아키텍처 패턴을 준수합니다</p></li>
+</ul>
+<p><strong>필수 요구사항:</strong></p>
+<ul class="simple">
+<li><p>CMWallet은 Shopping Agent와 동일 기기에 설치되어야 합니다</p></li>
+</ul>
 </section>
 <section id="android-credential-manager-api">
-<h5>Android Credential Manager API 통합<a class="headerlink" href="#android-credential-manager-api" title="Link to this heading">#</a></h5>
+<h5>Android Credential Manager API 통합 흐름<a class="headerlink" href="#android-credential-manager-api" title="Link to this heading">#</a></h5>
+<pre  class="mermaid">
+        sequenceDiagram
+    participant SA as Shopping Assistant
+    participant ACM as Android Credential Manager API
+    participant CMW as CM Wallet (Credential Provider)
+
+    SA-&gt;&gt;ACM: (1) credentialManager.getCredential(request)
+    ACM-&gt;&gt;ACM: (2) Find appropriate Credential Provider
+    ACM-&gt;&gt;CMW: (3) Invoke CM Wallet
+    CMW-&gt;&gt;CMW: (4) Show UI &amp; get user approval
+    CMW-&gt;&gt;ACM: (5) Generate signed token
+    ACM-&gt;&gt;SA: (6) Return token
+    </pre><p><strong>코드 예시:</strong></p>
 <div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="c1">// Credential Manager를 통한 DPC 요청</span>
 <span class="kd">val</span><span class="w"> </span><span class="nv">credentialManager</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">CredentialManager</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
 <span class="kd">val</span><span class="w"> </span><span class="nv">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">credentialManager</span><span class="p">.</span><span class="na">getCredential</span><span class="p">(</span>
@@ -1148,11 +1180,11 @@ document.write(`
       </div>
     </a>
     <a class="right-next"
-       href="cmwallet.html"
+       href="../paas/bosh/bosh-agent-dev-setup.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">CMWallet</p>
+        <p class="prev-next-title">BOSH Agent Development Setup</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -1196,8 +1228,8 @@ document.write(`
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">주요 특징</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">사용 사례</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id14">기술 상세</a><ul class="nav section-nav flex-column">
-<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#cmwallet">CMWallet 구조</a></li>
-<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#android-credential-manager-api">Android Credential Manager API 통합</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#cmwallet">CMWallet 개요</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#android-credential-manager-api">Android Credential Manager API 통합 흐름</a></li>
 </ul>
 </li>
 </ul>

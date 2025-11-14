@@ -154,14 +154,49 @@ sequenceDiagram
 
 #### 기술 상세
 
-##### CMWallet 구조
+##### CMWallet 개요
 
-CMWallet은 Digital Credential을 관리하는 전용 앱으로, 샘플에서는 2개의 가상 신용카드를 제공합니다:
+CMWallet은 Android Credential Manager 생태계에서 **Credential Provider** 역할을 하는 앱입니다. Digital Credential을 관리하는 전용 앱으로, 샘플에서는 2개의 가상 신용카드를 제공합니다.
+
+![CMWallet Architecture](files/cmwallet-architecture.png "CMWallet Architecture")
+
+**핵심 기능:**
+- **Digital Payment Credentials (DPC) 보관**: 사용자의 결제 카드 정보를 디지털 자격 증명서로 보관합니다
+- **Credential Manager 통합**: Android 시스템의 Credential Manager API를 통해 다른 앱에 자격 증명을 제공합니다
+- **사용자 승인 UI**: 결제 승인 시 거래 세부 정보를 표시하고 사용자 확인을 요청합니다
+- **암호화 서명**: 기기의 보안 요소를 사용하여 거래에 암호화 서명을 생성합니다
+
+**기술 사양:**
 - 사용자는 결제 시 복수의 카드 중 선택 가능
 - 각 카드는 ISO 18013-5 mDOC 형식으로 저장
 - ES256 알고리즘으로 서명되어 위변조 방지
 
-##### Android Credential Manager API 통합
+**왜 별도 앱인가?**
+- **역할 분리**: Shopping Agent는 쇼핑 경험에 집중, CMWallet은 결제 자격 증명 관리 역할에 집중합니다
+- **보안 격리**: 민감한 결제 정보를 별도 앱에서 관리하여 보안을 강화합니다
+- **재사용성**: 하나의 CMWallet이 여러 쇼핑 앱에서 사용 가능합니다
+- **표준 준수**: Android Credential Manager의 표준 아키텍처 패턴을 준수합니다
+
+**필수 요구사항:**
+- CMWallet은 Shopping Agent와 동일 기기에 설치되어야 합니다
+
+##### Android Credential Manager API 통합 흐름
+
+```{mermaid}
+sequenceDiagram
+    participant SA as Shopping Assistant
+    participant ACM as Android Credential Manager API
+    participant CMW as CM Wallet (Credential Provider)
+
+    SA->>ACM: (1) credentialManager.getCredential(request)
+    ACM->>ACM: (2) Find appropriate Credential Provider
+    ACM->>CMW: (3) Invoke CM Wallet
+    CMW->>CMW: (4) Show UI & get user approval
+    CMW->>ACM: (5) Generate signed token
+    ACM->>SA: (6) Return token
+```
+
+**코드 예시:**
 
 ```kotlin
 // Credential Manager를 통한 DPC 요청
