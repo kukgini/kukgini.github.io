@@ -34,6 +34,7 @@ extensions = [
     'sphinx.ext.mathjax',
     'sphinx.ext.githubpages',
     'myst_parser',
+    'sphinxcontrib.mermaid',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -166,4 +167,8 @@ texinfo_documents = [
 ]
 
 
+# -- MyST Parser configuration --------------------------------------------
+myst_enable_extensions = [
+    "colon_fence",
+]
 
