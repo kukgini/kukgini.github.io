@@ -1,14 +1,14 @@
-# Hands On
+# Digital Payment Credential 시나리오
 
 ## Introduction
 
 Sample 은 3가지 시나리오를 제공함
 
-* x402
-* Cards
-* DCP
+* x402 - HTTP 402 Code 확장 시나리오
+* Cards - ?
+* DPC - Digital Payment Credential 연계 시나리오
 
-### DCP 시나리오
+### DPC 시나리오
 
 Android 기반으로 되어 있으며 Android Credential Manager API 를 통해 CMWallet 과 상호작용 함
 

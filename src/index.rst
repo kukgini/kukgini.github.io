@@ -10,7 +10,7 @@ Knowledge Utility Kit for Global Intelligence Integration
    :maxdepth: 2
    :caption: Agent Payment Protocol (AP2)
 
-   ap2/hands-on.md
+   ap2/sample-dpc.md
 
 
 
