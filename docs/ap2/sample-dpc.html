@@ -40,6 +40,14 @@
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs"></script>
+    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs";import elkLayouts from "https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs";mermaid.registerLayoutLoaders(elkLayouts);mermaid.initialize({startOnLoad:false});</script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+    <script type="module">
+import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs";
+window.addEventListener("load", () => mermaid.run());
+</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'ap2/sample-dpc';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -429,7 +437,22 @@ document.write(`
 <p>Android 기반으로 되어 있으며 Android Credential Manager API 를 통해 CMWallet 과 상호작용 함. CMWallet 이란 Digital Credential 을 관리하는 전용 앱으로 샘플에서 제공하는 CMWallet 은 2개의 가상 신용카드를 가지고 있어 결제 확인시 사용자가 신용카드를 선택할 수 있음.</p>
 <section id="id1">
 <h4>Digital Payment Credential 흐름<a class="headerlink" href="#id1" title="Link to this heading">#</a></h4>
-</section>
+<pre  class="mermaid">
+        sequenceDiagram
+    participant SA as Shopping Assistant
+    participant MA as Merchant Agent
+    participant ACM as Android Credential Manager API
+    participant CMW as CM Wallet
+
+    SA-&gt;&gt;MA: (1) 장바구니 확정 요청 (네트워크)
+    MA--&gt;&gt;SA: (2) Cart Mandate 반환
+    SA-&gt;&gt;ACM: (3) DPC 요청 생성 (Credential Manager API 호출)
+    ACM-&gt;&gt;CMW: (4) CM Wallet 호출&lt;br/&gt;UI 표시 &amp; 서명 생성
+    CMW--&gt;&gt;ACM: (5) 서명된 토큰 반환
+    ACM--&gt;&gt;SA: (5) 토큰 수신
+    SA-&gt;&gt;MA: (6) 토큰 전송 (네트워크)
+    MA--&gt;&gt;MA: 토큰 검증 및 결제 처리
+    </pre></section>
 </section>
 </section>
 <section id="dpchelper-kt">

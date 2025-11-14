@@ -40,6 +40,14 @@
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs"></script>
+    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs";import elkLayouts from "https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs";mermaid.registerLayoutLoaders(elkLayouts);mermaid.initialize({startOnLoad:false});</script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+    <script type="module">
+import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs";
+window.addEventListener("load", () => mermaid.run());
+</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'ap2/cmwallet';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -450,7 +458,19 @@ document.write(`
 <section id="integration-flow-with-android-credential-manager-api">
 <h2>Integration Flow with Android Credential Manager API<a class="headerlink" href="#integration-flow-with-android-credential-manager-api" title="Link to this heading">#</a></h2>
 <p>CMWallet integrates with the Android Credential Manager API to provide secure credential management.</p>
-</section>
+<pre  class="mermaid">
+        sequenceDiagram
+    participant SA as Shopping Assistant
+    participant ACM as Android Credential Manager API
+    participant CMW as CM Wallet (Credential Provider)
+
+    SA-&gt;&gt;ACM: (1) credentialManager.getCredential(request)
+    ACM-&gt;&gt;ACM: (2) Find appropriate Credential Provider
+    ACM-&gt;&gt;CMW: (3) Invoke CM Wallet
+    CMW-&gt;&gt;CMW: (4) Show UI &amp; get user approval
+    CMW-&gt;&gt;ACM: (5) Generate signed token
+    ACM-&gt;&gt;SA: (6) Return token
+    </pre></section>
 <section id="features">
 <h2>Features<a class="headerlink" href="#features" title="Link to this heading">#</a></h2>
 <section id="credential-storage">
