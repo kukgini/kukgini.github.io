@@ -405,6 +405,13 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">결론</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#next-steps">Next Steps</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#verification-of-signed-token">Verification of signed token</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ios">iOS 플랫폼 지원 및 상호운용성</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#apple-digital-credentials-api">Apple의 Digital Credentials API</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">플랫폼 간 차이점</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">상호운용성 확보 방안</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">향후 과제</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
@@ -467,8 +474,8 @@ document.write(`
 <p>DPC 시나리오는 EUID Wallet 표준과 여러 측면에서 밀접하게 연관 있음</p>
 <section id="oid4vp-openid-for-verifiable-presentaiton">
 <h3>OID4VP (OpenID for Verifiable Presentaiton) 프로토콜 사용<a class="headerlink" href="#oid4vp-openid-for-verifiable-presentaiton" title="Link to this heading">#</a></h3>
-<div class="literal-block-wrapper docutils container" id="id4">
-<div class="code-block-caption"><span class="caption-text">DpcHelper.kt:110~120</span><a class="headerlink" href="#id4" title="Link to this code">#</a></div>
+<div class="literal-block-wrapper docutils container" id="id7">
+<div class="code-block-caption"><span class="caption-text">DpcHelper.kt:110~120</span><a class="headerlink" href="#id7" title="Link to this code">#</a></div>
 <div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="kd">val</span><span class="w"> </span><span class="nv">dcRequest</span><span class="w"> </span><span class="o">=</span>
 <span class="w">  </span><span class="n">Request</span><span class="p">(</span>
 <span class="w">    </span><span class="n">responseType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;vp_token&quot;</span><span class="p">,</span>
@@ -491,8 +498,8 @@ document.write(`
 </section>
 <section id="iso-iec-18013-5-mode">
 <h3>ISO/IEC 18013-5 mode 형식 지원<a class="headerlink" href="#iso-iec-18013-5-mode" title="Link to this heading">#</a></h3>
-<div class="literal-block-wrapper docutils container" id="id5">
-<div class="code-block-caption"><span class="caption-text">DpcHelper.kt:85~91</span><a class="headerlink" href="#id5" title="Link to this code">#</a></div>
+<div class="literal-block-wrapper docutils container" id="id8">
+<div class="code-block-caption"><span class="caption-text">DpcHelper.kt:85~91</span><a class="headerlink" href="#id8" title="Link to this code">#</a></div>
 <div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="kd">val</span><span class="w"> </span><span class="nv">credentialQuery</span><span class="w"> </span><span class="o">=</span>
 <span class="w">    </span><span class="n">CredentialQuery</span><span class="p">(</span>
 <span class="w">        </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">credId</span><span class="p">,</span>
@@ -503,8 +510,8 @@ document.write(`
 </pre></div>
 </div>
 </div>
-<div class="literal-block-wrapper docutils container" id="id6">
-<div class="code-block-caption"><span class="caption-text">DpcHelper.kt:96~100</span><a class="headerlink" href="#id6" title="Link to this code">#</a></div>
+<div class="literal-block-wrapper docutils container" id="id9">
+<div class="code-block-caption"><span class="caption-text">DpcHelper.kt:96~100</span><a class="headerlink" href="#id9" title="Link to this code">#</a></div>
 <div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="kd">val</span><span class="w"> </span><span class="nv">mdocFormatsSupported</span><span class="w"> </span><span class="o">=</span>
 <span class="w">    </span><span class="n">MdocFormatsSupported</span><span class="p">(</span>
 <span class="w">        </span><span class="n">issuerauthAlgValues</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">listOf</span><span class="p">(</span><span class="o">-</span><span class="m">7</span><span class="p">),</span><span class="w"> </span><span class="c1">// ES256</span>
@@ -521,8 +528,8 @@ document.write(`
 </section>
 <section id="dcql-digital-credentials-query-language">
 <h3>DCQL (Digital Credentials Query Language) 사용<a class="headerlink" href="#dcql-digital-credentials-query-language" title="Link to this heading">#</a></h3>
-<div class="literal-block-wrapper docutils container" id="id7">
-<div class="code-block-caption"><span class="caption-text">DpcHelper.kt:78~93</span><a class="headerlink" href="#id7" title="Link to this code">#</a></div>
+<div class="literal-block-wrapper docutils container" id="id10">
+<div class="code-block-caption"><span class="caption-text">DpcHelper.kt:78~93</span><a class="headerlink" href="#id10" title="Link to this code">#</a></div>
 <div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="c1">// Build the DCQL query to request specific credential claims.</span>
 <span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="nv">claims</span><span class="w"> </span><span class="o">=</span>
 <span class="w">    </span><span class="n">listOf</span><span class="p">(</span>
@@ -550,8 +557,8 @@ document.write(`
 </section>
 <section id="android-credential-manager-api">
 <h3>Android Credential Manager API 통합<a class="headerlink" href="#android-credential-manager-api" title="Link to this heading">#</a></h3>
-<div class="literal-block-wrapper docutils container" id="id8">
-<div class="code-block-caption"><span class="caption-text">DpcHelpper.kt:67~76</span><a class="headerlink" href="#id8" title="Link to this code">#</a></div>
+<div class="literal-block-wrapper docutils container" id="id11">
+<div class="code-block-caption"><span class="caption-text">DpcHelpper.kt:67~76</span><a class="headerlink" href="#id11" title="Link to this code">#</a></div>
 <div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="c1">// Build transaction_data payload.</span>
 <span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="nv">transactionData</span><span class="w"> </span><span class="o">=</span>
 <span class="w">    </span><span class="n">TransactionData</span><span class="p">(</span>
@@ -570,8 +577,8 @@ document.write(`
 <li><p>Transaction Data 에 대한 서명 - EUDI Wallet 에서도 중요한 보안 메커니즘</p></li>
 <li><p>transactionDataHashesAlg = “sha-256” - 거래 무결성 보장</p></li>
 </ul>
-<div class="literal-block-wrapper docutils container" id="id9">
-<div class="code-block-caption"><span class="caption-text">DpcHelper.kt:59~65</span><a class="headerlink" href="#id9" title="Link to this code">#</a></div>
+<div class="literal-block-wrapper docutils container" id="id12">
+<div class="code-block-caption"><span class="caption-text">DpcHelper.kt:59~65</span><a class="headerlink" href="#id12" title="Link to this code">#</a></div>
 <div class="highlight-kotkin notranslate"><div class="highlight"><pre><span></span>  val additionalInfo =
     AdditionalInfo(
       title = &quot;Please confirm your purchase details...&quot;,
@@ -605,6 +612,76 @@ document.write(`
 <section id="verification-of-signed-token">
 <h3>Verification of signed token<a class="headerlink" href="#verification-of-signed-token" title="Link to this heading">#</a></h3>
 <p>이 시나리오에서 Merchant Agent 는 Shopping Assistant 로 부터 받은 token 을 검증하지 않는다. 단지 signed token 이 포함되어 있는지 여부만 확인함. 부인 방지를 위해 추후 검증 방식이 보완 되어야 하며 이는 EUID Wallet 의 검증 방식을 차용할 것으로 예상됨.</p>
+</section>
+<section id="ios">
+<h3>iOS 플랫폼 지원 및 상호운용성<a class="headerlink" href="#ios" title="Link to this heading">#</a></h3>
+<p>현재 DPC 시나리오는 Android Credential Manager API를 기반으로 구현되어 있습니다. 진정한 크로스 플랫폼 상호운용성을 위해서는 iOS 지원이 필수적입니다.</p>
+<section id="apple-digital-credentials-api">
+<h4>Apple의 Digital Credentials API<a class="headerlink" href="#apple-digital-credentials-api" title="Link to this heading">#</a></h4>
+<p>Apple은 2024-2025년부터 <strong>Digital Credentials API</strong>를 도입하여 Android의 Credential Manager API와 유사한 기능을 제공하기 시작했습니다:</p>
+<p><strong>현재 지원 현황:</strong></p>
+<ul class="simple">
+<li><p>✅ ISO 18013-5 mDOC 형식 지원</p></li>
+<li><p>✅ ISO 18013-7 Annex C 프로토콜 지원</p></li>
+<li><p>✅ Apple Wallet 통합</p></li>
+<li><p>❌ OpenID4VP 프로토콜 제한적 지원</p></li>
+</ul>
+</section>
+<section id="id4">
+<h4>플랫폼 간 차이점<a class="headerlink" href="#id4" title="Link to this heading">#</a></h4>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>측면</p></th>
+<th class="head"><p>Android</p></th>
+<th class="head"><p>iOS</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>API</strong></p></td>
+<td><p>Credential Manager API</p></td>
+<td><p>Digital Credentials API + Apple Wallet</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>프로토콜</strong></p></td>
+<td><p>OpenID4VP 완전 지원</p></td>
+<td><p>ISO 18013-7 위주, OpenID4VP 제한적</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>생태계</strong></p></td>
+<td><p>오픈 (다양한 Provider)</p></td>
+<td><p>폐쇄적 (Apple Wallet 중심)</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>유연성</strong></p></td>
+<td><p>높음</p></td>
+<td><p>제한적</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="id5">
+<h4>상호운용성 확보 방안<a class="headerlink" href="#id5" title="Link to this heading">#</a></h4>
+<p>EUDI Wallet의 접근 방식을 참고하여 다음과 같은 전략을 고려해야 합니다:</p>
+<ol class="arabic simple">
+<li><p><strong>플랫폼 추상화 레이어</strong>: 각 OS의 네이티브 API를 감싸는 공통 인터페이스 구현</p></li>
+<li><p><strong>공통 표준 활용</strong>: OpenID4VCI, SD-JWT와 같은 플랫폼 독립적 프로토콜 사용</p></li>
+<li><p><strong>iOS 네이티브 구현</strong>:</p>
+<ul class="simple">
+<li><p>Swift로 구현</p></li>
+<li><p>Apple App Attest를 통한 무결성 보장</p></li>
+<li><p>IdentityDocumentServices 프레임워크 활용</p></li>
+</ul>
+</li>
+<li><p><strong>폴백 메커니즘</strong>: OS 네이티브 지원이 부족할 경우 애플리케이션 레벨에서 구현</p></li>
+</ol>
+</section>
+<section id="id6">
+<h4>향후 과제<a class="headerlink" href="#id6" title="Link to this heading">#</a></h4>
+<ul class="simple">
+<li><p>Apple의 Digital Credentials API에서 OpenID4VP 완전 지원 대기</p></li>
+<li><p>iOS용 CMWallet 구현</p></li>
+<li><p>크로스 플랫폼 테스트 및 검증</p></li>
+<li><p>Apple의 제한적 생태계 내에서의 최적화</p></li>
+</ul>
+</section>
 </section>
 </section>
 <section id="references">
@@ -682,6 +759,13 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">결론</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#next-steps">Next Steps</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#verification-of-signed-token">Verification of signed token</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ios">iOS 플랫폼 지원 및 상호운용성</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#apple-digital-credentials-api">Apple의 Digital Credentials API</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">플랫폼 간 차이점</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">상호운용성 확보 방안</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">향후 과제</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
