@@ -16,6 +16,26 @@ Sample 은 3가지 시나리오를 제공함
 
 Android 기반으로 되어 있으며 Android Credential Manager API 를 통해 CMWallet 과 상호작용 함. CMWallet 이란 Digital Credential 을 관리하는 전용 앱으로 샘플에서 제공하는 CMWallet 은 2개의 가상 신용카드를 가지고 있어 결제 확인시 사용자가 신용카드를 선택할 수 있음.
 
+#### Digital Payment Credential 흐름
+
+```{mermaid}
+sequenceDiagram
+    participant SA as Shopping Assistant
+    participant MA as Merchant Agent
+    participant ACM as Android Credential Manager API
+    participant CMW as CM Wallet
+
+    SA->>MA: (1) 장바구니 확정 요청 (네트워크)
+    MA-->>SA: (2) Cart Mandate 반환
+    SA->>ACM: (3) DPC 요청 생성 (Credential Manager API 호출)
+    ACM->>CMW: (4) CM Wallet 호출<br/>UI 표시 & 서명 생성
+    CMW-->>ACM: (5) 서명된 토큰 반환
+    ACM-->>SA: (5) 토큰 수신
+    SA->>MA: (6) 토큰 전송 (네트워크)
+    MA-->>MA: 토큰 검증 및 결제 처리
+```
+
+
 ## DpcHelper.kt
 
 이 코드는 DPC (Digital Payment Credential) 요청을 생성함. 주요 기능은 쇼핑 카트 정보를 받아 OID4VP (OpenID 4 Verifiable Presentation) 프로토콜 기반의 인증 요청 생성.
