@@ -49,7 +49,7 @@ Cards 시나리오는 기존의 **카드 결제 네트워크**(Visa, Mastercard 
 
 DPC(Digital Payment Credential) 시나리오는 **암호학적으로 검증 가능한 디지털 자격증명**을 결제 수단으로 활용하는 혁신적인 접근 방식입니다. Cards가 기존 카드 네트워크에 기반한다면, DPC는 **EUDI Wallet과 같은 디지털 신원 표준**을 결제 영역으로 확장한 것입니다.
 
-Android Credential Manager API를 통해 상호작용하며, 사용자는 암호학적으로 서명된 증명(cryptographic proof)을 제시하여 결제를 완료합니다. 이는 단순히 카드 정보를 전달하는 것이 아니라, **사용자가 특정 자격증명의 소유자임을 증명**하는 방식입니다.
+샘플 시나리오는 Android 앱이므로 Android Credential Manager API를 통해 상호작용하며, 사용자는 암호학적으로 서명된 증명(cryptographic proof)을 제시하여 결제를 완료합니다. 이는 단순히 카드 정보를 전달하는 것이 아니라, **사용자가 결제카드 소유자이며 이 거래을 승인했음을 증명**하는 방식입니다.
 
 #### 주요 특징
 
@@ -69,7 +69,7 @@ Android Credential Manager API를 통해 상호작용하며, 사용자는 암호
 
 #### 한계점
 
-- **플랫폼 한정**: 현재 Android에만 구현, iOS 지원 제한적
+- **플랫폼 한정**: 현재 Android 에만 구현, iOS 지원 제한적
 - **생태계 미성숙**: Credential provider가 아직 초기 단계
 - **사용자 교육**: 새로운 개념으로 사용자 이해와 신뢰 구축 필요
 - **표준화 진행 중**: OpenID4VP, mDOC 등이 아직 완전히 확립되지 않음
@@ -307,6 +307,161 @@ val result = credentialManager.getCredential(
     )
 )
 ```
+
+### x402 시나리오
+
+HTTP 402 "Payment Required" 상태 코드를 활용한 웹 네이티브 결제 시나리오입니다.
+
+#### 개요
+
+x402 시나리오는 1997년 HTTP/1.1 표준에 정의되었지만 거의 사용되지 않았던 **HTTP 402 상태 코드**를 AI 에이전트 시대에 맞게 재해석한 혁신적인 프로토콜입니다. Cards가 기존 카드 네트워크를, DPC가 디지털 자격증명을 활용한다면, x402는 **HTTP 프로토콜 자체에 결제 기능을 통합**하여 웹의 본질적인 일부로 만듭니다.
+
+AI 에이전트들이 웹 리소스나 API 서비스에 접근할 때 자동으로 결제를 처리할 수 있도록 설계되었으며, 특히 **Machine-to-Machine(M2M) 거래**에 최적화되어 있습니다.
+
+#### 동작 방식
+
+```{mermaid}
+sequenceDiagram
+    participant Agent as AI Agent
+    participant Server as Resource Server
+    participant Payment as Payment Processor
+    
+    Agent->>Server: (1) 리소스 요청 (GET /api/data)
+    Server-->>Agent: (2) HTTP 402 Payment Required<br/>+ Payment Details
+    Agent->>Agent: (3) 결제 필요 여부 자동 판단
+    Agent->>Payment: (4) 자동 결제 처리
+    Payment-->>Agent: (5) 결제 증명 (Payment Token)
+    Agent->>Server: (6) Authorization 헤더와 함께 재요청
+    Server->>Server: (7) 토큰 검증
+    Server-->>Agent: (8) HTTP 200 OK + 리소스 제공
+```
+
+#### 주요 특징
+
+1. **HTTP 네이티브**: HTTP 표준의 일부로 웹 인프라와 자연스럽게 통합
+2. **AI 에이전트 친화적**: 사람의 개입 없이 에이전트가 자율적으로 결제 결정
+3. **프로토콜 독립적**: 특정 결제 수단이나 통화에 종속되지 않음
+4. **마이크로 페이먼트 최적화**: 소액 결제에 적합 (거의 무료에 가까운 거래 비용)
+5. **중개자 불필요**: 판매자와 구매자가 직접 거래 조건 설정 가능
+6. **실시간 협상**: 가격, 조건 등을 동적으로 협상 가능
+7. **리소스 기반**: URL 단위로 세밀한 접근 제어 및 과금 가능
+
+#### 기술 상세
+
+##### HTTP 402 상태 코드
+
+```http
+HTTP/1.1 402 Payment Required
+Content-Type: application/json
+WWW-Authenticate: Bearer realm="payment-api"
+
+{
+  "amount": "0.01",
+  "currency": "USD",
+  "payment_methods": ["crypto", "micropayment", "card"],
+  "payment_endpoint": "https://payment.example.com/pay",
+  "resource_id": "api-call-12345"
+}
+```
+
+##### 에이전트 자동 결제 로직
+
+```python
+async def fetch_with_payment(url: str, agent_wallet):
+    response = await http_client.get(url)
+    
+    if response.status_code == 402:
+        payment_info = response.json()
+        
+        # 자동 결제 판단 로직
+        if agent_wallet.can_afford(payment_info['amount']):
+            # 결제 실행
+            payment_token = await agent_wallet.pay(
+                amount=payment_info['amount'],
+                endpoint=payment_info['payment_endpoint']
+            )
+            
+            # 결제 증명과 함께 재요청
+            response = await http_client.get(
+                url,
+                headers={'Authorization': f'Bearer {payment_token}'}
+            )
+    
+    return response
+```
+
+##### 결제 토큰 검증
+
+```python
+def verify_payment_token(token: str, resource_id: str):
+    try:
+        decoded = jwt.decode(token, public_key, algorithms=['RS256'])
+        
+        # 토큰 유효성 확인
+        assert decoded['resource_id'] == resource_id
+        assert decoded['exp'] > time.time()
+        assert decoded['amount_paid'] >= required_amount
+        
+        return True
+    except:
+        return False
+```
+
+#### 사용 사례
+
+- **프리미엄 API 접근**: AI 에이전트가 유료 API나 데이터셋에 자동으로 결제하고 접근
+  - 예: 날씨 API, 금융 데이터, 머신러닝 모델 추론 서비스
+- **컴퓨팅 리소스**: 필요한 만큼만 사용하고 즉시 결제하는 온디맨드 서비스
+  - 예: GPU 인스턴스, 스토리지, CDN 대역폭
+- **콘텐츠 마이크로 페이먼트**: 개별 콘텐츠에 대한 소액 결제
+  - 예: 뉴스 기사 ($0.01), 연구 논문 ($0.05), 이미지 ($0.001)
+- **AI 에이전트 간 서비스 교환**: 에이전트들이 서로의 서비스를 자동으로 구매
+  - 예: 번역 에이전트가 음성 인식 에이전트의 서비스를 구매
+- **모니터링 및 분석**: 실시간 모니터링 서비스에 대한 종량제 결제
+  - 예: 로그 분석, 성능 추적, 보안 스캔
+
+#### 한계점 및 고려사항
+
+**표준 및 생태계:**
+- **표준 부재**: HTTP 402는 1997년부터 정의되었으나 실제 구현 사례 거의 없음
+- **생태계 미구축**: 결제 프로세서, 서버, 클라이언트 모두 새로 구축 필요
+- **브라우저 미지원**: 주요 웹 브라우저에서 402 상태 코드를 특별히 처리하지 않음
+- **표준화 지연**: IETF나 W3C 등에서 공식 표준화가 진행되지 않음
+
+**보안 및 신뢰:**
+- **보안 표준 부족**: 아직 확립된 보안 모범 사례나 인증 체계 없음
+- **사기 방지**: 결제 분쟁 해결 메커니즘이 명확하지 않음
+- **신원 확인**: 서비스 제공자와 결제자의 신원 검증 체계 필요
+- **재생 공격**: 토큰 재사용 방지 메커니즘 구현 필요
+
+**기술적 과제:**
+- **채택 장벽**: 기존 시스템과의 호환성 없어 전면적인 생태계 전환 필요
+- **네트워크 의존성**: 온라인 연결이 필수적 (오프라인 불가능)
+- **성능**: 결제 단계 추가로 인한 지연 발생 가능
+- **복잡도**: 기존 HTTP 클라이언트/서버에 결제 로직 추가 필요
+
+**비즈니스 및 규제:**
+- **불확실성**: 실험적 단계로 장기적 실용화 여부 불확실
+- **규제 미비**: 금융 규제 당국의 가이드라인 부재
+- **수익 모델**: 전통적인 결제 네트워크 대비 수수료 구조 불명확
+- **법적 책임**: 결제 실패나 분쟁 시 책임 소재 불분명
+
+#### x402의 미래 전망
+
+**단기 (2025-2027):**
+- 실험적 파일럿 프로젝트 및 PoC (Proof of Concept)
+- 특정 도메인(예: AI 서비스 마켓플레이스)에서 제한적 사용
+- 표준화 논의 시작 (IETF, W3C)
+
+**중기 (2027-2030):**
+- 마이크로서비스 및 API 경제에서 점진적 채택
+- 암호화폐 및 블록체인 기반 결제 시스템과의 통합
+- 주요 클라우드 제공업체의 실험적 지원
+
+**장기 (2030+):**
+- AI 에이전트 생태계의 표준 결제 프로토콜로 자리잡을 가능성
+- 웹의 근본적인 비즈니스 모델 변화 (광고 기반 → 마이크로 페이먼트)
+- 사람 간 거래보다는 M2M 거래의 주류 프로토콜로 발전
 
 ## DPC 시나리오 상세 분석
 
