@@ -11,7 +11,6 @@ Knowledge Utility Kit for Global Intelligence Integration
    :caption: Agent Payment Protocol (AP2)
 
    ap2/ap2-samples.md
-   ap2/cmwallet.md
 
 
 
