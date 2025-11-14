@@ -8,6 +8,12 @@ Welcome to my.sphinx's documentation!
 
 .. toctree::
    :maxdepth: 2
+   :caption: Agent Payment Protocol (AP2)
+
+   ap2/hands-on.md
+
+.. toctree::
+   :maxdepth: 2
    :caption: Golang
 
    golang/mockery.md
