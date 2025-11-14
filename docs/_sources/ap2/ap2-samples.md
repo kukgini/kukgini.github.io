@@ -360,6 +360,54 @@ val mdocFormatsSupported =
 - **비즈니스 모델**: 기존 카드 네트워크와의 수익 모델 차이
 - **사용자 인센티브**: 복잡한 새 시스템 도입을 정당화할 혜택 제공 필요
 
+### DPC 개선 방향 (Next Steps)
+
+#### Verification of signed token
+
+이 시나리오에서 Merchant Agent 는 Shopping Assistant 로 부터 받은 token 을 검증하지 않습니다. 단지 signed token 이 포함되어 있는지 여부만 확인합니다. 부인 방지를 위해 추후 검증 방식이 보완되어야 하며, 이는 EUID Wallet 의 검증 방식을 차용할 것으로 예상됩니다.
+
+#### iOS 플랫폼 지원 및 상호운용성
+
+현재 DPC 시나리오는 Android Credential Manager API를 기반으로 구현되어 있습니다. 진정한 크로스 플랫폼 상호운용성을 위해서는 iOS 지원이 필수적입니다.
+
+**Apple의 Digital Credentials API**
+
+Apple은 2024-2025년부터 **Digital Credentials API**를 도입하여 Android의 Credential Manager API와 유사한 기능을 제공하기 시작했습니다:
+
+**현재 지원 현황:**
+- ✅ ISO 18013-5 mDOC 형식 지원
+- ✅ ISO 18013-7 Annex C 프로토콜 지원
+- ✅ Apple Wallet 통합
+- ❌ OpenID4VP 프로토콜 제한적 지원
+
+**플랫폼 간 차이점**
+
+| 측면 | Android | iOS |
+|------|---------|-----|
+| **API** | Credential Manager API | Digital Credentials API + Apple Wallet |
+| **프로토콜** | OpenID4VP 완전 지원 | ISO 18013-7 위주, OpenID4VP 제한적 |
+| **생태계** | 오픈 (다양한 Provider) | 폐쇄적 (Apple Wallet 중심) |
+| **유연성** | 높음 | 제한적 |
+
+**상호운용성 확보 방안**
+
+EUDI Wallet의 접근 방식을 참고하여 다음과 같은 전략을 고려해야 합니다:
+
+1. **플랫폼 추상화 레이어**: 각 OS의 네이티브 API를 감싸는 공통 인터페이스 구현
+2. **공통 표준 활용**: OpenID4VCI, SD-JWT와 같은 플랫폼 독립적 프로토콜 사용
+3. **iOS 네이티브 구현**: 
+   - Swift로 구현
+   - Apple App Attest를 통한 무결성 보장
+   - IdentityDocumentServices 프레임워크 활용
+4. **폴백 메커니즘**: OS 네이티브 지원이 부족할 경우 애플리케이션 레벨에서 구현
+
+**향후 과제**
+
+- Apple의 Digital Credentials API에서 OpenID4VP 완전 지원 대기
+- iOS용 CMWallet 구현
+- 크로스 플랫폼 테스트 및 검증
+- Apple의 제한적 생태계 내에서의 최적화
+
 ### x402 시나리오
 
 HTTP 402 "Payment Required" 상태 코드를 활용한 AI 에이전트 간 자동 결제 시나리오입니다.
@@ -493,54 +541,6 @@ AP2 프로토콜의 세 가지 시나리오는 AI 에이전트 결제의 진화 
 현명한 전략은 Cards로 시작하여 즉시 가치를 제공하면서, DPC 표준 성숙을 추적하고, x402의 장기적 잠재력을 모니터링하는 것입니다. 각 시나리오는 상호 배타적이지 않으며, 사용 사례와 시장 상황에 따라 적절히 조합할 수 있습니다.
 
 특히 DPC는 EUDI Wallet과 같은 대규모 정부 주도 이니셔티브의 지원을 받고 있어, **중기적으로 가장 유망한 선택지**로 평가됩니다. 프라이버시와 보안이 점점 더 중요해지는 디지털 시대에, DPC는 사용자 통제와 검증 가능성을 제공하는 차세대 표준이 될 것입니다.
-
-## Next Steps
-
-### Verification of signed token
-
-이 시나리오에서 Merchant Agent 는 Shopping Assistant 로 부터 받은 token 을 검증하지 않습니다. 단지 signed token 이 포함되어 있는지 여부만 확인합니다. 부인 방지를 위해 추후 검증 방식이 보완되어야 하며, 이는 EUID Wallet 의 검증 방식을 차용할 것으로 예상됩니다.
-
-### iOS 플랫폼 지원 및 상호운용성
-
-현재 DPC 시나리오는 Android Credential Manager API를 기반으로 구현되어 있습니다. 진정한 크로스 플랫폼 상호운용성을 위해서는 iOS 지원이 필수적입니다.
-
-#### Apple의 Digital Credentials API
-
-Apple은 2024-2025년부터 **Digital Credentials API**를 도입하여 Android의 Credential Manager API와 유사한 기능을 제공하기 시작했습니다:
-
-**현재 지원 현황:**
-- ✅ ISO 18013-5 mDOC 형식 지원
-- ✅ ISO 18013-7 Annex C 프로토콜 지원
-- ✅ Apple Wallet 통합
-- ❌ OpenID4VP 프로토콜 제한적 지원
-
-#### 플랫폼 간 차이점
-
-| 측면 | Android | iOS |
-|------|---------|-----|
-| **API** | Credential Manager API | Digital Credentials API + Apple Wallet |
-| **프로토콜** | OpenID4VP 완전 지원 | ISO 18013-7 위주, OpenID4VP 제한적 |
-| **생태계** | 오픈 (다양한 Provider) | 폐쇄적 (Apple Wallet 중심) |
-| **유연성** | 높음 | 제한적 |
-
-#### 상호운용성 확보 방안
-
-EUDI Wallet의 접근 방식을 참고하여 다음과 같은 전략을 고려해야 합니다:
-
-1. **플랫폼 추상화 레이어**: 각 OS의 네이티브 API를 감싸는 공통 인터페이스 구현
-2. **공통 표준 활용**: OpenID4VCI, SD-JWT와 같은 플랫폼 독립적 프로토콜 사용
-3. **iOS 네이티브 구현**: 
-   - Swift로 구현
-   - Apple App Attest를 통한 무결성 보장
-   - IdentityDocumentServices 프레임워크 활용
-4. **폴백 메커니즘**: OS 네이티브 지원이 부족할 경우 애플리케이션 레벨에서 구현
-
-#### 향후 과제
-
-- Apple의 Digital Credentials API에서 OpenID4VP 완전 지원 대기
-- iOS용 CMWallet 구현
-- 크로스 플랫폼 테스트 및 검증
-- Apple의 제한적 생태계 내에서의 최적화
 
 ## References
 
