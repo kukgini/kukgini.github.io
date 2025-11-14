@@ -1,0 +1,706 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>BOSH linux stemcell builder &#8212; Knowledge Utility Kit for Global Intelligence Integration  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'paas/bosh/bosh-stemcell-builder';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="BOSH lite resizing" href="bosh-lite-resizing.html" />
+    <link rel="prev" title="BOSH Agent Development Setup" href="bosh-agent-dev-setup.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Knowledge Utility Kit for Global Intelligence Integration  documentation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../index.html">
+                    Knowledge Utility Kit for Global Intelligence Integration
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Agent Payment Protocol (AP2)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../ap2/hands-on.html">Hands On</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">PaaS</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="bosh-agent-dev-setup.html">BOSH Agent Development Setup</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">BOSH linux stemcell builder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bosh-lite-resizing.html">BOSH lite resizing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-upstart.html">Using upstart on ubuntu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reverse-ssh-port-forwarding.html">Bypassing corporate firewall with reverse ssh port forwarding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bosh-task.html">BOSH task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bosh-inside.html">BOSH Inside</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshoot-case-01-openstack.html">OpenStack Case 1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshoot-case-02-openstack.html">OpenStack Case 2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshoot-case-03-aws.html">Case 3 AWS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshoot-case-04-aws.html">Case 4 AWS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshoot-case-05-galera-cluster.html">IaaS 네트워크 장비 교체 작업 후 mariadb galera cluster 장애</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshoot-case-06-openstack.html">Trouble Shoot case 6 OpenStack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/locket.html">Locket</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/cups.html">Custom User Provided Service (CUPS)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/ch3.html">CF-Extensions projects in incubation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/ch1.1.html">Custom User Provided Service (CUPS)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/ch1.2.html">Cloud Native Application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/ch1.3.html">Failed to push java app (case sensative entries)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/ch1.4.html">bosh-lite 장애 Case 1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/ch1.5.html">Heartbeat Message sample</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/ch1.6.html">BOSH2 CLI 로 VM 에 로그인 하기</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/ch1.7.html">HowTo Simply TcpDump and get.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/ch1.8.html">Inside Cell</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/ch1.9.html">Inside Diego Database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/ch1.10.html">Router Register Log</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/ch1.11.html">Cloud Check 를 통한 vm 장애 복구</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/ch1.12.html">bosh-init 시 Open Stack Nova Bug 관련</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/ch1.13.html">cf-openstack-validator 실행시 floatingip 관련 오류</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/ch1.z.html">Uncategorized</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">IaaS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../iaas/ch1.1.html">Chapter 1 Command-Line Interface (CLI)</a></li>
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Git</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../git/git-flow.html">git flow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../git/git-push.html">git push</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../git/git-status.html">git status</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Golang</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../golang/mockery.html">mockery</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Markdown Examples</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../md/markdown_examples.html">Markdown Examples</a></li>
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/kukgini/kukgini.github.io" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/paas/bosh/bosh-stemcell-builder.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>BOSH linux stemcell builder</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#concourse-workflow">Concourse workflow</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#periodic-bump">Periodic bump</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rakefile">Rakefile</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#build-os-image">build_os_image</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#upload-os-image-download-os-image">upload_os_image / download_os_image</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#build-with-local-os-image">build(_with_local_os_image)</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="bosh-linux-stemcell-builder">
+<h1>BOSH linux stemcell builder<a class="headerlink" href="#bosh-linux-stemcell-builder" title="Link to this heading">#</a></h1>
+<p>Repository: https://github.com/cloudfoundry/bosh-linux-stemcell-builder</p>
+<p>기본적으로 프로젝트에 Vagrantfile 이 포함되어 있기 때문에 build 에 필요한 환경을 만들기 위해서는 VirtualBox 와 Vagrant 가 깔려 있으면 된다.
+하지만 이를 자동화된 방식으로 반복하기 위해서는 CI 를 활용하는게 나은 방법일 것이고 다음은 Cuncourse CI 를 통한 Build 절차이다.</p>
+<section id="concourse-workflow">
+<h2>Concourse workflow<a class="headerlink" href="#concourse-workflow" title="Link to this heading">#</a></h2>
+<p>To create a stemcell on concourse instead of locally on virtualbox, you can execute the build-stemcell task.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mkdir</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">version</span>
+<span class="n">cat</span> <span class="o">&lt;&lt;</span><span class="n">EOF</span> <span class="o">&gt;/</span><span class="n">tmp</span><span class="o">/</span><span class="n">version</span><span class="o">/</span><span class="n">number</span>
+<span class="mf">0.0</span>
+<span class="n">EOF</span>
+<span class="n">cd</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">version</span>
+<span class="n">git</span> <span class="n">init</span>
+
+<span class="n">pushd</span> <span class="o">~/</span><span class="n">workspace</span><span class="o">/</span><span class="n">bosh</span><span class="o">-</span><span class="n">linux</span><span class="o">-</span><span class="n">stemcell</span><span class="o">-</span><span class="n">builder</span>
+<span class="n">fly</span> <span class="o">-</span><span class="n">t</span> <span class="n">production</span> <span class="n">login</span>
+<span class="n">IAAS</span><span class="o">=</span><span class="n">vsphere</span> <span class="n">HYPERVISOR</span><span class="o">=</span><span class="n">esxi</span> <span class="n">OS_NAME</span><span class="o">=</span><span class="n">ubuntu</span> <span class="n">OS_VERSION</span><span class="o">=</span><span class="n">trusty</span> <span class="n">time</span> <span class="n">fly</span> <span class="o">-</span><span class="n">t</span> <span class="n">production</span> <span class="n">execute</span> <span class="o">-</span><span class="n">p</span> <span class="o">-</span><span class="n">x</span> <span class="o">-</span><span class="n">i</span> <span class="n">version</span><span class="o">=/</span><span class="n">tmp</span><span class="o">/</span><span class="n">version</span> <span class="o">-</span><span class="n">i</span> <span class="n">bosh</span><span class="o">-</span><span class="n">linux</span><span class="o">-</span><span class="n">stemcell</span><span class="o">-</span><span class="n">builder</span><span class="o">=.</span> <span class="o">-</span><span class="n">c</span> <span class="o">./</span><span class="n">ci</span><span class="o">/</span><span class="n">tasks</span><span class="o">/</span><span class="n">build</span><span class="o">.</span><span class="n">yml</span> <span class="o">-</span><span class="n">o</span> <span class="n">stemcell</span><span class="o">=/</span><span class="n">tmp</span><span class="o">/</span><span class="n">vsphere</span><span class="o">/</span><span class="n">dev</span><span class="o">/</span>
+<span class="n">popd</span>
+</pre></div>
+</div>
+<p>Q: 내 local /tmp/version 에 version 정보가 관리되어야 하는가? 지워지면 어떻하지? 버전번호 업데이트는 알아서 해주나?</p>
+</section>
+<section id="periodic-bump">
+<h2>Periodic bump<a class="headerlink" href="#periodic-bump" title="Link to this heading">#</a></h2>
+<p>OS images are stored in S3 bucket <a class="reference external" href="http://s3.amazonaws.com/bosh-os-images/">bosh-os-images</a>.</p>
+<p>stemcell 에 사용되는 OS Image 는 항상 중요 보안 문제와 심각한 버그들로 부터 안전하게 시스템이 지켜지도록 자동화된 방식으로 지속 업데이트 된다.
+특별한 수정사항이 발생한 업데이트의 경우 패치 내용이 기술되지만 정기적인 자동 업데이트의 경우는 Periodic bump 로 기술된다.</p>
+</section>
+<section id="rakefile">
+<h2>Rakefile<a class="headerlink" href="#rakefile" title="Link to this heading">#</a></h2>
+<p>참조: https://github.com/cloudfoundry/bosh-linux-stemcell-builder</p>
+<p>프로젝트 최상단에 위치한 Rakefile 은 Stemcell Build Process 의 전체 구조를 살펴보는데 도움이 될 것이다.
+Rakefile 에 의하면 총 4 단계를 거쳐 stemcell 이 제작되는 것을 알 수 있다. 만약 S3 와 같은 원격 저장소를
+활용하지 않는다면 이를 2 단계로 간소화 할 수 있다.</p>
+<p>Rakefile 에 기술된 stemcell build process</p>
+<ol class="arabic simple">
+<li><p>build_os_image</p></li>
+<li><p>upload_os_image (optional)</p></li>
+<li><p>download_os_image (optional)</p></li>
+<li><p>build(_with_local_os_image)</p></li>
+</ol>
+<p>S3 를 사용하지 않을때의 stemcell build process</p>
+<ol class="arabic simple">
+<li><p>build_os_image</p></li>
+<li><p>build_woth_local_os_image</p></li>
+</ol>
+</section>
+<section id="build-os-image">
+<h2>build_os_image<a class="headerlink" href="#build-os-image" title="Link to this heading">#</a></h2>
+<p>stemcell 의 모체가 되는 OS Image 를 생성한다. 옵션에 따라 Ubuntu / CentOS / ReadHat 등을
+선택할 수 있으며 Public 으로 배포되는 ISO Image 에 약간의 hardning 작업을 가해 보안성을 강화하고
+bosh 와 관련된 모듈들을 추가 설치한 Image File 이 생성된다</p>
+<p><img alt="Stemcell Build Sequence image" src="../../_images/stemcell-build-sequence-build-os-iamge.png" /></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">title</span> <span class="n">Stemcell</span> <span class="n">Build</span> <span class="n">Sequence</span> <span class="p">(</span><span class="n">build_os_iamge</span><span class="p">)</span>
+<span class="n">Rake</span><span class="o">-&gt;</span><span class="n">OSImageBuilder</span><span class="p">:</span><span class="n">build</span>\<span class="n">n</span><span class="p">[:</span><span class="n">environment</span>\<span class="n">n</span><span class="p">:</span><span class="n">collection</span>\<span class="n">n</span><span class="p">:</span><span class="n">runner</span>\<span class="n">n</span><span class="p">:</span><span class="n">archive_handler</span><span class="p">]</span>
+<span class="n">OSImageBuilder</span><span class="o">-&gt;</span><span class="n">BuildEnvironment</span><span class="p">:</span><span class="n">prepare_build</span>
+    <span class="n">alt</span> <span class="n">resume_from</span> <span class="o">==</span> <span class="n">nil</span>
+        <span class="n">BuildEnvironment</span><span class="o">-&gt;</span><span class="n">BuildEnvironment</span><span class="p">:</span><span class="n">sanitize</span>
+        <span class="n">BuildEnvironment</span><span class="o">-&gt;</span><span class="n">BuildEnvironment</span><span class="p">:</span><span class="n">prepare_build_path</span>
+    <span class="n">end</span>
+    <span class="n">BuildEnvironment</span><span class="o">-&gt;</span><span class="n">BuildEnvironment</span><span class="p">:</span><span class="n">copy_stemcell_builder</span>\<span class="n">n_to_build_path</span>
+    <span class="n">BuildEnvironment</span><span class="o">-&gt;</span><span class="n">BuildEnvironment</span><span class="p">:</span><span class="n">prepare_work_root</span>
+    <span class="n">BuildEnvironment</span><span class="o">-&gt;</span><span class="n">BuildEnvironment</span><span class="p">:</span><span class="n">prepare_stemcell_path</span>
+    <span class="n">BuildEnvironment</span><span class="o">-&gt;</span><span class="n">BuildEnvironment</span><span class="p">:</span><span class="n">persist_settings_for_bash</span>
+<span class="n">OSImageBuilder</span><span class="o">-&gt;</span><span class="n">StageRunner</span><span class="p">:</span><span class="n">configure_and_apply</span>\<span class="n">n</span><span class="p">(</span><span class="n">operation_system_stages</span><span class="p">,</span> <span class="n">ENV</span><span class="p">[</span><span class="s1">&#39;resume_from&#39;</span><span class="p">])</span>
+    <span class="n">StageRunner</span><span class="o">-&gt;</span><span class="n">StageRunner</span><span class="p">:</span><span class="n">check_corrent_uid</span>
+    <span class="n">StageRunner</span><span class="o">-&gt;</span><span class="n">StageRunner</span><span class="p">:</span><span class="n">resume_from</span>\<span class="n">n</span><span class="p">(</span><span class="n">stages</span><span class="p">,</span> <span class="n">resume_from_stage</span><span class="p">)</span>
+    <span class="n">StageRunner</span><span class="o">-&gt;</span><span class="n">StageRunner</span><span class="p">:</span><span class="n">configure</span><span class="p">(</span><span class="n">stages</span><span class="p">)</span>
+    <span class="n">StageRunner</span><span class="o">-&gt;</span><span class="n">StageRunner</span><span class="p">:</span><span class="n">apply</span><span class="p">(</span><span class="n">stages</span><span class="p">)</span>
+<span class="n">OSImageBuilder</span><span class="o">-&gt;</span><span class="n">ArchiveHandler</span><span class="p">:</span><span class="n">compress</span><span class="p">(</span><span class="n">chroot_dir</span><span class="p">,</span> <span class="n">os_image_path</span><span class="p">)</span>
+    <span class="n">ArchiveHandler</span><span class="o">-&gt;</span><span class="nd">@shell</span><span class="p">:</span><span class="n">sudo</span> <span class="n">tar</span> <span class="o">-</span><span class="n">cz</span> \<span class="n">n</span><span class="o">-</span><span class="n">f</span> <span class="c1">#{archive_filename} \n-C #{directory} .&quot;</span>
+</pre></div>
+</div>
+<p>stemcell 은 StageCollection class 에 정의된 stages 라고 불리우는 묶음을 StateRunner class 를 통해 순차적으로 수행함으로써 OS 이미지를 생성한다. OSImageBuilder 가 StageRunner 를 초기화 할때 StageCollection.operation_system_stages 를 전달하므로 이 states 를 순차적으로 수행할 것이다. IaaS/OS 별로 서로 다른 stages 가 정의되어 있으며 상황에 맞는 state 묶음인 stages 를 정의해 둔 소스가 다음 위치에 있다.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bosh_stemcell</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">bosh</span><span class="o">/</span><span class="n">stemcell</span><span class="o">/</span><span class="n">state_collection</span><span class="o">.</span><span class="n">rb</span>
+</pre></div>
+</div>
+<p>Stage 는 ‘apply.sh’ 에 의해 실행되며 100% 독립적으로 실행될 수 있도록 Stage 간에 의존성이 있으면 안된다. states/ 디렉터리의 하부는 다음과 같이 이루어져 있다.</p>
+<ul class="simple">
+<li><p>apply.sh   state 실행 스크립트</p></li>
+<li><p>assets/*   각 asset 은 stage 를 수행하기 위해 필요한 모든 resource 들이 보괸되는 장소이다.</p></li>
+<li><p>config.sh  stage 내에서 필요한 local configuration 저장소.</p></li>
+</ul>
+<p>StageCollection.operation_system_stages 를 분석하여 Ubuntu OS Image 를 위한 stages 는 다음과 같이 구성되어 있음을 알게 되었다.</p>
+<ol class="arabic simple">
+<li><p>base_debootstrap,</p></li>
+<li><p>base_ubuntu_firstboot,</p></li>
+<li><p>base_apt,</p></li>
+<li><p>base_ubuntu_build_essential,</p></li>
+<li><p>base_ubuntu_packages,</p></li>
+<li><p>base_file_permission,</p></li>
+<li><p>base_ssh,</p></li>
+<li><p>bosh_sysstat,</p></li>
+<li><p>system_kernel,</p></li>
+<li><p>system_kernel_modules,</p></li>
+<li><p>system_ixgbevf (Arch.ppc64le 인 경우 생략)</p></li>
+<li><p><strong>bosh_steps</strong></p>
+<ol class="arabic simple">
+<li><p>bosh_sysctl,</p></li>
+<li><p>bosh_limits,</p></li>
+<li><p>bosh_users,</p></li>
+<li><p>bosh_monit,</p></li>
+<li><p>bosh_ntpdate,</p></li>
+<li><p>bosh_sudoers,</p></li>
+</ol>
+</li>
+<li><p>password_policies,</p></li>
+<li><p>restrict_su_command,</p></li>
+<li><p>tty_config,</p></li>
+<li><p>rsyslog_config,</p></li>
+<li><p>delay_monit_start,</p></li>
+<li><p>system_grub,</p></li>
+<li><p>vim_tiny,</p></li>
+<li><p>cron_config,</p></li>
+<li><p>escape_ctrl_alt_del,</p></li>
+<li><p>system_users,</p></li>
+<li><p>bosh_audit_ubuntu,</p></li>
+<li><p>bosh_log_audit_start,</p></li>
+</ol>
+</section>
+<section id="upload-os-image-download-os-image">
+<h2>upload_os_image / download_os_image<a class="headerlink" href="#upload-os-image-download-os-image" title="Link to this heading">#</a></h2>
+<p>build_os_image 에 의해 생성된 image 를 upload/download 한다. 한번 만들어 둔 것을 upload 해
+두면 stemcell 제작시 재활용 할 수 있게 된다. local_os_image 를 사용한다면 필요하지 않다.</p>
+</section>
+<section id="build-with-local-os-image">
+<h2>build(_with_local_os_image)<a class="headerlink" href="#build-with-local-os-image" title="Link to this heading">#</a></h2>
+<p>upload_os_image 에 의해 저장된 원격 저장소를 이용하지 않는다면 build_with_local_os_image 를
+사용하면 된다. 만들어진 OS Image 를 Bosh 가 인식할 수 있는 stemcell 이라는 형태로 한번 더 감싸는
+작업을 하게 된다.</p>
+<p>우선, stages 는 몇개의 큰 카테고리로 분류된다.</p>
+<ul class="simple">
+<li><p>initialize</p></li>
+<li><p>operating_system_stages</p></li>
+<li><p>extract_operating_system_stages</p></li>
+<li><p>agent_stages</p></li>
+<li><p>build_stemcell_image_stages</p></li>
+<li><p>package_stemcell_stages</p></li>
+</ul>
+<p>또한 StageCollection class 는 Forwardable 이어서 다음 class 들로 적절한 위임이 일어난다.</p>
+<ul class="simple">
+<li><p>definition</p></li>
+<li><p>infrastructure</p></li>
+<li><p>operating_system</p></li>
+<li><p>agent</p></li>
+</ul>
+<p>이제 이렇게 분류해 놓은 stages 는 StemcellBuilder 와 StemcellPackager 에 의해 build 되는데 build 순서는 다음과 같다.</p>
+<ol class="arabic simple">
+<li><p>StemcellBuilder</p>
+<ol class="arabic simple">
+<li><p>extract_operating_system_stages</p>
+<ol class="arabic simple">
+<li><p>untar_base_os_image</p></li>
+</ol>
+</li>
+<li><p>agent_stages</p>
+<ol class="arabic simple">
+<li><p>bosh_libyaml</p></li>
+<li><p>bosh_go_agent</p></li>
+<li><p>aws_cli</p></li>
+<li><p>logrotate_config</p></li>
+<li><p>dev_tools_config</p></li>
+<li><p>static_libraries_config</p></li>
+</ol>
+</li>
+<li><p>build_stemcell_image_stages</p>
+<ol class="arabic simple">
+<li><p>system_network</p></li>
+<li><p>system_openstack_clock</p></li>
+<li><p>system_openstack_modules</p></li>
+<li><p>system_parameters</p></li>
+<li><p>bosh_clean</p></li>
+<li><p>bosh_harden</p></li>
+<li><p>bosh_openstack_agent_settings</p></li>
+<li><p>bosh_clean_ssh</p></li>
+<li><p>image_create</p></li>
+<li><p>image_install_grub</p></li>
+<li><p>finish_stemcell_stages</p>
+<ol class="arabic simple">
+<li><p>bosh_package_list</p></li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+<li><p>StemcellPackager</p>
+<ol class="arabic simple">
+<li><p>package_stemcell_stages</p>
+<ol class="arabic simple">
+<li><p>raw_package_stages</p>
+<ol class="arabic simple">
+<li><p>prepare_raw_image_stemcell</p></li>
+</ol>
+</li>
+</ol>
+</li>
+<li><p>write_manifest</p></li>
+<li><p>create_tarball</p></li>
+</ol>
+</li>
+</ol>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="bosh-agent-dev-setup.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">BOSH Agent Development Setup</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="bosh-lite-resizing.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">BOSH lite resizing</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#concourse-workflow">Concourse workflow</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#periodic-bump">Periodic bump</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rakefile">Rakefile</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#build-os-image">build_os_image</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#upload-os-image-download-os-image">upload_os_image / download_os_image</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#build-with-local-os-image">build(_with_local_os_image)</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Gini
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2017-2025, Gini.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

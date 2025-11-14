@@ -1,0 +1,510 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>bosh-lite 장애 Case 1 &#8212; Knowledge Utility Kit for Global Intelligence Integration  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'paas/cf/ch1.4';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Heartbeat Message sample" href="ch1.5.html" />
+    <link rel="prev" title="Failed to push java app (case sensative entries)" href="ch1.3.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Knowledge Utility Kit for Global Intelligence Integration  documentation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../index.html">
+                    Knowledge Utility Kit for Global Intelligence Integration
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Agent Payment Protocol (AP2)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../ap2/hands-on.html">Hands On</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">PaaS</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../bosh/bosh-agent-dev-setup.html">BOSH Agent Development Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bosh/bosh-stemcell-builder.html">BOSH linux stemcell builder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bosh/bosh-lite-resizing.html">BOSH lite resizing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bosh/using-upstart.html">Using upstart on ubuntu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bosh/reverse-ssh-port-forwarding.html">Bypassing corporate firewall with reverse ssh port forwarding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bosh/bosh-task.html">BOSH task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bosh/bosh-inside.html">BOSH Inside</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bosh/troubleshoot-case-01-openstack.html">OpenStack Case 1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bosh/troubleshoot-case-02-openstack.html">OpenStack Case 2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bosh/troubleshoot-case-03-aws.html">Case 3 AWS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bosh/troubleshoot-case-04-aws.html">Case 4 AWS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bosh/troubleshoot-case-05-galera-cluster.html">IaaS 네트워크 장비 교체 작업 후 mariadb galera cluster 장애</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bosh/troubleshoot-case-06-openstack.html">Trouble Shoot case 6 OpenStack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="locket.html">Locket</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cups.html">Custom User Provided Service (CUPS)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ch3.html">CF-Extensions projects in incubation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ch1.1.html">Custom User Provided Service (CUPS)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ch1.2.html">Cloud Native Application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ch1.3.html">Failed to push java app (case sensative entries)</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">bosh-lite 장애 Case 1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ch1.5.html">Heartbeat Message sample</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ch1.6.html">BOSH2 CLI 로 VM 에 로그인 하기</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ch1.7.html">HowTo Simply TcpDump and get.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ch1.8.html">Inside Cell</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ch1.9.html">Inside Diego Database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ch1.10.html">Router Register Log</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ch1.11.html">Cloud Check 를 통한 vm 장애 복구</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ch1.12.html">bosh-init 시 Open Stack Nova Bug 관련</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ch1.13.html">cf-openstack-validator 실행시 floatingip 관련 오류</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ch1.z.html">Uncategorized</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">IaaS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../iaas/ch1.1.html">Chapter 1 Command-Line Interface (CLI)</a></li>
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Git</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../git/git-flow.html">git flow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../git/git-push.html">git push</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../git/git-status.html">git status</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Golang</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../golang/mockery.html">mockery</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Markdown Examples</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../md/markdown_examples.html">Markdown Examples</a></li>
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/kukgini/kukgini.github.io" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/paas/cf/ch1.4.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>bosh-lite 장애 Case 1</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="bosh-lite-case-1">
+<h1>bosh-lite 장애 Case 1<a class="headerlink" href="#bosh-lite-case-1" title="Link to this heading">#</a></h1>
+<p>bosh cli 로 아예 director 에 connection refused 가 났기 때문에 director 에 문제가 생긴 것으로 추정함.
+director 는 bosh-lite 의 경우 Vagrant VM 그 자체이므로 다음과 같이 로그인 할 수 있다.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>vagrant<span class="w"> </span>ssh
+</pre></div>
+</div>
+<p>director 로그에는 access 자체가 안되는 것으로 보여서 시스템 로그를 확인해 보았다.</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>tail -f /var/log/syslog.log
+
+May 15 07:36:03 MY-SVR anacron[26411]: Job `cron.daily&#39; terminated
+May 15 07:36:03 MY-SVR anacron[26411]: Normal exit (1 job run)
+May 15 08:17:01 MY-SVR CRON[26579]: (root) CMD (   cd / &amp;&amp; run-parts --report /etc/cron.hourly)
+May 15 09:17:01 MY-SVR CRON[26596]: (root) CMD (   cd / &amp;&amp; run-parts --report /etc/cron.hourly)
+May 15 10:17:01 MY-SVR CRON[26852]: (root) CMD (   cd / &amp;&amp; run-parts --report /etc/cron.hourly)
+May 15 10:23:23 MY-SVR systemd[1]: snapd.refresh.timer: Adding 26min 19.000282s random time.
+May 15 11:17:01 MY-SVR CRON[27041]: (root) CMD (   cd / &amp;&amp; run-parts --report /etc/cron.hourly)
+May 15 11:27:23 MY-SVR systemd[1]: snapd.refresh.timer: Adding 4h 39min 57.220974s random time.
+May 15 12:11:23 MY-SVR systemd[1]: Starting Daily apt activities...
+May 15 12:11:40 MY-SVR systemd[1]: Started Daily apt activities.
+May 15 12:11:40 MY-SVR systemd[1]: apt-daily.timer: Adding 11h 32min 45.317937s random time.
+May 15 12:11:40 MY-SVR systemd[1]: apt-daily.timer: Adding 9h 39min 19.081080s random time.
+May 15 12:17:01 MY-SVR CRON[27412]: (root) CMD (   cd / &amp;&amp; run-parts --report /etc/cron.hourly)
+May 15 13:17:01 MY-SVR CRON[27469]: (root) CMD (   cd / &amp;&amp; run-parts --report /etc/cron.hourly)
+
+May 15 13:19:36 MY-SVR kernel: [2146474.509021] device vboxnet0 left promiscuous mode (&lt;-- 요기 주목!!!)
+May 15 13:19:36 MY-SVR NetworkManager[1233]: &lt;info&gt;  [1494821976.7642] device (vboxnet0): link disconnected
+May 15 13:19:36 MY-SVR kernel: [2146474.525511] vboxnetflt: 3649851 out of 3651331 packets were not sent (directed to host)
+
+May 15 13:24:02 MY-SVR systemd[1]: Started Session 781 of user lgcns.
+May 15 13:26:39 MY-SVR systemd[1]: Started Session 782 of user lgcns.
+May 15 13:26:39 MY-SVR systemd[1]: Started Session 783 of user lgcns.
+May 15 13:31:44 MY-SVR kernel: [2147202.365199] ip_tables: (C) 2000-2006 Netfilter Core Team
+</pre></div>
+</div>
+<p>로그를 보았을 때 vboxnet0 라는 NIC 디바이스가 장애가 난 것으로 보인다.</p>
+<p>vboxnet0 는 Virtual Box 가 Host 와 Guest VM 사이의 통신을 위해 만든 가상 디바이스이다. 다음 명령으로 디바이스 리스트를 볼 수 있다.</p>
+<p>이 경우 장치 오류이므로 어찌할 도리가 없어 서버를 재기동 하고 snapshot 으로 복구하였다.</p>
+<p>관련 자료:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="http://www.linuxquestions.org/questions/linux-security-4/device-entered-promiscuous-mode-696873/">http://www.linuxquestions.org/questions/linux-security-4/device-entered-promiscuous-mode-696873/</a></p></li>
+<li><p><a class="reference external" href="https://forums.virtualbox.org/viewtopic.php?f=7&amp;t=82378">https://forums.virtualbox.org/viewtopic.php?f=7&amp;t=82378</a></p></li>
+</ul>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="ch1.3.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Failed to push java app (case sensative entries)</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="ch1.5.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Heartbeat Message sample</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Gini
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2017-2025, Gini.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

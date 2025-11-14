@@ -1,0 +1,586 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>BOSH lite resizing &#8212; Knowledge Utility Kit for Global Intelligence Integration  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'paas/bosh/bosh-lite-resizing';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Using upstart on ubuntu" href="using-upstart.html" />
+    <link rel="prev" title="BOSH linux stemcell builder" href="bosh-stemcell-builder.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Knowledge Utility Kit for Global Intelligence Integration  documentation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../index.html">
+                    Knowledge Utility Kit for Global Intelligence Integration
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Agent Payment Protocol (AP2)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../ap2/hands-on.html">Hands On</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">PaaS</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="bosh-agent-dev-setup.html">BOSH Agent Development Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bosh-stemcell-builder.html">BOSH linux stemcell builder</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">BOSH lite resizing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-upstart.html">Using upstart on ubuntu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reverse-ssh-port-forwarding.html">Bypassing corporate firewall with reverse ssh port forwarding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bosh-task.html">BOSH task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bosh-inside.html">BOSH Inside</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshoot-case-01-openstack.html">OpenStack Case 1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshoot-case-02-openstack.html">OpenStack Case 2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshoot-case-03-aws.html">Case 3 AWS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshoot-case-04-aws.html">Case 4 AWS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshoot-case-05-galera-cluster.html">IaaS 네트워크 장비 교체 작업 후 mariadb galera cluster 장애</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshoot-case-06-openstack.html">Trouble Shoot case 6 OpenStack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/locket.html">Locket</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/cups.html">Custom User Provided Service (CUPS)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/ch3.html">CF-Extensions projects in incubation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/ch1.1.html">Custom User Provided Service (CUPS)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/ch1.2.html">Cloud Native Application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/ch1.3.html">Failed to push java app (case sensative entries)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/ch1.4.html">bosh-lite 장애 Case 1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/ch1.5.html">Heartbeat Message sample</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/ch1.6.html">BOSH2 CLI 로 VM 에 로그인 하기</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/ch1.7.html">HowTo Simply TcpDump and get.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/ch1.8.html">Inside Cell</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/ch1.9.html">Inside Diego Database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/ch1.10.html">Router Register Log</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/ch1.11.html">Cloud Check 를 통한 vm 장애 복구</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/ch1.12.html">bosh-init 시 Open Stack Nova Bug 관련</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/ch1.13.html">cf-openstack-validator 실행시 floatingip 관련 오류</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/ch1.z.html">Uncategorized</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">IaaS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../iaas/ch1.1.html">Chapter 1 Command-Line Interface (CLI)</a></li>
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Git</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../git/git-flow.html">git flow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../git/git-push.html">git push</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../git/git-status.html">git status</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Golang</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../golang/mockery.html">mockery</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Markdown Examples</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../md/markdown_examples.html">Markdown Examples</a></li>
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/kukgini/kukgini.github.io" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/paas/bosh/bosh-lite-resizing.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>BOSH lite resizing</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resizing-memory">resizing memory</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resizing-disk">resizing disk</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="bosh-lite-resizing">
+<h1>BOSH lite resizing<a class="headerlink" href="#bosh-lite-resizing" title="Link to this heading">#</a></h1>
+<section id="resizing-memory">
+<h2>resizing memory<a class="headerlink" href="#resizing-memory" title="Link to this heading">#</a></h2>
+<p>최초 시작시 (아직 VM Provisioning 이 수행되기 전) Vagrantfile 을 열어 config.vm.provider 내에 v.memory 를 MB 단위로 지정하고 vagrant up 을 하면 메모리가 조정된다.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Vagrant</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="s1">&#39;2&#39;</span><span class="p">)</span> <span class="n">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
+  <span class="n">config</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">box</span> <span class="o">=</span> <span class="s1">&#39;cloudfoundry/bosh-lite&#39;</span>
+
+  <span class="n">config</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">provider</span> <span class="p">:</span><span class="n">virtualbox</span> <span class="n">do</span> <span class="o">|</span><span class="n">v</span><span class="p">,</span> <span class="n">override</span><span class="o">|</span>
+    <span class="n">override</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">box_version</span> <span class="o">=</span> <span class="s1">&#39;9000.137.0&#39;</span> <span class="c1"># ci:replace</span>
+    <span class="c1"># To use a different IP address for the bosh-lite director, uncomment this line:</span>
+    <span class="c1"># override.vm.network :private_network, ip: &#39;192.168.59.4&#39;, id: :local</span>
+    <span class="n">v</span><span class="o">.</span><span class="n">memory</span> <span class="o">=</span> <span class="mi">40960</span>
+  <span class="n">end</span>
+
+  <span class="n">config</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">provider</span> <span class="p">:</span><span class="n">aws</span> <span class="n">do</span> <span class="o">|</span><span class="n">v</span><span class="p">,</span> <span class="n">override</span><span class="o">|</span>
+    <span class="n">override</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">box_version</span> <span class="o">=</span> <span class="s1">&#39;9000.137.0&#39;</span> <span class="c1"># ci:replace</span>
+    <span class="c1"># To turn off public IP echoing, uncomment this line:</span>
+    <span class="c1"># override.vm.provision :shell, id: &quot;public_ip&quot;, run: &quot;always&quot;, inline: &quot;/bin/true&quot;</span>
+
+    <span class="c1"># To turn off CF port forwarding, uncomment this line:</span>
+    <span class="c1"># override.vm.provision :shell, id: &quot;port_forwarding&quot;, run: &quot;always&quot;, inline: &quot;/bin/true&quot;</span>
+
+    <span class="c1"># Following minimal config is for Vagrant 1.7 since it loads this file before downloading the box.</span>
+    <span class="c1"># (Must not fail due to missing ENV variables because this file is loaded for all providers)</span>
+    <span class="n">v</span><span class="o">.</span><span class="n">access_key_id</span> <span class="o">=</span> <span class="n">ENV</span><span class="p">[</span><span class="s1">&#39;BOSH_AWS_ACCESS_KEY_ID&#39;</span><span class="p">]</span> <span class="o">||</span> <span class="s1">&#39;&#39;</span>
+    <span class="n">v</span><span class="o">.</span><span class="n">secret_access_key</span> <span class="o">=</span> <span class="n">ENV</span><span class="p">[</span><span class="s1">&#39;BOSH_AWS_SECRET_ACCESS_KEY&#39;</span><span class="p">]</span> <span class="o">||</span> <span class="s1">&#39;&#39;</span>
+    <span class="n">v</span><span class="o">.</span><span class="n">ami</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+  <span class="n">end</span>
+
+  <span class="n">config</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">provider</span> <span class="p">:</span><span class="n">vmware_fusion</span> <span class="n">do</span> <span class="o">|</span><span class="n">v</span><span class="p">,</span> <span class="n">override</span><span class="o">|</span>
+    <span class="n">override</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">box</span> <span class="o">=</span> <span class="s1">&#39;cloudfoundry/no-support-for-bosh-lite-on-fusion&#39;</span>
+    <span class="c1">#we no longer build current boxes for vmware_fusion</span>
+    <span class="c1">#ensure that this fails. otherwise the user gets an old box</span>
+  <span class="n">end</span>
+
+  <span class="n">config</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">provider</span> <span class="p">:</span><span class="n">vmware_workstation</span> <span class="n">do</span> <span class="o">|</span><span class="n">v</span><span class="p">,</span> <span class="n">override</span><span class="o">|</span>
+    <span class="n">override</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">box</span> <span class="o">=</span> <span class="s1">&#39;cloudfoundry/no-support-for-bosh-lite-on-workstation&#39;</span>
+    <span class="c1">#we no longer build current boxes for vmware_workstation</span>
+    <span class="c1">#ensure that this fails. otherwise the user gets an old box</span>
+  <span class="n">end</span>
+<span class="n">end</span>
+</pre></div>
+</div>
+</section>
+<section id="resizing-disk">
+<h2>resizing disk<a class="headerlink" href="#resizing-disk" title="Link to this heading">#</a></h2>
+<p>디스크의 조정은 다음 문서를 참조했다.
+https://medium.com/&#64;phirschybar/resize-your-vagrant-virtualbox-disk-3c0fbc607817</p>
+<p>Vagrant 가 Provisioning 한 디스크는 vmdk 포맷인데 이 포멧은 VBoxManager 를 통해 동적으로 resizing 을 할 수 없다. 따라서 다음 과정을 통해 용량 증설이 가능하다.</p>
+<ul class="simple">
+<li><p>vmdk -&gt; vdi 로 포맷 변경</p></li>
+<li><p>vdi resizing</p></li>
+<li><p>guest 에서 파티션 생성</p></li>
+<li><p>LVM 으로 새로 생성된 파티션을 기존 파티션에 붙이기</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">~/</span><span class="n">host</span><span class="o">&gt;</span> <span class="n">vagrant</span> <span class="n">halt</span>
+<span class="o">~/</span><span class="n">host</span><span class="o">&gt;</span> <span class="n">cd</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">where</span><span class="o">/</span><span class="n">your</span><span class="o">/</span><span class="n">vbox</span><span class="o">/.</span><span class="n">vmdk</span><span class="o">/</span><span class="n">files</span><span class="o">/</span><span class="n">are</span>
+<span class="o">~/</span><span class="n">host</span><span class="o">&gt;</span> <span class="n">VBoxManage</span> <span class="n">clonehd</span> <span class="n">my</span><span class="o">.</span><span class="n">vmdk</span> <span class="n">out</span><span class="o">.</span><span class="n">vdi</span> <span class="o">--</span><span class="nb">format</span> <span class="n">VDI</span>
+<span class="o">~/</span><span class="n">host</span><span class="o">&gt;</span> <span class="n">VBoxManage</span> <span class="n">modifyhd</span> <span class="n">out</span><span class="o">.</span><span class="n">vdi</span> <span class="o">--</span><span class="n">resize</span> <span class="mi">51200</span> 
+</pre></div>
+</div>
+<p>이렇게 하면 이미 떠있던 VM 이 halt 된다. 나중에 다시 VM 을 기동하여도 warden 컨테이너는 제대로 기동이 안되므로 deploy 를 수행하기 전에 용량 증설을 먼저 해두어야 한다.</p>
+<p>그런 다음 VirtualBox GUI 를 통해 하드 드라이브를 새로 만든 .vdi 이미지로 바꿔치기 한다.
+(select VM &gt; settings &gt; storage &gt; remove existing hard drive and add bew hard drive)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">~/</span><span class="n">host</span><span class="o">&gt;</span> <span class="n">vagrant</span> <span class="n">up</span>
+<span class="o">~/</span><span class="n">host</span><span class="o">&gt;</span> <span class="n">vagrant</span> <span class="n">ssh</span>
+<span class="o">~/</span><span class="n">guest</span><span class="o">&gt;</span> <span class="n">sudo</span> <span class="n">cfdisk</span> <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">sda</span>
+</pre></div>
+</div>
+<p>이렇게 하면 VM 이 기동되고 파티션 정보를 보여주는 대화형 창이 뜬다. 새로운 Space 를 선택후 다음과 같은 명령을 수행한다.
+(Select new space available &gt; select “NEW” &gt; select “Primary” &gt; select “Write”)
+/sda3 가 새로운 파티션으로 나타날 것이다.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">~/</span><span class="n">guest</span><span class="o">&gt;</span> <span class="n">exit</span>
+<span class="o">~/</span><span class="n">host</span><span class="o">&gt;</span> <span class="n">vagrant</span> <span class="n">reload</span>
+<span class="o">~/</span><span class="n">host</span><span class="o">&gt;</span> <span class="n">vagrant</span> <span class="n">ssh</span>
+<span class="o">~/</span><span class="n">guest</span><span class="o">&gt;</span> <span class="n">sudo</span> <span class="n">pvcreate</span> <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">sda3</span>
+</pre></div>
+</div>
+<p>만약 pvcreate 명령이 설치되어 있지 않다면 <strong>apt install lvm2</strong> 로 설치힌다.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">~/</span><span class="n">guest</span><span class="o">&gt;</span> <span class="n">sudo</span> <span class="n">pvdisplay</span> <span class="o">|</span> <span class="n">grep</span> <span class="s2">&quot;VG Name&quot;</span>
+</pre></div>
+</div>
+<p>이것은 볼륨 그룹 이름을 출력해 줄 것이다. 내 경우는 ubuntu-vg 였다. 다음과 같이 하여 볼륨 그룹에 새로 생성된 파티션을 붙여 확장한다. VG-NAME 을 자신의 것으로 바꿀것.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">~/</span><span class="n">guest</span><span class="o">&gt;</span> <span class="n">sudo</span> <span class="n">vgextend</span> <span class="n">VG</span><span class="o">-</span><span class="n">NAME</span> <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">sda3</span>
+<span class="o">~/</span><span class="n">guest</span><span class="o">&gt;</span> <span class="n">sudo</span> <span class="n">lvextend</span> <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">VG</span><span class="o">-</span><span class="n">NAME</span><span class="o">/</span><span class="n">root</span> <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">sda3</span>
+<span class="o">~/</span><span class="n">guest</span><span class="o">&gt;</span> <span class="n">sudo</span> <span class="n">resize2fs</span> <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">VG</span><span class="o">-</span><span class="n">NAME</span><span class="o">/</span><span class="n">root</span>
+<span class="o">~/</span><span class="n">guest</span><span class="o">&gt;</span> <span class="n">df</span> <span class="o">-</span><span class="n">h</span>
+</pre></div>
+</div>
+<p>마지막 명령은 새롭게 조정된 디스크 볼륨을 보여줄 것이다.</p>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="bosh-stemcell-builder.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">BOSH linux stemcell builder</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="using-upstart.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Using upstart on ubuntu</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resizing-memory">resizing memory</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resizing-disk">resizing disk</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Gini
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2017-2025, Gini.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
