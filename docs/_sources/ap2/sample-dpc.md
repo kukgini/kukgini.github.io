@@ -2,11 +2,33 @@
 
 ## Introduction
 
-Sample 은 3가지 시나리오를 제공함 (현실적 도입 가능성 순서)
+### AP2 프로토콜 개요
 
-* Cards - 기존 신용카드 인프라 사용 시나리오 (현재: 즉시 도입 가능)
-* DPC - Digital Payment Credential 연계 시나리오 (중기: 표준화 진행 중)
-* x402 - HTTP 402 Code 확장 시나리오 (장기: 실험적 개념)
+AP2(Agent to Payment)는 Google이 제안한 AI 에이전트 시대의 결제 프로토콜입니다. AI 에이전트가 사용자를 대신하여 자율적으로 상품을 구매하고 서비스에 가입하는 미래를 대비하여, 안전하고 효율적인 결제 방법을 정의합니다.
+
+### 세 가지 시나리오
+
+AP2 샘플은 서로 다른 특성과 도입 시기를 가진 **세 가지 결제 시나리오**를 제공합니다. 각 시나리오는 현실적 도입 가능성 순서로 배치되었습니다:
+
+#### 1. Cards - 기존 인프라 활용 (현재: 즉시 도입 가능)
+전통적인 신용카드 결제 네트워크를 그대로 활용하는 가장 현실적인 접근 방식입니다. 기존 인프라를 사용하므로 즉시 도입이 가능하며, 전 세계 대부분의 가맹점에서 사용할 수 있습니다.
+
+#### 2. DPC - 디지털 자격증명 기반 (중기: 표준화 진행 중)
+Digital Payment Credential을 활용한 차세대 결제 방식입니다. EUDI Wallet과 같은 대규모 디지털 신원 이니셔티브와 연계되어 있으며, 프라이버시와 보안을 최우선으로 합니다. Android Credential Manager API가 이미 존재하고 ISO/OpenID 표준화가 진행 중입니다.
+
+#### 3. x402 - HTTP 네이티브 결제 (장기: 실험적 개념)
+HTTP 402 상태 코드를 활용한 웹 네이티브 결제 프로토콜입니다. AI 에이전트 간 M2M(Machine-to-Machine) 거래에 최적화되어 있으나, 아직 표준과 생태계가 구축되지 않은 실험적 단계입니다.
+
+### 문서 구성
+
+이 문서는 다음과 같이 구성되어 있습니다:
+
+1. **각 시나리오 상세 설명**: 동작 방식, 주요 특징, 사용 사례, 한계점
+2. **DPC 기술 분석**: EUDI Wallet 연관성 및 구현 상세
+3. **전체 비교 및 결론**: 세 시나리오의 종합 비교와 도입 전략 제안
+4. **Next Steps**: 향후 개선 방향 및 iOS 지원
+
+각 시나리오는 상호 배타적이지 않으며, 사용 사례와 시장 상황에 따라 적절히 조합할 수 있습니다.
 
 ### Cards 시나리오
 
@@ -153,11 +175,11 @@ val result = credentialManager.getCredential(
 
 ## DPC 시나리오 상세 분석
 
-이 예제 시나리오는 DPC (Digital Payment Credential) 요청을 생성함. 주요 기능은 쇼핑 카트 정보를 받아 OID4VP (OpenID 4 Verifiable Presentation) 프로토콜 기반의 인증 요청 생성.
+이 예제 시나리오는 DPC (Digital Payment Credential) 요청을 생성합니다. 주요 기능은 쇼핑 카트 정보를 받아 OID4VP (OpenID 4 Verifiable Presentation) 프로토콜 기반의 인증 요청을 생성하는 것입니다.
 
 ## EUID Wallet (EU Digital Identity Wallet) 표준 연관성
 
-DPC 시나리오는 EUID Wallet 표준과 여러 측면에서 밀접하게 연관 있음
+DPC 시나리오는 EUID Wallet 표준과 여러 측면에서 밀접하게 연관되어 있습니다
 
 ### OID4VP (OpenID for Verifiable Presentaiton) 프로토콜 사용
 
@@ -177,9 +199,9 @@ val dcRequest =
 val dpcRequest = DpcRequest(protocol = "openid4vp-v1-unsigned", request = dcRequest)
 ```
 
-* EUDI Wallet 표준의 핵심: EUDI Wallet 은 OpenID4VP 를 주요 프로토콜로 사용함.
-* Protocol = “openid4vp-v1-unsigned” - EUDI Wallet 도 동일한 프로토콜을 사용하여 Verifiable Presentation 을 요청
-* responseType = “vp_token”
+* EUDI Wallet 표준의 핵심: EUDI Wallet 은 OpenID4VP 를 주요 프로토콜로 사용합니다.
+* Protocol = "openid4vp-v1-unsigned" - EUDI Wallet 도 동일한 프로토콜을 사용하여 Verifiable Presentation 을 요청합니다
+* responseType = "vp_token"
 
 ### ISO/IEC 18013-5 mode 형식 지원
 
@@ -205,9 +227,9 @@ val mdocFormatsSupported =
     )
 ```
 
-* EUID Wallet 의 주요 형식: EUID Wallet 은 ISO mdoc (mDL - Mobile Driver’s License) 형식을 핵심 credential 형식으로 사용
-* Format = mdocIdentifier (mso_mdoc) - EUID Wallet 에서도 동일한 mdoc 형식 사용
-* ES256 알고리즘 - EUID Wallet 에서 권장하는 암호화 알고리즘
+* EUID Wallet 의 주요 형식: EUID Wallet 은 ISO mdoc (mDL - Mobile Driver's License) 형식을 핵심 credential 형식으로 사용합니다
+* Format = mdocIdentifier (mso_mdoc) - EUID Wallet 에서도 동일한 mdoc 형식을 사용합니다
+* ES256 알고리즘 - EUID Wallet 에서 권장하는 암호화 알고리즘입니다
 
 ### DCQL (Digital Credentials Query Language) 사용
 
@@ -232,9 +254,9 @@ val mdocFormatsSupported =
   val dcqlQuery = DcqlQuery(credentials = listOf(credentialQuery))
 ```
 
-* 선택적 공개 (Selective Disclosure) - EUDI Wallet 의 핵심 원칙
-* DCQL 을 사용하여 필요한 특정 claim 만 요청 (카드 번호, 소유자 이름 만)
-* EUDI Wallet 도 동일한 방식으로 사용자가 공개할 정보를 선택할 수 있음
+* 선택적 공개 (Selective Disclosure) - EUDI Wallet 의 핵심 원칙입니다
+* DCQL 을 사용하여 필요한 특정 claim 만 요청합니다 (카드 번호, 소유자 이름 만)
+* EUDI Wallet 도 동일한 방식으로 사용자가 공개할 정보를 선택할 수 있습니다
 
 ### Android Credential Manager API 통합
 
@@ -253,9 +275,9 @@ val mdocFormatsSupported =
     )
 ```
 
-* Android Credential Manager API 는 EUDI Wallet 의 구현 플랫폼 중 하나임
-* Transaction Data 에 대한 서명 - EUDI Wallet 에서도 중요한 보안 메커니즘
-* transactionDataHashesAlg = “sha-256” - 거래 무결성 보장
+* Android Credential Manager API 는 EUDI Wallet 의 구현 플랫폼 중 하나입니다
+* Transaction Data 에 대한 서명 - EUDI Wallet 에서도 중요한 보안 메커니즘입니다
+* transactionDataHashesAlg = "sha-256" - 거래 무결성을 보장합니다
 
 ```{code-block} kotkin
 :caption: DpcHelper.kt:59~65
@@ -268,8 +290,8 @@ val mdocFormatsSupported =
     )
 ```
 
-* EUID Wallet 의 핵심 원칙: 사용자가 공유하는 정보를 명확히 보고 동의해야 함
-* 구매 세부사항을 표시하여 사용자가 서명하는 내용을 정확히 이해할 수 있게 함
+* EUID Wallet 의 핵심 원칙: 사용자가 공유하는 정보를 명확히 보고 동의해야 합니다
+* 구매 세부사항을 표시하여 사용자가 서명하는 내용을 정확히 이해할 수 있게 합니다
 
 ### DPC vs EUDI Wallet 차이점
 
@@ -441,7 +463,7 @@ AP2 프로토콜의 세 가지 시나리오는 AI 에이전트 결제의 진화 
 
 ### Verification of signed token
 
-이 시나리오에서 Merchant Agent 는 Shopping Assistant 로 부터 받은 token 을 검증하지 않는다. 단지 signed token 이 포함되어 있는지 여부만 확인함. 부인 방지를 위해 추후 검증 방식이 보완 되어야 하며 이는 EUID Wallet 의 검증 방식을 차용할 것으로 예상됨.
+이 시나리오에서 Merchant Agent 는 Shopping Assistant 로 부터 받은 token 을 검증하지 않습니다. 단지 signed token 이 포함되어 있는지 여부만 확인합니다. 부인 방지를 위해 추후 검증 방식이 보완되어야 하며, 이는 EUID Wallet 의 검증 방식을 차용할 것으로 예상됩니다.
 
 ### iOS 플랫폼 지원 및 상호운용성
 
