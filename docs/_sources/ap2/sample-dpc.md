@@ -8,22 +8,26 @@ Sample 은 3가지 시나리오를 제공함
 * Cards - ?
 * DPC - Digital Payment Credential 연계 시나리오
 
+### x402 시나리오
+
+### Cards 시나리오
+
 ### DPC 시나리오
 
-Android 기반으로 되어 있으며 Android Credential Manager API 를 통해 CMWallet 과 상호작용 함
+Android 기반으로 되어 있으며 Android Credential Manager API 를 통해 CMWallet 과 상호작용 함. CMWallet 이란 Digital Credential 을 관리하는 전용 앱으로 샘플에서 제공하는 CMWallet 은 2개의 가상 신용카드를 가지고 있어 결제 확인시 사용자가 신용카드를 선택할 수 있음.
 
-## DcpHelper.kt
+## DpcHelper.kt
 
-이 코드는 DCP (Digital Payment Credential) 요청을 생성함. 주요 기능은 쇼핑 카트 정보를 받아 OID4VP (OpenID 4 Verifiable Presentation) 프로토콜 기반의 인증 요청 생성.
+이 코드는 DPC (Digital Payment Credential) 요청을 생성함. 주요 기능은 쇼핑 카트 정보를 받아 OID4VP (OpenID 4 Verifiable Presentation) 프로토콜 기반의 인증 요청 생성.
 
 ## EUID Wallet (EU Digital Identity Wallet) 표준 연관성
 
-DCP 시나리오는 EUID Wallet 표준과 여러 측면에서 밀접하게 연관 있음
+DPC 시나리오는 EUID Wallet 표준과 여러 측면에서 밀접하게 연관 있음
 
 ### OID4VP (OpenID for Verifiable Presentaiton) 프로토콜 사용
 
 ```{code-block} kotlin
-:caption: DcpHelper.kt:110~120
+:caption: DpcHelper.kt:110~120
 
 val dcRequest =
   Request(
@@ -45,7 +49,7 @@ val dpcRequest = DpcRequest(protocol = "openid4vp-v1-unsigned", request = dcRequ
 ### ISO/IEC 18013-5 mode 형식 지원
 
 ```{code-block} kotlin
-:caption: DcpHelper.kt:85~91
+:caption: DpcHelper.kt:85~91
 
 val credentialQuery =
     CredentialQuery(
@@ -57,7 +61,7 @@ val credentialQuery =
 ```
 
 ```{code-block} kotlin
-:caption: DcpHelper.kt:96~100
+:caption: DpcHelper.kt:96~100
 
 val mdocFormatsSupported =
     MdocFormatsSupported(
@@ -73,7 +77,7 @@ val mdocFormatsSupported =
 ### DCQL (Digital Credentials Query Language) 사용
 
 ```{code-block} kotlin
-:caption: DcpHelper.kt:78~93
+:caption: DpcHelper.kt:78~93
 
   // Build the DCQL query to request specific credential claims.
   val claims =
@@ -100,7 +104,7 @@ val mdocFormatsSupported =
 ### Android Credential Manager API 통합
 
 ```{code-block} kotlin
-:caption: DcpHelpper.kt:67~76
+:caption: DpcHelpper.kt:67~76
 
   // Build transaction_data payload.
   val transactionData =
@@ -119,7 +123,7 @@ val mdocFormatsSupported =
 * transactionDataHashesAlg = “sha-256” - 거래 무결성 보장
 
 ```{code-block} kotkin
-:caption: DcpHelper.kt:59~65
+:caption: DpcHelper.kt:59~65
   val additionalInfo =
     AdditionalInfo(
       title = "Please confirm your purchase details...",

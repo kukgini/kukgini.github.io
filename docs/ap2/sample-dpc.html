@@ -43,7 +43,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'ap2/sample-dpc';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="BOSH Agent Development Setup" href="../paas/bosh/bosh-agent-dev-setup.html" />
+    <link rel="next" title="CMWallet" href="cmwallet.html" />
     <link rel="prev" title="Knowledge Utility Kit for Global Intelligence Integration" href="../index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -159,6 +159,7 @@
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Agent Payment Protocol (AP2)</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Digital Payment Credential 시나리오</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cmwallet.html">CMWallet</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">PaaS</span></p>
 <ul class="nav bd-sidenav">
@@ -376,10 +377,12 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#x402">x402 시나리오</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cards">Cards 시나리오</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dpc">DPC 시나리오</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dcphelper-kt">DcpHelper.kt</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dpchelper-kt">DpcHelper.kt</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#euid-wallet-eu-digital-identity-wallet">EUID Wallet (EU Digital Identity Wallet) 표준 연관성</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#oid4vp-openid-for-verifiable-presentaiton">OID4VP (OpenID for Verifiable Presentaiton) 프로토콜 사용</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#iso-iec-18013-5-mode">ISO/IEC 18013-5 mode 형식 지원</a></li>
@@ -412,22 +415,28 @@ document.write(`
 <li><p>Cards - ?</p></li>
 <li><p>DPC - Digital Payment Credential 연계 시나리오</p></li>
 </ul>
+<section id="x402">
+<h3>x402 시나리오<a class="headerlink" href="#x402" title="Link to this heading">#</a></h3>
+</section>
+<section id="cards">
+<h3>Cards 시나리오<a class="headerlink" href="#cards" title="Link to this heading">#</a></h3>
+</section>
 <section id="dpc">
 <h3>DPC 시나리오<a class="headerlink" href="#dpc" title="Link to this heading">#</a></h3>
-<p>Android 기반으로 되어 있으며 Android Credential Manager API 를 통해 CMWallet 과 상호작용 함</p>
+<p>Android 기반으로 되어 있으며 Android Credential Manager API 를 통해 CMWallet 과 상호작용 함. CMWallet 이란 Digital Credential 을 관리하는 전용 앱으로 샘플에서 제공하는 CMWallet 은 2개의 가상 신용카드를 가지고 있어 결제 확인시 사용자가 신용카드를 선택할 수 있음.</p>
 </section>
 </section>
-<section id="dcphelper-kt">
-<h2>DcpHelper.kt<a class="headerlink" href="#dcphelper-kt" title="Link to this heading">#</a></h2>
-<p>이 코드는 DCP (Digital Payment Credential) 요청을 생성함. 주요 기능은 쇼핑 카트 정보를 받아 OID4VP (OpenID 4 Verifiable Presentation) 프로토콜 기반의 인증 요청 생성.</p>
+<section id="dpchelper-kt">
+<h2>DpcHelper.kt<a class="headerlink" href="#dpchelper-kt" title="Link to this heading">#</a></h2>
+<p>이 코드는 DPC (Digital Payment Credential) 요청을 생성함. 주요 기능은 쇼핑 카트 정보를 받아 OID4VP (OpenID 4 Verifiable Presentation) 프로토콜 기반의 인증 요청 생성.</p>
 </section>
 <section id="euid-wallet-eu-digital-identity-wallet">
 <h2>EUID Wallet (EU Digital Identity Wallet) 표준 연관성<a class="headerlink" href="#euid-wallet-eu-digital-identity-wallet" title="Link to this heading">#</a></h2>
-<p>DCP 시나리오는 EUID Wallet 표준과 여러 측면에서 밀접하게 연관 있음</p>
+<p>DPC 시나리오는 EUID Wallet 표준과 여러 측면에서 밀접하게 연관 있음</p>
 <section id="oid4vp-openid-for-verifiable-presentaiton">
 <h3>OID4VP (OpenID for Verifiable Presentaiton) 프로토콜 사용<a class="headerlink" href="#oid4vp-openid-for-verifiable-presentaiton" title="Link to this heading">#</a></h3>
 <div class="literal-block-wrapper docutils container" id="id3">
-<div class="code-block-caption"><span class="caption-text">DcpHelper.kt:110~120</span><a class="headerlink" href="#id3" title="Link to this code">#</a></div>
+<div class="code-block-caption"><span class="caption-text">DpcHelper.kt:110~120</span><a class="headerlink" href="#id3" title="Link to this code">#</a></div>
 <div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="kd">val</span><span class="w"> </span><span class="nv">dcRequest</span><span class="w"> </span><span class="o">=</span>
 <span class="w">  </span><span class="n">Request</span><span class="p">(</span>
 <span class="w">    </span><span class="n">responseType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;vp_token&quot;</span><span class="p">,</span>
@@ -451,7 +460,7 @@ document.write(`
 <section id="iso-iec-18013-5-mode">
 <h3>ISO/IEC 18013-5 mode 형식 지원<a class="headerlink" href="#iso-iec-18013-5-mode" title="Link to this heading">#</a></h3>
 <div class="literal-block-wrapper docutils container" id="id4">
-<div class="code-block-caption"><span class="caption-text">DcpHelper.kt:85~91</span><a class="headerlink" href="#id4" title="Link to this code">#</a></div>
+<div class="code-block-caption"><span class="caption-text">DpcHelper.kt:85~91</span><a class="headerlink" href="#id4" title="Link to this code">#</a></div>
 <div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="kd">val</span><span class="w"> </span><span class="nv">credentialQuery</span><span class="w"> </span><span class="o">=</span>
 <span class="w">    </span><span class="n">CredentialQuery</span><span class="p">(</span>
 <span class="w">        </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">credId</span><span class="p">,</span>
@@ -463,7 +472,7 @@ document.write(`
 </div>
 </div>
 <div class="literal-block-wrapper docutils container" id="id5">
-<div class="code-block-caption"><span class="caption-text">DcpHelper.kt:96~100</span><a class="headerlink" href="#id5" title="Link to this code">#</a></div>
+<div class="code-block-caption"><span class="caption-text">DpcHelper.kt:96~100</span><a class="headerlink" href="#id5" title="Link to this code">#</a></div>
 <div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="kd">val</span><span class="w"> </span><span class="nv">mdocFormatsSupported</span><span class="w"> </span><span class="o">=</span>
 <span class="w">    </span><span class="n">MdocFormatsSupported</span><span class="p">(</span>
 <span class="w">        </span><span class="n">issuerauthAlgValues</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">listOf</span><span class="p">(</span><span class="o">-</span><span class="m">7</span><span class="p">),</span><span class="w"> </span><span class="c1">// ES256</span>
@@ -481,7 +490,7 @@ document.write(`
 <section id="dcql-digital-credentials-query-language">
 <h3>DCQL (Digital Credentials Query Language) 사용<a class="headerlink" href="#dcql-digital-credentials-query-language" title="Link to this heading">#</a></h3>
 <div class="literal-block-wrapper docutils container" id="id6">
-<div class="code-block-caption"><span class="caption-text">DcpHelper.kt:78~93</span><a class="headerlink" href="#id6" title="Link to this code">#</a></div>
+<div class="code-block-caption"><span class="caption-text">DpcHelper.kt:78~93</span><a class="headerlink" href="#id6" title="Link to this code">#</a></div>
 <div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="c1">// Build the DCQL query to request specific credential claims.</span>
 <span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="nv">claims</span><span class="w"> </span><span class="o">=</span>
 <span class="w">    </span><span class="n">listOf</span><span class="p">(</span>
@@ -510,7 +519,7 @@ document.write(`
 <section id="android-credential-manager-api">
 <h3>Android Credential Manager API 통합<a class="headerlink" href="#android-credential-manager-api" title="Link to this heading">#</a></h3>
 <div class="literal-block-wrapper docutils container" id="id7">
-<div class="code-block-caption"><span class="caption-text">DcpHelpper.kt:67~76</span><a class="headerlink" href="#id7" title="Link to this code">#</a></div>
+<div class="code-block-caption"><span class="caption-text">DpcHelpper.kt:67~76</span><a class="headerlink" href="#id7" title="Link to this code">#</a></div>
 <div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="c1">// Build transaction_data payload.</span>
 <span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="nv">transactionData</span><span class="w"> </span><span class="o">=</span>
 <span class="w">    </span><span class="n">TransactionData</span><span class="p">(</span>
@@ -530,7 +539,7 @@ document.write(`
 <li><p>transactionDataHashesAlg = “sha-256” - 거래 무결성 보장</p></li>
 </ul>
 <div class="literal-block-wrapper docutils container" id="id8">
-<div class="code-block-caption"><span class="caption-text">DcpHelper.kt:59~65</span><a class="headerlink" href="#id8" title="Link to this code">#</a></div>
+<div class="code-block-caption"><span class="caption-text">DpcHelper.kt:59~65</span><a class="headerlink" href="#id8" title="Link to this code">#</a></div>
 <div class="highlight-kotkin notranslate"><div class="highlight"><pre><span></span>  val additionalInfo =
     AdditionalInfo(
       title = &quot;Please confirm your purchase details...&quot;,
@@ -598,11 +607,11 @@ document.write(`
       </div>
     </a>
     <a class="right-next"
-       href="../paas/bosh/bosh-agent-dev-setup.html"
+       href="cmwallet.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">BOSH Agent Development Setup</p>
+        <p class="prev-next-title">CMWallet</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -623,10 +632,12 @@ document.write(`
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#x402">x402 시나리오</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cards">Cards 시나리오</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dpc">DPC 시나리오</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dcphelper-kt">DcpHelper.kt</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dpchelper-kt">DpcHelper.kt</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#euid-wallet-eu-digital-identity-wallet">EUID Wallet (EU Digital Identity Wallet) 표준 연관성</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#oid4vp-openid-for-verifiable-presentaiton">OID4VP (OpenID for Verifiable Presentaiton) 프로토콜 사용</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#iso-iec-18013-5-mode">ISO/IEC 18013-5 mode 형식 지원</a></li>
