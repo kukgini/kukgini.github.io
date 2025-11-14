@@ -1,4 +1,4 @@
-# Digital Payment Credential 시나리오
+# Agent Payment Protocol Samples
 
 ## Introduction
 
