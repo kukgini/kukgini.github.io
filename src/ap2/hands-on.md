@@ -1,84 +1,27 @@
-# Samples Hands On
+# Hands On
 
 ## Introduction
 
-Agent Payment Protocol (AP2) is...
+Sample 은 3가지 시나리오를 제공함
 
-## Prerequisites
+- x402
+- Cards
+- DCP
 
-Before you begin, make sure you have:
+### DCP 시나리오
 
-- Requirement 1
-- Requirement 2
-- Requirement 3
+Android 기반으로 되어 있으며 Android Credential Manager API 를 통해 CMWallet 과 상호작용 함
 
-## Setup
+## DcpHelper.kt
 
-### Step 1: Environment Setup
+이 코드는 DCP (Digital Payment Credential) 요청을 생성함. 주요 기능은 쇼핑 카트 정보를 받아 OID4VP (OpenID 4 Verifiable Presentation) 프로토콜 기반의 인증 요청 생성.
 
-```bash
-# Add your setup commands here
-```
+## EUID Wallet (EU Digital Identity Wallet) 표준 연관성
 
-### Step 2: Configuration
+DCP 시나리오는 EUID Wallet 표준과 여러 측면에서 밀접하게 연관 있음
 
-```bash
-# Add your configuration commands here
-```
+### OID4VP (OpenID for Verifiable Presentaiton) 프로토콜 사용
 
-## Getting Started
-
-### Basic Example
-
-```python
-# Add your code example here
-```
-
-### Running Your First AP2 Transaction
-
-1. First step...
-2. Second step...
-3. Third step...
-
-## Common Use Cases
-
-### Use Case 1: Payment Processing
-
-Description of the use case...
-
-```python
-# Example code
-```
-
-### Use Case 2: Transaction Verification
-
-Description of the use case...
-
-```python
-# Example code
-```
-
-## Troubleshooting
-
-### Common Issues
-
-#### Issue 1: Connection Error
-
-**Problem:** Description of the problem...
-
-**Solution:** How to solve it...
-
-#### Issue 2: Authentication Failed
-
-**Problem:** Description of the problem...
-
-**Solution:** How to solve it...
-
-## Best Practices
-
-- Best practice 1
-- Best practice 2
-- Best practice 3
 
 ## Next Steps
 
