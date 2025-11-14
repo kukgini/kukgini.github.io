@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Chapter 1 Command-Line Interface (CLI) &#8212; my.sphinx  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="&lt;no title&gt;" href="../git/git-flow.html" />
+    <link rel="prev" title="Uncategorized" href="../cf/ch1.z.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="chapter-1-command-line-interface-cli">
+<h1>Chapter 1 Command-Line Interface (CLI)<a class="headerlink" href="#chapter-1-command-line-interface-cli" title="Link to this heading">¶</a></h1>
+<section id="login">
+<h2>Login<a class="headerlink" href="#login" title="Link to this heading">¶</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+openstack<span class="w"> </span>--os-auth-url<span class="w"> </span>http://xx.xx.xx.xx:5000/v3<span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>--os-identity-api-version<span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>--os-auth-type<span class="w"> </span>v3password<span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>--os-project-domain-id<span class="w"> </span>&lt;project-domain-id&gt;<span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>--os-project-name<span class="w"> </span>&lt;project_name&gt;<span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>--os-user-domain-id<span class="w"> </span>&lt;user-domain-id&gt;<span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>--os-username<span class="w"> </span>&lt;username&gt;<span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>--os-password<span class="w"> </span>&lt;password&gt;
+</pre></div>
+</div>
+</section>
+<section id="floating-ip">
+<h2>Floating IP 할당<a class="headerlink" href="#floating-ip" title="Link to this heading">¶</a></h2>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>(openstack) server list
+(openstack) floating ip list
+(openstack) server add floating ip &lt;server-id&gt; &lt;floating-ip-addr&gt;
+</pre></div>
+</div>
+</section>
+</section>
+<section id="uncategorized">
+<h1>Uncategorized<a class="headerlink" href="#uncategorized" title="Link to this heading">¶</a></h1>
+<ul class="simple">
+<li><p>[Official Documentation](<a class="reference external" href="http://docs.openstack.org/index.html">http://docs.openstack.org/index.html</a>)</p></li>
+<li><p>[Newton releases 의 구성요소](<a class="reference external" href="https://releases.openstack.org/newton/index.html">https://releases.openstack.org/newton/index.html</a>)</p></li>
+<li><p>[Installation Guides](<a class="reference external" href="http://docs.openstack.org/index.html#install-guides">http://docs.openstack.org/index.html#install-guides</a>)</p></li>
+</ul>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">my.sphinx</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../golang/mockery.html">}</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../golang/mockery.html#id10">}</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../golang/mockery.html#id35">}</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../golang/mockery.html#id54">})</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bosh/bosh-stemcell-builder.html">build_os_image</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bosh/bosh-stemcell-builder.html#upload-os-image-download-os-image">upload_os_image / download_os_image</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bosh/bosh-stemcell-builder.html#build-with-local-os-image">build(_with_local_os_image)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bosh/bosh-lite-resizing.html">end</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bosh/using-upstart.html">오래 돌아야 하는 서버 또는 워커를 관리하는 스마트하지 않은 방법</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bosh/using-upstart.html#id2">스마트하지 않은 방법의 문제점</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bosh/using-upstart.html#upstart">우분투에서 기본으로 제공되는 upstart 를 사용하는 스마트한 방법</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bosh/troubleshoot-case-05-galera-cluster.html">## 장애 원인</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bosh/troubleshoot-case-05-galera-cluster.html#id14">## 작업 내역</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/ch3.html">CF-Extensions projects in incubation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/ch1.1.html">Custom User Provided Service (CUPS)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/ch1.2.html">Cloud Native Application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/ch1.3.html">Failed to push java app (case sensative entries)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/ch1.4.html">bosh-lite 장애 Case 1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/ch1.5.html">Heartbeat Message sample</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/ch1.6.html">BOSH2 CLI 로 VM 에 로그인 하기</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/ch1.7.html">HowTo Simply TcpDump and get.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/ch1.8.html">Inside Cell</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/ch1.9.html">Inside Diego Database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/ch1.10.html">Router Register Log</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/ch1.11.html">Cloud Check 를 통한 vm 장애 복구</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/ch1.12.html">bosh-init 시 Open Stack Nova Bug 관련</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/ch1.13.html">cf-openstack-validator 실행시 floatingip 관련 오류</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/ch1.z.html">Uncategorized</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Chapter 1 Command-Line Interface (CLI)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#uncategorized">Uncategorized</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../md/markdown_examples.html">An h1 header</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="../cf/ch1.z.html" title="previous chapter">Uncategorized</a></li>
+      <li>Next: <a href="../git/git-flow.html" title="next chapter">&lt;no title&gt;</a></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2017, me.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../_sources/os/ch1.1.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,5 @@
+_build
+.venv
+# docs directory is committed for GitHub Pages, but exclude build artifacts
+docs/.doctrees/
+docs/.buildinfo

@@ -1,0 +1,14 @@
+$
+$
+$ cat bosh.pub
+ssh-rsa .... bosh
+
+$
+$
+$ ssh-keygen -y -e -f bosh.pem
+---- BEGIN SSH2 PUBLIC KEY ----
+Comment: "4096-bit RSA, converted by ... from OpenSSH"
+...
+...
+...
+---- END SSH2 PUBLIC KEY ----

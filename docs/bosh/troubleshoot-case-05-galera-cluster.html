@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>## 장애 원인 &#8212; my.sphinx  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="&lt;no title&gt;" href="troubleshoot-case-06-openstack.html" />
+    <link rel="prev" title="&lt;no title&gt;" href="troubleshoot-case-04-aws.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <p># IaaS 네트워크 장비 교체 작업 후 mariadb galera cluster 장애</p>
+<p>## 장애 상황</p>
+<p>mysqld 프로세스를 띄우는 데 사용된 명령 라인</p>
+<p><a href="#id1"><span class="problematic" id="id2">``</span></a>`
+/var/vcap/packages/mariadb/bin/mysqld</p>
+<blockquote>
+<div><p>–basedir=/var/vcap/packages/mariadb
+–datadir=/var/vcap/store/mysql
+–plugin-dir=/var/vcap/packages/mariadb/lib/plugin
+–wsrep_on=ON
+–wsrep_provider=/var/vcap/packages/mariadb/lib/plugin/libgalera_smm.so
+–log-error=/var/vcap/sys/log/mysql/mysql.err.log
+–pid-file=/var/vcap/sys/run/mysql/mysql.pid
+–socket=/var/vcap/sys/run/mysql/mysqld.sock
+–port=3306
+–wsrep_start_position=746e46f3-8f76-11e7-9c1c-a220eabab4ba:20626756</p>
+</div></blockquote>
+<p><a href="#id3"><span class="problematic" id="id4">``</span></a><a href="#id5"><span class="problematic" id="id6">`</span></a></p>
+<p>명령 라인에 명시된 pid 파일(/var/vcap/sys/run/mysql/mysql.pid)이 존재하지 않음
+명령 라인에 명시된 socket 파일(/var/vcap/sys/run/mysql/mysqld.sock) 이 존재함: 프로세스간 통신으로 DB 에 접근은 가능할 것으로 예상됨.</p>
+<p>mysql VM 에서 서비스 중인 port 검사: 클러스터 리플리케이션에 사용되는 4567 포트는 정상이나 서비스 포트인 3306 은 사라짐</p>
+<p><code class="docutils literal notranslate"><span class="pre">`</span>
+<span class="pre">#</span> <span class="pre">netstat</span> <span class="pre">-tulpn</span>
+<span class="pre">Active</span> <span class="pre">Internet</span> <span class="pre">connections</span> <span class="pre">(only</span> <span class="pre">servers)</span>
+<span class="pre">Proto</span> <span class="pre">Recv-Q</span> <span class="pre">Send-Q</span> <span class="pre">Local</span> <span class="pre">Address</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">Foreign</span> <span class="pre">Address</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">State</span>&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">PID/Program</span> <span class="pre">name</span>
+<span class="pre">tcp</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">0</span>&#160;&#160;&#160;&#160;&#160; <span class="pre">0</span> <span class="pre">127.0.0.1:2822</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">0.0.0.0:*</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">LISTEN</span>&#160;&#160;&#160;&#160;&#160; <span class="pre">1437/monit</span>
+<span class="pre">tcp</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">0</span>&#160;&#160;&#160;&#160;&#160; <span class="pre">0</span> <span class="pre">127.0.0.1:2825</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">0.0.0.0:*</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">LISTEN</span>&#160;&#160;&#160;&#160;&#160; <span class="pre">985/bosh-agent</span>
+<span class="pre">tcp</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">0</span>&#160;&#160;&#160;&#160;&#160; <span class="pre">0</span> <span class="pre">0.0.0.0:9100</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">0.0.0.0:*</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">LISTEN</span>&#160;&#160;&#160;&#160;&#160; <span class="pre">2038/node_exporter</span>
+<span class="pre">tcp</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">0</span>&#160;&#160;&#160;&#160;&#160; <span class="pre">0</span> <span class="pre">0.0.0.0:51692</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">0.0.0.0:*</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">LISTEN</span>&#160;&#160;&#160;&#160;&#160; <span class="pre">578/rpc.statd</span>
+<span class="pre">tcp</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">0</span>&#160;&#160;&#160;&#160;&#160; <span class="pre">0</span> <span class="pre">0.0.0.0:111</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">0.0.0.0:*</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">LISTEN</span>&#160;&#160;&#160;&#160;&#160; <span class="pre">566/rpcbind</span>
+<span class="pre">tcp</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">0</span>&#160;&#160;&#160;&#160;&#160; <span class="pre">0</span> <span class="pre">0.0.0.0:9200</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">0.0.0.0:*</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">LISTEN</span>&#160;&#160;&#160;&#160;&#160; <span class="pre">1935/galera-healthc</span>
+<span class="pre">tcp</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">0</span>&#160;&#160;&#160;&#160;&#160; <span class="pre">0</span> <span class="pre">127.0.0.1:33331</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">0.0.0.0:*</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">LISTEN</span>&#160;&#160;&#160;&#160;&#160; <span class="pre">985/bosh-agent</span>
+<span class="pre">tcp</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">0</span>&#160;&#160;&#160;&#160;&#160; <span class="pre">0</span> <span class="pre">0.0.0.0:22</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">0.0.0.0:*</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">LISTEN</span>&#160;&#160;&#160;&#160;&#160; <span class="pre">866/sshd</span>
+<span class="pre">tcp</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">0</span>&#160;&#160;&#160;&#160;&#160; <span class="pre">0</span> <span class="pre">0.0.0.0:4567</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">0.0.0.0:*</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">LISTEN</span>&#160;&#160;&#160;&#160;&#160; <span class="pre">1890/mysqld</span>
+<span class="pre">udp</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">0</span>&#160;&#160;&#160;&#160;&#160; <span class="pre">0</span> <span class="pre">127.0.0.1:514</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">0.0.0.0:*</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">1417/rsyslogd</span>
+<span class="pre">udp</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">0</span>&#160;&#160;&#160;&#160;&#160; <span class="pre">0</span> <span class="pre">0.0.0.0:694</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">0.0.0.0:*</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">566/rpcbind</span>
+<span class="pre">udp</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">0</span>&#160;&#160;&#160;&#160;&#160; <span class="pre">0</span> <span class="pre">0.0.0.0:33474</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">0.0.0.0:*</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">578/rpc.statd</span>
+<span class="pre">udp</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">0</span>&#160;&#160;&#160;&#160;&#160; <span class="pre">0</span> <span class="pre">127.0.0.1:754</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">0.0.0.0:*</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">578/rpc.statd</span>
+<span class="pre">udp</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">0</span>&#160;&#160;&#160;&#160;&#160; <span class="pre">0</span> <span class="pre">0.0.0.0:22522</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">0.0.0.0:*</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">668/dhclient</span>
+<span class="pre">udp</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">0</span>&#160;&#160;&#160;&#160;&#160; <span class="pre">0</span> <span class="pre">0.0.0.0:68</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">0.0.0.0:*</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">668/dhclient</span>
+<span class="pre">udp</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">0</span>&#160;&#160;&#160;&#160;&#160; <span class="pre">0</span> <span class="pre">0.0.0.0:111</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">0.0.0.0:*</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">566/rpcbind</span>
+<span class="pre">`</span></code></p>
+<p>명령 라인에 명시된 log 파일에서 IaaS 작업 시간대의 로그를 발췌하면 다음과 같다.
+로그를 통해 알 수 있는 사실은 클러스터 복구 작업 도중 프로세스가 멈춰있다는 것이다. (이 상태로 Timeout 도 없이 2일간 지속됨)</p>
+<p><a href="#id7"><span class="problematic" id="id8">``</span></a>`
+mysql/4c1906d1-….:/var/vcap/sys/log/mysql# cat /var/vcap/sys/log/mysql/mysql.err.log | sed ‘1,554d’
+171021 21:56:54 mysqld_safe Starting mysqld daemon with databases from /var/vcap/store/mysql
+171021 21:56:54 mysqld_safe WSREP: Running position recovery with –log_error=’/var/vcap/store/mysql/wsrep_recovery.dHPgeE’ –pid-file=’/var/vcap/store/mysql/9693da77-4ad5-4bd2-ae62-8eb421f87d1a-recover.pid’
+2017-10-21 21:56:55 140111964899200 [Note] /var/vcap/packages/mariadb/bin/mysqld (mysqld 10.1.24-MariaDB) starting as process 1822 …
+2017-10-21 21:56:55 140111964899200 [Warning] An old style –language or -lc-message-dir value with language specific part detected: /var/vcap/packages/mariadb/share/english/
+2017-10-21 21:56:55 140111964899200 [Warning] Use –lc-messages-dir without language specific part instead.
+171021 21:57:32 mysqld_safe WSREP: Recovered position 746e46f3-8f76-11e7-9c1c-a220eabab4ba:20626756
+2017-10-21 21:57:32 140046406944640 [Note] /var/vcap/packages/mariadb/bin/mysqld (mysqld 10.1.24-MariaDB) starting as process 1890 …
+2017-10-21 21:57:32 140046406944640 [Warning] An old style –language or -lc-message-dir value with language specific part detected: /var/vcap/packages/mariadb/share/english/
+2017-10-21 21:57:32 140046406944640 [Warning] Use –lc-messages-dir without language specific part instead.
+2017-10-21 21:57:32 140046406944640 [Note] WSREP: Read nil XID from storage engines, skipping position init
+2017-10-21 21:57:32 140046406944640 [Note] WSREP: wsrep_load(): loading provider library ‘/var/vcap/packages/mariadb/lib/plugin/libgalera_smm.so’
+2017-10-21 21:57:33 140046406944640 [Note] WSREP: wsrep_load(): Galera 3.20(rXXXX) by Codership Oy &lt;info&#64;codership.com&gt; loaded successfully.
+2017-10-21 21:57:33 140046406944640 [Note] WSREP: CRC-32C: using hardware acceleration.
+2017-10-21 21:57:33 140046406944640 [Note] WSREP: Found saved state: 746e46f3-8f76-11e7-9c1c-a220eabab4ba:-1, safe_to_bootsrap: 0
+2017-10-21 21:57:33 140046406944640 [Note] WSREP: Passing config to GCS: base_dir = /var/vcap/store/mysql/; base_host = 10.62.154.5; base_port = 4567; cert.log_conflicts = no; debug = no; evs.auto_evict = 0; evs.delay_margin = PT1S; evs.delayed_keep_period = PT30S; evs.inactive_check_period = PT0.5S; evs.inactive_timeout = PT15S; evs.join_retrans_period = PT1S; evs.max_install_timeouts = 3; evs.send_window = 4; evs.stats_report_period = PT1M; evs.suspect_timeout = PT5S; evs.user_send_window = 2; evs.view_forget_timeout = PT24H; gcache.dir = /var/vcap/store/mysql/; gcache.keep_pages_size = 0; gcache.mem_size = 0; gcache.name = /var/vcap/store/mysql//galera.cache; gcache.page_size = 128M; gcache.recover = no; gcache.size = 512M; gcomm.thread_prio = ; gcs.fc_debug = 0; gcs.fc_factor = 1.0; gcs.fc_limit = 16; gcs.fc_master_slave = no; gcs.max_packet_size = 64500; gcs.max_throttle = 0.25; gcs.recv_q_hard_limit = 9223372036854775807; gcs.recv_q_soft_limit = 0.25; gcs.sync_donor = no; gmcast.segment = 0; gmcast.version = 0; pc.announce_timeout = PT3S; pc.ch
+2017-10-21 21:57:33 140046406944640 [Note] WSREP: GCache history reset: old(746e46f3-8f76-11e7-9c1c-a220eabab4ba:0) -&gt; new(746e46f3-8f76-11e7-9c1c-a220eabab4ba:20626756)
+2017-10-21 21:57:33 140046406944640 [Note] WSREP: Assign initial position for certification: 20626756, protocol version: -1
+2017-10-21 21:57:33 140046406944640 [Note] WSREP: wsrep_sst_grab()
+2017-10-21 21:57:33 140046406944640 [Note] WSREP: Start replication
+2017-10-21 21:57:33 140046406944640 [Note] WSREP: Setting initial position to 746e46f3-8f76-11e7-9c1c-a220eabab4ba:20626756
+2017-10-21 21:57:33 140046406944640 [Note] WSREP: protonet asio version 0
+2017-10-21 21:57:33 140046406944640 [Note] WSREP: Using CRC-32C for message checksums.
+2017-10-21 21:57:33 140046406944640 [Note] WSREP: backend: asio
+2017-10-21 21:57:33 140046406944640 [Note] WSREP: gcomm thread scheduling priority set to other:0
+2017-10-21 21:57:33 140046406944640 [Note] WSREP: restore pc from disk successfully
+2017-10-21 21:57:33 140046406944640 [Note] WSREP: GMCast version 0
+2017-10-21 21:57:33 140046406944640 [Note] WSREP: (069ddd4c, ‘tcp://0.0.0.0:4567’) listening at tcp://0.0.0.0:4567
+2017-10-21 21:57:33 140046406944640 [Note] WSREP: (069ddd4c, ‘tcp://0.0.0.0:4567’) multicast: , ttl: 1
+2017-10-21 21:57:33 140046406944640 [Note] WSREP: EVS version 0
+2017-10-21 21:57:33 140046406944640 [Note] WSREP: gcomm: connecting to group ‘cf-mariadb-galera-cluster’, peer ‘10.62.154.4:,10.62.154.5:,10.62.154.13:’
+2017-10-21 21:57:33 140046406944640 [Note] WSREP: (069ddd4c, ‘tcp://0.0.0.0:4567’) connection established to 069ddd4c tcp://10.62.154.5:4567
+2017-10-21 21:57:33 140046406944640 [Warning] WSREP: (069ddd4c, ‘tcp://0.0.0.0:4567’) address ‘tcp://10.62.154.5:4567’ points to own listening address, blacklisting
+2017-10-21 21:57:36 140046406944640 [Note] WSREP: (069ddd4c, ‘tcp://0.0.0.0:4567’) connection to peer 069ddd4c with addr tcp://10.62.154.5:4567 timed out, no messages seen in PT3S
+2017-10-21 21:57:36 140046406944640 [Warning] WSREP: no nodes coming from prim view, prim not possible
+2017-10-21 21:57:36 140046406944640 [Note] WSREP: view(view_id(NON_PRIM,069ddd4c,109) memb {</p>
+<blockquote>
+<div><p>069ddd4c,0</p>
+</div></blockquote>
+<p>} joined {
+} left {
+} partitioned {
+})
+2017-10-21 21:57:36 140046406944640 [Note] WSREP: gcomm: connected
+2017-10-21 21:57:36 140046406944640 [Note] WSREP: Changing maximum packet size to 64500, resulting msg size: 32636
+2017-10-21 21:57:36 140046406944640 [Note] WSREP: Shifting CLOSED -&gt; OPEN (TO: 0)
+2017-10-21 21:57:36 140046406944640 [Note] WSREP: Opened channel ‘cf-mariadb-galera-cluster’
+2017-10-21 21:57:36 140046406944640 [Note] WSREP: Waiting for SST to complete.
+2017-10-21 21:57:36 140045696608000 [Note] WSREP: New COMPONENT: primary = no, bootstrap = no, my_idx = 0, memb_num = 1
+2017-10-21 21:57:36 140045696608000 [Note] WSREP: Flow-control interval: [16, 16]
+2017-10-21 21:57:36 140045696608000 [Note] WSREP: Received NON-PRIMARY.
+2017-10-21 21:57:36 140046341503744 [Note] WSREP: New cluster view: global state: 746e46f3-8f76-11e7-9c1c-a220eabab4ba:20626756, view# -1: non-Primary, number of nodes: 1, my index: 0, protocol version -1
+2017-10-21 21:57:36 140046341503744 [Note] WSREP: wsrep_notify_cmd is not defined, skipping notification.
+2017-10-21 21:57:37 140045705000704 [Warning] WSREP: last inactive check more than PT1.5S ago (PT3.50413S), skipping check
+2017-10-21 21:57:39 140045705000704 [Note] WSREP: (069ddd4c, ‘tcp://0.0.0.0:4567’) connection established to 26d54452 tcp://10.62.154.13:4567
+2017-10-21 21:57:39 140045705000704 [Note] WSREP: (069ddd4c, ‘tcp://0.0.0.0:4567’) turning message relay requesting on, nonlive peers:
+2017-10-21 21:57:40 140045705000704 [Note] WSREP: declaring 26d54452 at tcp://10.62.154.13:4567 stable
+2017-10-21 21:57:40 140045705000704 [Warning] WSREP: no nodes coming from prim view, prim not possible
+2017-10-21 21:57:40 140045705000704 [Note] WSREP: view(view_id(NON_PRIM,069ddd4c,110) memb {</p>
+<blockquote>
+<div><p>069ddd4c,0
+26d54452,0</p>
+</div></blockquote>
+<p>} joined {
+} left {
+} partitioned {
+})
+2017-10-21 21:57:40 140045696608000 [Note] WSREP: New COMPONENT: primary = no, bootstrap = no, my_idx = 0, memb_num = 2
+2017-10-21 21:57:40 140045696608000 [Note] WSREP: Flow-control interval: [23, 23]
+2017-10-21 21:57:40 140045696608000 [Note] WSREP: Received NON-PRIMARY.
+2017-10-21 21:57:40 140046341503744 [Note] WSREP: New cluster view: global state: 746e46f3-8f76-11e7-9c1c-a220eabab4ba:20626756, view# -1: non-Primary, number of nodes: 2, my index: 0, protocol version -1
+2017-10-21 21:57:40 140046341503744 [Note] WSREP: wsrep_notify_cmd is not defined, skipping notification.
+2017-10-21 21:57:43 140045705000704 [Note] WSREP: (069ddd4c, ‘tcp://0.0.0.0:4567’) turning message relay requesting off
+2017-10-21 21:57:52 140045705000704 [Note] WSREP: (069ddd4c, ‘tcp://0.0.0.0:4567’) connection established to 11247975 tcp://10.62.154.4:4567
+2017-10-21 21:57:52 140045705000704 [Note] WSREP: (069ddd4c, ‘tcp://0.0.0.0:4567’) turning message relay requesting on, nonlive peers:
+2017-10-21 21:57:52 140045705000704 [Note] WSREP: declaring 11247975 at tcp://10.62.154.4:4567 stable
+2017-10-21 21:57:52 140045705000704 [Note] WSREP: declaring 26d54452 at tcp://10.62.154.13:4567 stable
+2017-10-21 21:57:52 140045705000704 [Warning] WSREP: no nodes coming from prim view, prim not possible
+2017-10-21 21:57:52 140045705000704 [Note] WSREP: view(view_id(NON_PRIM,069ddd4c,111) memb {</p>
+<blockquote>
+<div><p>069ddd4c,0
+11247975,0
+26d54452,0</p>
+</div></blockquote>
+<p>} joined {
+} left {
+} partitioned {
+})
+2017-10-21 21:57:52 140045705000704 [Warning] WSREP: node uuid: 11247975 last_prim(type: 2, uuid: 11247975) is inconsistent to restored view(type: V_NON_PRIM, uuid: 069ddd4c
+2017-10-21 21:57:52 140045696608000 [Note] WSREP: New COMPONENT: primary = no, bootstrap = no, my_idx = 0, memb_num = 3
+2017-10-21 21:57:52 140045696608000 [Note] WSREP: Flow-control interval: [28, 28]
+2017-10-21 21:57:52 140045696608000 [Note] WSREP: Received NON-PRIMARY.
+2017-10-21 21:57:52 140046341503744 [Note] WSREP: New cluster view: global state: 746e46f3-8f76-11e7-9c1c-a220eabab4ba:20626756, view# -1: non-Primary, number of nodes: 3, my index: 0, protocol version -1
+2017-10-21 21:57:52 140046341503744 [Note] WSREP: wsrep_notify_cmd is not defined, skipping notification.
+2017-10-21 21:57:55 140045705000704 [Note] WSREP: (069ddd4c, ‘tcp://0.0.0.0:4567’) turning message relay requesting off
+<a href="#id9"><span class="problematic" id="id10">``</span></a><a href="#id11"><span class="problematic" id="id12">`</span></a></p>
+<section id="id13">
+<h1>## 장애 원인<a class="headerlink" href="#id13" title="Link to this heading">¶</a></h1>
+<p>아래 장애 원인은 Galera Cluster 복구 메커니즘을 알지 못한 상태에서 생각한 것임.</p>
+<ul class="simple">
+<li><p>IaaS 작업 내용에 비추어 보면 VM 이 정상인 상태에서 Network 만 장시간 단절되었을 수 있음.</p></li>
+<li><p>각 노드가 Network 단절로 인해 고립된 형태로 파티셔닝 되었을 수 있음.</p></li>
+<li><p>이후 Network 복원 시점에 클러스터링 복원을 위해 서비스 포트(3306)를 일시적으로 내렸을 가능성 있음</p></li>
+<li><p>클러스터 복원이 원활히 이루어지지 않고 deadlock 되면서 여타의 복원 프로세스가 연쇄적으로 동작하지 않게 됨.</p></li>
+</ul>
+</section>
+<section id="id14">
+<h1>## 작업 내역<a class="headerlink" href="#id14" title="Link to this heading">¶</a></h1>
+<p>장애 VM 중 하나를 재기동 하기 위해 종료: drain script timeout 으로 실패함.
+<code class="docutils literal notranslate"><span class="pre">`</span>
+<span class="pre">#</span> <span class="pre">bosh</span> <span class="pre">-d</span> <span class="pre">mysql</span> <span class="pre">stop</span> <span class="pre">mysql/fb2639f6-23dc-4b19-afaf-a9dce3df4dc7</span>
+<span class="pre">`</span></code></p>
+<p>deployment 전체를 재기동: 서비스 정상화 됨 (bootstrap errend job 을 실행시키지 않아도 되는 점이 특이함)
+<code class="docutils literal notranslate"><span class="pre">`</span>
+<span class="pre">#</span> <span class="pre">bosh</span> <span class="pre">-d</span> <span class="pre">mysql</span> <span class="pre">restart</span>
+<span class="pre">`</span></code></p>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">my.sphinx</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../golang/mockery.html">}</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../golang/mockery.html#id10">}</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../golang/mockery.html#id35">}</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../golang/mockery.html#id54">})</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bosh-stemcell-builder.html">build_os_image</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bosh-stemcell-builder.html#upload-os-image-download-os-image">upload_os_image / download_os_image</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bosh-stemcell-builder.html#build-with-local-os-image">build(_with_local_os_image)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bosh-lite-resizing.html">end</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-upstart.html">오래 돌아야 하는 서버 또는 워커를 관리하는 스마트하지 않은 방법</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-upstart.html#id2">스마트하지 않은 방법의 문제점</a></li>
+<li class="toctree-l1"><a class="reference internal" href="using-upstart.html#upstart">우분투에서 기본으로 제공되는 upstart 를 사용하는 스마트한 방법</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">## 장애 원인</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#id14">## 작업 내역</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/ch3.html">CF-Extensions projects in incubation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/ch1.1.html">Custom User Provided Service (CUPS)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/ch1.2.html">Cloud Native Application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/ch1.3.html">Failed to push java app (case sensative entries)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/ch1.4.html">bosh-lite 장애 Case 1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/ch1.5.html">Heartbeat Message sample</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/ch1.6.html">BOSH2 CLI 로 VM 에 로그인 하기</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/ch1.7.html">HowTo Simply TcpDump and get.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/ch1.8.html">Inside Cell</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/ch1.9.html">Inside Diego Database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/ch1.10.html">Router Register Log</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/ch1.11.html">Cloud Check 를 통한 vm 장애 복구</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/ch1.12.html">bosh-init 시 Open Stack Nova Bug 관련</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/ch1.13.html">cf-openstack-validator 실행시 floatingip 관련 오류</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cf/ch1.z.html">Uncategorized</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../os/ch1.1.html">Chapter 1 Command-Line Interface (CLI)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../os/ch1.1.html#uncategorized">Uncategorized</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../md/markdown_examples.html">An h1 header</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="troubleshoot-case-04-aws.html" title="previous chapter">&lt;no title&gt;</a></li>
+      <li>Next: <a href="troubleshoot-case-06-openstack.html" title="next chapter">&lt;no title&gt;</a></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2017, me.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../_sources/bosh/troubleshoot-case-05-galera-cluster.md.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
