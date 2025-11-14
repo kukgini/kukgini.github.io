@@ -168,13 +168,11 @@ val mdocFormatsSupported =
 
 ## Next Steps
 
-- Learn about [Advanced Topics](#)
-- Explore [API Reference](#)
-- Check out [Examples](#)
+### Verification of signed token
+
+이 시나리오에서 Merchant Agent 는 Shopping Assistant 로 부터 받은 token 을 검증하지 않는다. 단지 signed token 이 포함되어 있는지 여부만 확인함. 부인 방지를 위해 추후 검증 방식이 보완 되어야 하며 이는 EUID Wallet 의 검증 방식을 차용할 것으로 예상됨.
 
 ## References
 
-- [Official Documentation](https://example.com)
-- [GitHub Repository](https://github.com/example)
-- [Community Forum](https://forum.example.com)
-
+- [Official Documentation](https://cloud.google.com/blog/products/ai-machine-learning/announcing-agents-to-payments-ap2-protocol)
+- [GitHub Repository](https://github.com/google-agentic-commerce/AP2)
