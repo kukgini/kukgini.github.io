@@ -66,6 +66,82 @@ val mdocFormatsSupported =
     )
 ```
 
+* EUID Wallet 의 주요 형식: EUID Wallet 은 ISO mdoc (mDL - Mobile Driver’s License) 형식을 핵심 credential 형식으로 사용
+* Format = mdocIdentifier (mso_mdoc) - EUID Wallet 에서도 동일한 mdoc 형식 사용
+* ES256 알고리즘 - EUID Wallet 에서 권장하는 암호화 알고리즘
+
+### DCQL (Digital Credentials Query Language) 사용
+
+```{code-block} kotlin
+:caption: DcpHelper.kt:78~93
+
+  // Build the DCQL query to request specific credential claims.
+  val claims =
+    listOf(
+      Claim(path = listOf("com.emvco.payment_card.1", "card_number")),
+      Claim(path = listOf("com.emvco.payment_card.1", "holder_name")),
+    )
+
+  val credentialQuery =
+    CredentialQuery(
+      id = credId,
+      format = mdocIdentifier,
+      meta = Meta(doctypeValue = "com.emvco.payment_card"),
+      claims = claims,
+    )
+
+  val dcqlQuery = DcqlQuery(credentials = listOf(credentialQuery))
+```
+
+* 선택적 공개 (Selective Disclosure) - EUDI Wallet 의 핵심 원칙
+* DCQL 을 사용하여 필요한 특정 claim 만 요청 (카드 번호, 소유자 이름 만)
+* EUDI Wallet 도 동일한 방식으로 사용자가 공개할 정보를 선택할 수 있음
+
+### Android Credential Manager API 통합
+
+```{code-block} kotlin
+:caption: DcpHelpper.kt:67~76
+
+  // Build transaction_data payload.
+  val transactionData =
+    TransactionData(
+      type = "payment_card",
+      credentialIds = listOf(credId),
+      transactionDataHashesAlg = listOf("sha-256"),
+      merchantName = merchantName,
+      amount = "US ${String.format("%.2f", totalValue)}",
+      additionalInfo = json.encodeToString(additionalInfo), // Serialize the inner object
+    )
+```
+
+* Android Credential Manager API 는 EUDI Wallet 의 구현 플랫폼 중 하나임
+* Transaction Data 에 대한 서명 - EUDI Wallet 에서도 중요한 보안 메커니즘
+* transactionDataHashesAlg = “sha-256” - 거래 무결성 보장
+
+```{code-block} kotkin
+:caption: DcpHelper.kt:59~65
+  val additionalInfo =
+    AdditionalInfo(
+      title = "Please confirm your purchase details...",
+      tableHeader = listOf("Name", "Qty", "Price", "Total"),
+      tableRows = tableRows,
+      footer = footerText,
+    )
+```
+
+* EUID Wallet 의 핵심 원칙: 사용자가 공유하는 정보를 명확히 보고 동의해야 함
+* 구매 세부사항을 표시하여 사용자가 서명하는 내용을 정확히 이해할 수 있게 함
+
+### 주요 차이점
+
+* 용도: 이 코드는 결제에 특화 (payment_card), EUDI Wallet은 신원 증명이 주요 목적
+* doctype: com.emvco.payment_card vs EUDI Wallet의 eu.europa.ec.eudi.pid.1 (Personal ID)
+* 서명: 현재는 unsigned 버전을 사용하지만, EUDI Wallet은 강력한 암호화 서명 요구
+
+## 결론
+
+이 코드는 EUDI Wallet과 동일한 기술 스택과 표준(OpenID4VP, ISO mdoc, DCQL)을 사용하여 결제 시나리오를 구현한 것입니다. EUDI Wallet 표준을 결제 분야에 적용한 좋은 예시로, 향후 EUDI Wallet과의 상호운용성을 고려한 설계라고 볼 수 있습니다.
+
 ## Next Steps
 
 - Learn about [Advanced Topics](#)

@@ -383,8 +383,12 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#euid-wallet-eu-digital-identity-wallet">EUID Wallet (EU Digital Identity Wallet) 표준 연관성</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#oid4vp-openid-for-verifiable-presentaiton">OID4VP (OpenID for Verifiable Presentaiton) 프로토콜 사용</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#iso-iec-18013-5-mode">ISO/IEC 18013-5 mode 형식 지원</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dcql-digital-credentials-query-language">DCQL (Digital Credentials Query Language) 사용</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#android-credential-manager-api">Android Credential Manager API 통합</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">주요 차이점</a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">결론</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#next-steps">Next Steps</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
 </ul>
@@ -422,8 +426,8 @@ document.write(`
 <p>DCP 시나리오는 EUID Wallet 표준과 여러 측면에서 밀접하게 연관 있음</p>
 <section id="oid4vp-openid-for-verifiable-presentaiton">
 <h3>OID4VP (OpenID for Verifiable Presentaiton) 프로토콜 사용<a class="headerlink" href="#oid4vp-openid-for-verifiable-presentaiton" title="Link to this heading">#</a></h3>
-<div class="literal-block-wrapper docutils container" id="id1">
-<div class="code-block-caption"><span class="caption-text">DcpHelper.kt:110~120</span><a class="headerlink" href="#id1" title="Link to this code">#</a></div>
+<div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-text">DcpHelper.kt:110~120</span><a class="headerlink" href="#id3" title="Link to this code">#</a></div>
 <div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="kd">val</span><span class="w"> </span><span class="nv">dcRequest</span><span class="w"> </span><span class="o">=</span>
 <span class="w">  </span><span class="n">Request</span><span class="p">(</span>
 <span class="w">    </span><span class="n">responseType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;vp_token&quot;</span><span class="p">,</span>
@@ -446,8 +450,8 @@ document.write(`
 </section>
 <section id="iso-iec-18013-5-mode">
 <h3>ISO/IEC 18013-5 mode 형식 지원<a class="headerlink" href="#iso-iec-18013-5-mode" title="Link to this heading">#</a></h3>
-<div class="literal-block-wrapper docutils container" id="id2">
-<div class="code-block-caption"><span class="caption-text">DcpHelper.kt:85~91</span><a class="headerlink" href="#id2" title="Link to this code">#</a></div>
+<div class="literal-block-wrapper docutils container" id="id4">
+<div class="code-block-caption"><span class="caption-text">DcpHelper.kt:85~91</span><a class="headerlink" href="#id4" title="Link to this code">#</a></div>
 <div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="kd">val</span><span class="w"> </span><span class="nv">credentialQuery</span><span class="w"> </span><span class="o">=</span>
 <span class="w">    </span><span class="n">CredentialQuery</span><span class="p">(</span>
 <span class="w">        </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">credId</span><span class="p">,</span>
@@ -458,8 +462,8 @@ document.write(`
 </pre></div>
 </div>
 </div>
-<div class="literal-block-wrapper docutils container" id="id3">
-<div class="code-block-caption"><span class="caption-text">DcpHelper.kt:96~100</span><a class="headerlink" href="#id3" title="Link to this code">#</a></div>
+<div class="literal-block-wrapper docutils container" id="id5">
+<div class="code-block-caption"><span class="caption-text">DcpHelper.kt:96~100</span><a class="headerlink" href="#id5" title="Link to this code">#</a></div>
 <div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="kd">val</span><span class="w"> </span><span class="nv">mdocFormatsSupported</span><span class="w"> </span><span class="o">=</span>
 <span class="w">    </span><span class="n">MdocFormatsSupported</span><span class="p">(</span>
 <span class="w">        </span><span class="n">issuerauthAlgValues</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">listOf</span><span class="p">(</span><span class="o">-</span><span class="m">7</span><span class="p">),</span><span class="w"> </span><span class="c1">// ES256</span>
@@ -468,7 +472,92 @@ document.write(`
 </pre></div>
 </div>
 </div>
+<ul class="simple">
+<li><p>EUID Wallet 의 주요 형식: EUID Wallet 은 ISO mdoc (mDL - Mobile Driver’s License) 형식을 핵심 credential 형식으로 사용</p></li>
+<li><p>Format = mdocIdentifier (mso_mdoc) - EUID Wallet 에서도 동일한 mdoc 형식 사용</p></li>
+<li><p>ES256 알고리즘 - EUID Wallet 에서 권장하는 암호화 알고리즘</p></li>
+</ul>
 </section>
+<section id="dcql-digital-credentials-query-language">
+<h3>DCQL (Digital Credentials Query Language) 사용<a class="headerlink" href="#dcql-digital-credentials-query-language" title="Link to this heading">#</a></h3>
+<div class="literal-block-wrapper docutils container" id="id6">
+<div class="code-block-caption"><span class="caption-text">DcpHelper.kt:78~93</span><a class="headerlink" href="#id6" title="Link to this code">#</a></div>
+<div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="c1">// Build the DCQL query to request specific credential claims.</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="nv">claims</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="n">listOf</span><span class="p">(</span>
+<span class="w">      </span><span class="n">Claim</span><span class="p">(</span><span class="n">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">listOf</span><span class="p">(</span><span class="s">&quot;com.emvco.payment_card.1&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;card_number&quot;</span><span class="p">)),</span>
+<span class="w">      </span><span class="n">Claim</span><span class="p">(</span><span class="n">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">listOf</span><span class="p">(</span><span class="s">&quot;com.emvco.payment_card.1&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;holder_name&quot;</span><span class="p">)),</span>
+<span class="w">    </span><span class="p">)</span>
+
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="nv">credentialQuery</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="n">CredentialQuery</span><span class="p">(</span>
+<span class="w">      </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">credId</span><span class="p">,</span>
+<span class="w">      </span><span class="n">format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mdocIdentifier</span><span class="p">,</span>
+<span class="w">      </span><span class="n">meta</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Meta</span><span class="p">(</span><span class="n">doctypeValue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;com.emvco.payment_card&quot;</span><span class="p">),</span>
+<span class="w">      </span><span class="n">claims</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">claims</span><span class="p">,</span>
+<span class="w">    </span><span class="p">)</span>
+
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="nv">dcqlQuery</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DcqlQuery</span><span class="p">(</span><span class="n">credentials</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">listOf</span><span class="p">(</span><span class="n">credentialQuery</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<ul class="simple">
+<li><p>선택적 공개 (Selective Disclosure) - EUDI Wallet 의 핵심 원칙</p></li>
+<li><p>DCQL 을 사용하여 필요한 특정 claim 만 요청 (카드 번호, 소유자 이름 만)</p></li>
+<li><p>EUDI Wallet 도 동일한 방식으로 사용자가 공개할 정보를 선택할 수 있음</p></li>
+</ul>
+</section>
+<section id="android-credential-manager-api">
+<h3>Android Credential Manager API 통합<a class="headerlink" href="#android-credential-manager-api" title="Link to this heading">#</a></h3>
+<div class="literal-block-wrapper docutils container" id="id7">
+<div class="code-block-caption"><span class="caption-text">DcpHelpper.kt:67~76</span><a class="headerlink" href="#id7" title="Link to this code">#</a></div>
+<div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="c1">// Build transaction_data payload.</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="nv">transactionData</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="n">TransactionData</span><span class="p">(</span>
+<span class="w">      </span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;payment_card&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="n">credentialIds</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">listOf</span><span class="p">(</span><span class="n">credId</span><span class="p">),</span>
+<span class="w">      </span><span class="n">transactionDataHashesAlg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">listOf</span><span class="p">(</span><span class="s">&quot;sha-256&quot;</span><span class="p">),</span>
+<span class="w">      </span><span class="n">merchantName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">merchantName</span><span class="p">,</span>
+<span class="w">      </span><span class="n">amount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;US </span><span class="si">${</span><span class="kt">String</span><span class="p">.</span><span class="na">format</span><span class="p">(</span><span class="s">&quot;</span><span class="o">%</span><span class="p">.</span><span class="m">2f</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">totalValue</span><span class="p">)</span><span class="si">}</span><span class="s">&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="n">additionalInfo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">json</span><span class="p">.</span><span class="na">encodeToString</span><span class="p">(</span><span class="n">additionalInfo</span><span class="p">),</span><span class="w"> </span><span class="c1">// Serialize the inner object</span>
+<span class="w">    </span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<ul class="simple">
+<li><p>Android Credential Manager API 는 EUDI Wallet 의 구현 플랫폼 중 하나임</p></li>
+<li><p>Transaction Data 에 대한 서명 - EUDI Wallet 에서도 중요한 보안 메커니즘</p></li>
+<li><p>transactionDataHashesAlg = “sha-256” - 거래 무결성 보장</p></li>
+</ul>
+<div class="literal-block-wrapper docutils container" id="id8">
+<div class="code-block-caption"><span class="caption-text">DcpHelper.kt:59~65</span><a class="headerlink" href="#id8" title="Link to this code">#</a></div>
+<div class="highlight-kotkin notranslate"><div class="highlight"><pre><span></span>  val additionalInfo =
+    AdditionalInfo(
+      title = &quot;Please confirm your purchase details...&quot;,
+      tableHeader = listOf(&quot;Name&quot;, &quot;Qty&quot;, &quot;Price&quot;, &quot;Total&quot;),
+      tableRows = tableRows,
+      footer = footerText,
+    )
+</pre></div>
+</div>
+</div>
+<ul class="simple">
+<li><p>EUID Wallet 의 핵심 원칙: 사용자가 공유하는 정보를 명확히 보고 동의해야 함</p></li>
+<li><p>구매 세부사항을 표시하여 사용자가 서명하는 내용을 정확히 이해할 수 있게 함</p></li>
+</ul>
+</section>
+<section id="id1">
+<h3>주요 차이점<a class="headerlink" href="#id1" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>용도: 이 코드는 결제에 특화 (payment_card), EUDI Wallet은 신원 증명이 주요 목적</p></li>
+<li><p>doctype: com.emvco.payment_card vs EUDI Wallet의 eu.europa.ec.eudi.pid.1 (Personal ID)</p></li>
+<li><p>서명: 현재는 unsigned 버전을 사용하지만, EUDI Wallet은 강력한 암호화 서명 요구</p></li>
+</ul>
+</section>
+</section>
+<section id="id2">
+<h2>결론<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<p>이 코드는 EUDI Wallet과 동일한 기술 스택과 표준(OpenID4VP, ISO mdoc, DCQL)을 사용하여 결제 시나리오를 구현한 것입니다. EUDI Wallet 표준을 결제 분야에 적용한 좋은 예시로, 향후 EUDI Wallet과의 상호운용성을 고려한 설계라고 볼 수 있습니다.</p>
 </section>
 <section id="next-steps">
 <h2>Next Steps<a class="headerlink" href="#next-steps" title="Link to this heading">#</a></h2>
@@ -541,8 +630,12 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#euid-wallet-eu-digital-identity-wallet">EUID Wallet (EU Digital Identity Wallet) 표준 연관성</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#oid4vp-openid-for-verifiable-presentaiton">OID4VP (OpenID for Verifiable Presentaiton) 프로토콜 사용</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#iso-iec-18013-5-mode">ISO/IEC 18013-5 mode 형식 지원</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dcql-digital-credentials-query-language">DCQL (Digital Credentials Query Language) 사용</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#android-credential-manager-api">Android Credential Manager API 통합</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">주요 차이점</a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">결론</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#next-steps">Next Steps</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
 </ul>
