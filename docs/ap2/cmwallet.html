@@ -378,13 +378,12 @@ document.write(`
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#architecture">Architecture</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-components">Key Components</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-features">Key Features</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">왜 별도 앱인가?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">필수 요구사항</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#integration-with-android-credential-manager-api">Integration with Android Credential Manager API</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#api-usage">API Usage</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#integration-flow-with-android-credential-manager-api">Integration Flow with Android Credential Manager API</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#features">Features</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#credential-storage">1. Credential Storage</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#authentication">2. Authentication</a></li>
@@ -423,24 +422,34 @@ document.write(`
 <section id="architecture">
 <h2>Architecture<a class="headerlink" href="#architecture" title="Link to this heading">#</a></h2>
 <p><img alt="CMWallet Architecture" src="../_images/cmwallet-architecture.png" /></p>
-<section id="key-components">
-<h3>Key Components<a class="headerlink" href="#key-components" title="Link to this heading">#</a></h3>
+<section id="key-features">
+<h3>Key Features<a class="headerlink" href="#key-features" title="Link to this heading">#</a></h3>
 <ul class="simple">
-<li><p>Component 1</p></li>
-<li><p>Component 2</p></li>
-<li><p>Component 3</p></li>
+<li><p>Digital Payment Credentials (DPC) 보관: 사용자의 결제 카드 정보를 디지털 자격 증명서로 보관</p></li>
+<li><p>Credential Manager 통합: Android 시스템의 Credential Manager API 를 통해 다른 앱에 자격 증명 제공</p></li>
+<li><p>사용자 승인 UI: 결제 승인시 거래 세부 정보를 표시 하고 사용자 확인 요청</p></li>
+<li><p>암호화 서명: 기기의 보안 요소를 사용하여 거래에 암호화 서명 생성</p></li>
+</ul>
+</section>
+<section id="id1">
+<h3>왜 별도 앱인가?<a class="headerlink" href="#id1" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>역할 분리: Shopping Agent 는 쇼핑 경험에 집중, CMWallet 은 결제 자격 증명 관리 역할에 집중</p></li>
+<li><p>보안 격리: 민감한 결제 정보를 별도 앱에서 관리 하여 보안 강화</p></li>
+<li><p>재 사용성: 하나의 CMWallet 이 여러 쇼핑 앱에서 사용 가능</p></li>
+<li><p>표준 준수: Android Credential Manager 의 표준 아키텍처 패턴 준수</p></li>
+</ul>
+</section>
+<section id="id2">
+<h3>필수 요구사항<a class="headerlink" href="#id2" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>CMWallet 은 Shopping Agent 와 동일 기기에 설치 되어야 함.</p></li>
 </ul>
 </section>
 </section>
-<section id="integration-with-android-credential-manager-api">
-<h2>Integration with Android Credential Manager API<a class="headerlink" href="#integration-with-android-credential-manager-api" title="Link to this heading">#</a></h2>
+<section id="integration-flow-with-android-credential-manager-api">
+<h2>Integration Flow with Android Credential Manager API<a class="headerlink" href="#integration-flow-with-android-credential-manager-api" title="Link to this heading">#</a></h2>
 <p>CMWallet integrates with the Android Credential Manager API to provide secure credential management.</p>
-<section id="api-usage">
-<h3>API Usage<a class="headerlink" href="#api-usage" title="Link to this heading">#</a></h3>
-<div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="c1">// Example code</span>
-</pre></div>
-</div>
-</section>
 </section>
 <section id="features">
 <h2>Features<a class="headerlink" href="#features" title="Link to this heading">#</a></h2>
@@ -551,13 +560,12 @@ document.write(`
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#architecture">Architecture</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-components">Key Components</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-features">Key Features</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">왜 별도 앱인가?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">필수 요구사항</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#integration-with-android-credential-manager-api">Integration with Android Credential Manager API</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#api-usage">API Usage</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#integration-flow-with-android-credential-manager-api">Integration Flow with Android Credential Manager API</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#features">Features</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#credential-storage">1. Credential Storage</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#authentication">2. Authentication</a></li>
