@@ -16,7 +16,7 @@ Welcome to my.sphinx's documentation!
 
 .. toctree::
    :maxdepth: 2
-   :caption: BOSH
+   :caption: PaaS
 
    bosh/bosh-agent-dev-setup.md
    bosh/bosh-stemcell-builder.md
@@ -31,11 +31,6 @@ Welcome to my.sphinx's documentation!
    bosh/troubleshoot-case-04-aws.md
    bosh/troubleshoot-case-05-galera-cluster.md
    bosh/troubleshoot-case-06-openstack.md
-
-.. toctree::
-   :maxdepth: 2
-   :caption: Cloud Foundry
-
    cf/locket.md
    cf/cups.md
    cf/ch3.rst
