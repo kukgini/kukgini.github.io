@@ -80,22 +80,6 @@ DPC(Digital Payment Credential) 시나리오는 **암호학적으로 검증 가�
 
 x402는 1997년 HTTP/1.1 표준에 정의되었지만 거의 사용되지 않았던 **HTTP 402 상태 코드**를 현대적인 AI 에이전트 생태계에 맞게 재해석한 프로토콜입니다. AP2 샘플의 x402 시나리오는 이 개념을 구현한 것으로, AI 에이전트들이 웹 리소스나 서비스에 접근할 때 자동으로 결제를 처리할 수 있도록 합니다.
 
-#### 동작 방식
-
-```{mermaid}
-sequenceDiagram
-    participant Agent as AI Agent
-    participant Server as Resource Server
-    participant Payment as Payment Processor
-    
-    Agent->>Server: (1) 리소스 요청
-    Server-->>Agent: (2) HTTP 402 Payment Required + 결제 정보
-    Agent->>Payment: (3) 자동 결제 처리
-    Payment-->>Agent: (4) 결제 증명 (토큰)
-    Agent->>Server: (5) 결제 증명과 함께 재요청
-    Server-->>Agent: (6) 리소스 제공
-```
-
 #### 주요 특징
 
 1. **AI 에이전트 친화적**: 사람의 개입 없이 에이전트가 자율적으로 결제 결정
@@ -140,8 +124,8 @@ sequenceDiagram
 
 이 문서는 다음과 같이 구성되어 있습니다:
 
-1. **Cards 및 DPC 시나리오 상세 설명**: 동작 방식, 주요 특징, 사용 사례, 한계점
-2. **DPC 기술 분석**: EUDI Wallet 연관성 및 구현 상세
+1. **시나리오 상세 설명**: 동작 방식 및 기술 상세
+2. **DPC 기술 상세 분석**: EUDI Wallet 연관성 및 구현 상세
 3. **전체 비교 및 결론**: 세 시나리오의 종합 비교와 도입 전략 제안
 4. **Next Steps**: 향후 개선 방향 및 iOS 지원
 
