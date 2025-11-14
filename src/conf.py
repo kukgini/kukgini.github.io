@@ -51,9 +51,9 @@ source_suffix = {
 master_doc = 'index'
 
 # General information about the project.
-project = u'my.sphinx'
-copyright = u'2017, me'
-author = u'me'
+project = u'Knowledge Utility Kit for Global Intelligence Integration'
+copyright = u'2017-2025, Gini'
+author = u'Gini'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -112,7 +112,7 @@ html_static_path = ['_static']
 # -- Options for HTMLHelp output ------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'mysphinxdoc'
+htmlhelp_basename = 'kukginidoc'
 
 
 # -- Options for LaTeX output ---------------------------------------------
