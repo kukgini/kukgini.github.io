@@ -362,51 +362,34 @@ val mdocFormatsSupported =
 
 ### DPC 개선 방향 (Next Steps)
 
-#### Verification of signed token
+#### 서명된 OpenID4VP 흐름으로의 전환
 
-이 시나리오에서 Merchant Agent 는 Shopping Assistant 로 부터 받은 token 을 검증하지 않습니다. 단지 signed token 이 포함되어 있는지 여부만 확인합니다. 부인 방지를 위해 추후 검증 방식이 보완되어야 하며, 이는 EUID Wallet 의 검증 방식을 차용할 것으로 예상됩니다.
+현재 샘플은 `openid4vp-v1-unsigned` 프로파일을 사용하므로, Merchant Agent 는 토큰 진위 여부를 검증하지 못합니다. ARF(Security Level High)와 EUDI Wallet 파일럿에서는 서명/검증이 필수 요소로 간주되므로 다음 작업이 필요합니다.
 
-#### iOS 플랫폼 지원 및 상호운용성
+- **서명 프로파일 채택**: EMVCo DC-API 서명 확장 또는 OpenID4VP `signed` 프로파일로 업그레이드하고, mdoc 기반 credential 서명을 해석할 수 있는 검증 로직을 Merchant Agent 에 추가합니다.
+- **검증 서비스 분리**: 지갑에서 반환한 VP 토큰에 대해 issuer 서명, credential 유효기간, nonce를 검증하는 Verifier/Wallet Back-End를 구성합니다.
+- **Trust Framework 정합성**: ARF 가이드라인에서 요구하는 신뢰 anchor(국가/회원국 발급자 루트 인증서)와 Revocation 검사를 통합합니다.
 
-현재 DPC 시나리오는 Android Credential Manager API를 기반으로 구현되어 있습니다. 진정한 크로스 플랫폼 상호운용성을 위해서는 iOS 지원이 필수적입니다.
+#### 재현 공격 및 키 관리 개선
 
-**Apple의 Digital Credentials API**
+- **Replay 방지**: nonce·session binding을 강화하고 Merchants/logger 쪽에서 사용된 토큰을 기록하여 재사용을 차단합니다.
+- **지갑 키보호**: Android 하드웨어 백업 키 저장소(Keystore) 및 향후 iOS Secure Enclave를 이용한 키 저장/attestation을 도입합니다.
 
-Apple은 2024-2025년부터 **Digital Credentials API**를 도입하여 Android의 Credential Manager API와 유사한 기능을 제공하기 시작했습니다:
+#### Merchant 측 보증 수준 상향
 
-**현재 지원 현황:**
-- ✅ ISO 18013-5 mDOC 형식 지원
-- ✅ ISO 18013-7 Annex C 프로토콜 지원
-- ✅ Apple Wallet 통합
-- ❌ OpenID4VP 프로토콜 제한적 지원
+- **거래 영수증**: Merchant Agent 가 검증 결과와 고객 동의 evidence를 보관해 non-repudiation을 달성합니다.
+- **Fallback 흐름**: 증명 실패 시 기존 카드 결제 혹은 스텝업 인증으로 전환하는 사용자 경험을 설계합니다.
 
-**플랫폼 간 차이점**
+#### iOS 및 기타 플랫폼 정합성
 
-| 측면 | Android | iOS |
-|------|---------|-----|
-| **API** | Credential Manager API | Digital Credentials API + Apple Wallet |
-| **프로토콜** | OpenID4VP 완전 지원 | ISO 18013-7 위주, OpenID4VP 제한적 |
-| **생태계** | 오픈 (다양한 Provider) | 폐쇄적 (Apple Wallet 중심) |
-| **유연성** | 높음 | 제한적 |
+- **iOS 지원 현실화**: WWDC24에서 공개된 IdentityCredential / Digital Credentials API는 개발자 프리뷰 수준이므로, Apple의 Public Release 일정을 추적하고 베타 프레임워크 실험을 병행합니다.
+- **프로토콜 정렬**: 현재 iOS 프레임워크는 ISO 18013-5/7 기반 mdoc 흐름만 공식 지원 예정으로 알려져 있으므로, OpenID4VP support roadmap 공개 시까지는 SD-JWT VC 또는 web-based bridge 방식을 병행합니다.
+- **플랫폼 추상화**: Credential Manager (Android)·IdentityCredential(iOS)·WebAuthn 기반 브라우저 API를 아우르는 공통 추상화 레이어를 설계하여, 지갑/발급자/검증자 역할을 ARF와 동일한 구조로 매핑합니다.
 
-**상호운용성 확보 방안**
+#### 생태계 및 규제 대응
 
-EUDI Wallet의 접근 방식을 참고하여 다음과 같은 전략을 고려해야 합니다:
-
-1. **플랫폼 추상화 레이어**: 각 OS의 네이티브 API를 감싸는 공통 인터페이스 구현
-2. **공통 표준 활용**: OpenID4VCI, SD-JWT와 같은 플랫폼 독립적 프로토콜 사용
-3. **iOS 네이티브 구현**: 
-   - Swift로 구현
-   - Apple App Attest를 통한 무결성 보장
-   - IdentityDocumentServices 프레임워크 활용
-4. **폴백 메커니즘**: OS 네이티브 지원이 부족할 경우 애플리케이션 레벨에서 구현
-
-**향후 과제**
-
-- Apple의 Digital Credentials API에서 OpenID4VP 완전 지원 대기
-- iOS용 CMWallet 구현
-- 크로스 플랫폼 테스트 및 검증
-- Apple의 제한적 생태계 내에서의 최적화
+- **규제 일치**: EMVCo DC-API, ETSI TS 119 495(수신자 서명) 등 결제용 표준을 모니터링하고, EUDI Wallet 시행규정(2024/1183)에서 요구하는 PID/EAA(전자 속성) 처리 절차를 문서화합니다.
+- **인증 준비**: 지갑·검증자 모듈을 EUDI Wallet Conformity Assessment (BR-EL, DR-EL) 요구사항에 맞춰 테스트하고, 파일럿 참여국(예: EWC, NOBCCS)에서 공개한 상호운용성 체크리스트를 반영합니다.
 
 ### x402 시나리오
 
@@ -546,3 +529,4 @@ AP2 프로토콜의 세 가지 시나리오는 AI 에이전트 결제의 진화 
 
 - [Official Documentation](https://cloud.google.com/blog/products/ai-machine-learning/announcing-agents-to-payments-ap2-protocol)
 - [GitHub Repository](https://github.com/google-agentic-commerce/AP2)
+- [EU Digital Identity Wallet ARF overview](https://en.wikipedia.org/wiki/EU_Digital_Identity_Wallet)

@@ -424,29 +424,32 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dpc-vs-eudi-wallet">DPC vs EUDI Wallet 차이점</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id17">DPC 한계점 및 고려사항</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dpc-next-steps">DPC 개선 방향 (Next Steps)</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#verification-of-signed-token">Verification of signed token</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#ios">iOS 플랫폼 지원 및 상호운용성</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#openid4vp">서명된 OpenID4VP 흐름으로의 전환</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id18">재현 공격 및 키 관리 개선</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#merchant">Merchant 측 보증 수준 상향</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#ios">iOS 및 기타 플랫폼 정합성</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id19">생태계 및 규제 대응</a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#x402">x402 시나리오</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id18">개요</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id19">동작 방식</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id20">주요 특징</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id21">사용 사례</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id22">한계점 및 고려사항</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id20">개요</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id21">동작 방식</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id22">주요 특징</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id23">사용 사례</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id24">한계점 및 고려사항</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id23">전체 결론</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id24">세 가지 시나리오 비교</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id25">도입 타임라인</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id26">상세 비교</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id25">전체 결론</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id26">세 가지 시나리오 비교</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id27">도입 타임라인</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id28">상세 비교</a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id27">각 시나리오의 포지셔닝</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id28">권장 도입 전략</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id29">결론</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id29">각 시나리오의 포지셔닝</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id30">권장 도입 전략</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id31">결론</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
@@ -694,8 +697,8 @@ document.write(`
 <p>DPC 시나리오는 EUID Wallet 표준과 여러 측면에서 밀접하게 연관되어 있습니다</p>
 <section id="oid4vp-openid-for-verifiable-presentaiton">
 <h3>OID4VP (OpenID for Verifiable Presentaiton) 프로토콜 사용<a class="headerlink" href="#oid4vp-openid-for-verifiable-presentaiton" title="Link to this heading">#</a></h3>
-<div class="literal-block-wrapper docutils container" id="id30">
-<div class="code-block-caption"><span class="caption-text">DpcHelper.kt:110~120</span><a class="headerlink" href="#id30" title="Link to this code">#</a></div>
+<div class="literal-block-wrapper docutils container" id="id32">
+<div class="code-block-caption"><span class="caption-text">DpcHelper.kt:110~120</span><a class="headerlink" href="#id32" title="Link to this code">#</a></div>
 <div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="kd">val</span><span class="w"> </span><span class="nv">dcRequest</span><span class="w"> </span><span class="o">=</span>
 <span class="w">  </span><span class="n">Request</span><span class="p">(</span>
 <span class="w">    </span><span class="n">responseType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;vp_token&quot;</span><span class="p">,</span>
@@ -718,8 +721,8 @@ document.write(`
 </section>
 <section id="iso-iec-18013-5-mode">
 <h3>ISO/IEC 18013-5 mode 형식 지원<a class="headerlink" href="#iso-iec-18013-5-mode" title="Link to this heading">#</a></h3>
-<div class="literal-block-wrapper docutils container" id="id31">
-<div class="code-block-caption"><span class="caption-text">DpcHelper.kt:85~91</span><a class="headerlink" href="#id31" title="Link to this code">#</a></div>
+<div class="literal-block-wrapper docutils container" id="id33">
+<div class="code-block-caption"><span class="caption-text">DpcHelper.kt:85~91</span><a class="headerlink" href="#id33" title="Link to this code">#</a></div>
 <div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="kd">val</span><span class="w"> </span><span class="nv">credentialQuery</span><span class="w"> </span><span class="o">=</span>
 <span class="w">    </span><span class="n">CredentialQuery</span><span class="p">(</span>
 <span class="w">        </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">credId</span><span class="p">,</span>
@@ -730,8 +733,8 @@ document.write(`
 </pre></div>
 </div>
 </div>
-<div class="literal-block-wrapper docutils container" id="id32">
-<div class="code-block-caption"><span class="caption-text">DpcHelper.kt:96~100</span><a class="headerlink" href="#id32" title="Link to this code">#</a></div>
+<div class="literal-block-wrapper docutils container" id="id34">
+<div class="code-block-caption"><span class="caption-text">DpcHelper.kt:96~100</span><a class="headerlink" href="#id34" title="Link to this code">#</a></div>
 <div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="kd">val</span><span class="w"> </span><span class="nv">mdocFormatsSupported</span><span class="w"> </span><span class="o">=</span>
 <span class="w">    </span><span class="n">MdocFormatsSupported</span><span class="p">(</span>
 <span class="w">        </span><span class="n">issuerauthAlgValues</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">listOf</span><span class="p">(</span><span class="o">-</span><span class="m">7</span><span class="p">),</span><span class="w"> </span><span class="c1">// ES256</span>
@@ -748,8 +751,8 @@ document.write(`
 </section>
 <section id="dcql-digital-credentials-query-language">
 <h3>DCQL (Digital Credentials Query Language) 사용<a class="headerlink" href="#dcql-digital-credentials-query-language" title="Link to this heading">#</a></h3>
-<div class="literal-block-wrapper docutils container" id="id33">
-<div class="code-block-caption"><span class="caption-text">DpcHelper.kt:78~93</span><a class="headerlink" href="#id33" title="Link to this code">#</a></div>
+<div class="literal-block-wrapper docutils container" id="id35">
+<div class="code-block-caption"><span class="caption-text">DpcHelper.kt:78~93</span><a class="headerlink" href="#id35" title="Link to this code">#</a></div>
 <div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="c1">// Build the DCQL query to request specific credential claims.</span>
 <span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="nv">claims</span><span class="w"> </span><span class="o">=</span>
 <span class="w">    </span><span class="n">listOf</span><span class="p">(</span>
@@ -777,8 +780,8 @@ document.write(`
 </section>
 <section id="id16">
 <h3>Android Credential Manager API 통합<a class="headerlink" href="#id16" title="Link to this heading">#</a></h3>
-<div class="literal-block-wrapper docutils container" id="id34">
-<div class="code-block-caption"><span class="caption-text">DpcHelpper.kt:67~76</span><a class="headerlink" href="#id34" title="Link to this code">#</a></div>
+<div class="literal-block-wrapper docutils container" id="id36">
+<div class="code-block-caption"><span class="caption-text">DpcHelpper.kt:67~76</span><a class="headerlink" href="#id36" title="Link to this code">#</a></div>
 <div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="c1">// Build transaction_data payload.</span>
 <span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="nv">transactionData</span><span class="w"> </span><span class="o">=</span>
 <span class="w">    </span><span class="n">TransactionData</span><span class="p">(</span>
@@ -797,8 +800,8 @@ document.write(`
 <li><p>Transaction Data 에 대한 서명 - EUDI Wallet 에서도 중요한 보안 메커니즘입니다</p></li>
 <li><p>transactionDataHashesAlg = “sha-256” - 거래 무결성을 보장합니다</p></li>
 </ul>
-<div class="literal-block-wrapper docutils container" id="id35">
-<div class="code-block-caption"><span class="caption-text">DpcHelper.kt:59~65</span><a class="headerlink" href="#id35" title="Link to this code">#</a></div>
+<div class="literal-block-wrapper docutils container" id="id37">
+<div class="code-block-caption"><span class="caption-text">DpcHelper.kt:59~65</span><a class="headerlink" href="#id37" title="Link to this code">#</a></div>
 <div class="highlight-kotkin notranslate"><div class="highlight"><pre><span></span>  val additionalInfo =
     AdditionalInfo(
       title = &quot;Please confirm your purchase details...&quot;,
@@ -855,82 +858,54 @@ document.write(`
 </section>
 <section id="dpc-next-steps">
 <h3>DPC 개선 방향 (Next Steps)<a class="headerlink" href="#dpc-next-steps" title="Link to this heading">#</a></h3>
-<section id="verification-of-signed-token">
-<h4>Verification of signed token<a class="headerlink" href="#verification-of-signed-token" title="Link to this heading">#</a></h4>
-<p>이 시나리오에서 Merchant Agent 는 Shopping Assistant 로 부터 받은 token 을 검증하지 않습니다. 단지 signed token 이 포함되어 있는지 여부만 확인합니다. 부인 방지를 위해 추후 검증 방식이 보완되어야 하며, 이는 EUID Wallet 의 검증 방식을 차용할 것으로 예상됩니다.</p>
+<section id="openid4vp">
+<h4>서명된 OpenID4VP 흐름으로의 전환<a class="headerlink" href="#openid4vp" title="Link to this heading">#</a></h4>
+<p>현재 샘플은 <code class="docutils literal notranslate"><span class="pre">openid4vp-v1-unsigned</span></code> 프로파일을 사용하므로, Merchant Agent 는 토큰 진위 여부를 검증하지 못합니다. ARF(Security Level High)와 EUDI Wallet 파일럿에서는 서명/검증이 필수 요소로 간주되므로 다음 작업이 필요합니다.</p>
+<ul class="simple">
+<li><p><strong>서명 프로파일 채택</strong>: EMVCo DC-API 서명 확장 또는 OpenID4VP <code class="docutils literal notranslate"><span class="pre">signed</span></code> 프로파일로 업그레이드하고, mdoc 기반 credential 서명을 해석할 수 있는 검증 로직을 Merchant Agent 에 추가합니다.</p></li>
+<li><p><strong>검증 서비스 분리</strong>: 지갑에서 반환한 VP 토큰에 대해 issuer 서명, credential 유효기간, nonce를 검증하는 Verifier/Wallet Back-End를 구성합니다.</p></li>
+<li><p><strong>Trust Framework 정합성</strong>: ARF 가이드라인에서 요구하는 신뢰 anchor(국가/회원국 발급자 루트 인증서)와 Revocation 검사를 통합합니다.</p></li>
+</ul>
+</section>
+<section id="id18">
+<h4>재현 공격 및 키 관리 개선<a class="headerlink" href="#id18" title="Link to this heading">#</a></h4>
+<ul class="simple">
+<li><p><strong>Replay 방지</strong>: nonce·session binding을 강화하고 Merchants/logger 쪽에서 사용된 토큰을 기록하여 재사용을 차단합니다.</p></li>
+<li><p><strong>지갑 키보호</strong>: Android 하드웨어 백업 키 저장소(Keystore) 및 향후 iOS Secure Enclave를 이용한 키 저장/attestation을 도입합니다.</p></li>
+</ul>
+</section>
+<section id="merchant">
+<h4>Merchant 측 보증 수준 상향<a class="headerlink" href="#merchant" title="Link to this heading">#</a></h4>
+<ul class="simple">
+<li><p><strong>거래 영수증</strong>: Merchant Agent 가 검증 결과와 고객 동의 evidence를 보관해 non-repudiation을 달성합니다.</p></li>
+<li><p><strong>Fallback 흐름</strong>: 증명 실패 시 기존 카드 결제 혹은 스텝업 인증으로 전환하는 사용자 경험을 설계합니다.</p></li>
+</ul>
 </section>
 <section id="ios">
-<h4>iOS 플랫폼 지원 및 상호운용성<a class="headerlink" href="#ios" title="Link to this heading">#</a></h4>
-<p>현재 DPC 시나리오는 Android Credential Manager API를 기반으로 구현되어 있습니다. 진정한 크로스 플랫폼 상호운용성을 위해서는 iOS 지원이 필수적입니다.</p>
-<p><strong>Apple의 Digital Credentials API</strong></p>
-<p>Apple은 2024-2025년부터 <strong>Digital Credentials API</strong>를 도입하여 Android의 Credential Manager API와 유사한 기능을 제공하기 시작했습니다:</p>
-<p><strong>현재 지원 현황:</strong></p>
+<h4>iOS 및 기타 플랫폼 정합성<a class="headerlink" href="#ios" title="Link to this heading">#</a></h4>
 <ul class="simple">
-<li><p>✅ ISO 18013-5 mDOC 형식 지원</p></li>
-<li><p>✅ ISO 18013-7 Annex C 프로토콜 지원</p></li>
-<li><p>✅ Apple Wallet 통합</p></li>
-<li><p>❌ OpenID4VP 프로토콜 제한적 지원</p></li>
+<li><p><strong>iOS 지원 현실화</strong>: WWDC24에서 공개된 IdentityCredential / Digital Credentials API는 개발자 프리뷰 수준이므로, Apple의 Public Release 일정을 추적하고 베타 프레임워크 실험을 병행합니다.</p></li>
+<li><p><strong>프로토콜 정렬</strong>: 현재 iOS 프레임워크는 ISO 18013-5/7 기반 mdoc 흐름만 공식 지원 예정으로 알려져 있으므로, OpenID4VP support roadmap 공개 시까지는 SD-JWT VC 또는 web-based bridge 방식을 병행합니다.</p></li>
+<li><p><strong>플랫폼 추상화</strong>: Credential Manager (Android)·IdentityCredential(iOS)·WebAuthn 기반 브라우저 API를 아우르는 공통 추상화 레이어를 설계하여, 지갑/발급자/검증자 역할을 ARF와 동일한 구조로 매핑합니다.</p></li>
 </ul>
-<p><strong>플랫폼 간 차이점</strong></p>
-<div class="pst-scrollable-table-container"><table class="table">
-<thead>
-<tr class="row-odd"><th class="head"><p>측면</p></th>
-<th class="head"><p>Android</p></th>
-<th class="head"><p>iOS</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p><strong>API</strong></p></td>
-<td><p>Credential Manager API</p></td>
-<td><p>Digital Credentials API + Apple Wallet</p></td>
-</tr>
-<tr class="row-odd"><td><p><strong>프로토콜</strong></p></td>
-<td><p>OpenID4VP 완전 지원</p></td>
-<td><p>ISO 18013-7 위주, OpenID4VP 제한적</p></td>
-</tr>
-<tr class="row-even"><td><p><strong>생태계</strong></p></td>
-<td><p>오픈 (다양한 Provider)</p></td>
-<td><p>폐쇄적 (Apple Wallet 중심)</p></td>
-</tr>
-<tr class="row-odd"><td><p><strong>유연성</strong></p></td>
-<td><p>높음</p></td>
-<td><p>제한적</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<p><strong>상호운용성 확보 방안</strong></p>
-<p>EUDI Wallet의 접근 방식을 참고하여 다음과 같은 전략을 고려해야 합니다:</p>
-<ol class="arabic simple">
-<li><p><strong>플랫폼 추상화 레이어</strong>: 각 OS의 네이티브 API를 감싸는 공통 인터페이스 구현</p></li>
-<li><p><strong>공통 표준 활용</strong>: OpenID4VCI, SD-JWT와 같은 플랫폼 독립적 프로토콜 사용</p></li>
-<li><p><strong>iOS 네이티브 구현</strong>:</p>
+</section>
+<section id="id19">
+<h4>생태계 및 규제 대응<a class="headerlink" href="#id19" title="Link to this heading">#</a></h4>
 <ul class="simple">
-<li><p>Swift로 구현</p></li>
-<li><p>Apple App Attest를 통한 무결성 보장</p></li>
-<li><p>IdentityDocumentServices 프레임워크 활용</p></li>
-</ul>
-</li>
-<li><p><strong>폴백 메커니즘</strong>: OS 네이티브 지원이 부족할 경우 애플리케이션 레벨에서 구현</p></li>
-</ol>
-<p><strong>향후 과제</strong></p>
-<ul class="simple">
-<li><p>Apple의 Digital Credentials API에서 OpenID4VP 완전 지원 대기</p></li>
-<li><p>iOS용 CMWallet 구현</p></li>
-<li><p>크로스 플랫폼 테스트 및 검증</p></li>
-<li><p>Apple의 제한적 생태계 내에서의 최적화</p></li>
+<li><p><strong>규제 일치</strong>: EMVCo DC-API, ETSI TS 119 495(수신자 서명) 등 결제용 표준을 모니터링하고, EUDI Wallet 시행규정(2024/1183)에서 요구하는 PID/EAA(전자 속성) 처리 절차를 문서화합니다.</p></li>
+<li><p><strong>인증 준비</strong>: 지갑·검증자 모듈을 EUDI Wallet Conformity Assessment (BR-EL, DR-EL) 요구사항에 맞춰 테스트하고, 파일럿 참여국(예: EWC, NOBCCS)에서 공개한 상호운용성 체크리스트를 반영합니다.</p></li>
 </ul>
 </section>
 </section>
 <section id="x402">
 <h3>x402 시나리오<a class="headerlink" href="#x402" title="Link to this heading">#</a></h3>
 <p>HTTP 402 “Payment Required” 상태 코드를 활용한 AI 에이전트 간 자동 결제 시나리오입니다.</p>
-<section id="id18">
-<h4>개요<a class="headerlink" href="#id18" title="Link to this heading">#</a></h4>
+<section id="id20">
+<h4>개요<a class="headerlink" href="#id20" title="Link to this heading">#</a></h4>
 <p>x402는 1997년 HTTP/1.1 표준에 정의되었지만 거의 사용되지 않았던 <strong>HTTP 402 상태 코드</strong>를 현대적인 AI 에이전트 생태계에 맞게 재해석한 프로토콜입니다. AP2 샘플의 x402 시나리오는 이 개념을 구현한 것으로, AI 에이전트들이 웹 리소스나 서비스에 접근할 때 자동으로 결제를 처리할 수 있도록 합니다.</p>
 </section>
-<section id="id19">
-<h4>동작 방식<a class="headerlink" href="#id19" title="Link to this heading">#</a></h4>
+<section id="id21">
+<h4>동작 방식<a class="headerlink" href="#id21" title="Link to this heading">#</a></h4>
 <pre  class="mermaid">
         sequenceDiagram
     participant Agent as AI Agent
@@ -944,8 +919,8 @@ document.write(`
     Agent-&gt;&gt;Server: (5) 결제 증명과 함께 재요청
     Server--&gt;&gt;Agent: (6) 리소스 제공
     </pre></section>
-<section id="id20">
-<h4>주요 특징<a class="headerlink" href="#id20" title="Link to this heading">#</a></h4>
+<section id="id22">
+<h4>주요 특징<a class="headerlink" href="#id22" title="Link to this heading">#</a></h4>
 <ol class="arabic simple">
 <li><p><strong>AI 에이전트 친화적</strong>: 사람의 개입 없이 에이전트가 자율적으로 결제 결정</p></li>
 <li><p><strong>프로토콜 독립적</strong>: 특정 결제 수단이나 통화에 종속되지 않음</p></li>
@@ -954,8 +929,8 @@ document.write(`
 <li><p><strong>중개자 불필요</strong>: 판매자와 구매자 간 직접 거래 조건 설정 가능</p></li>
 </ol>
 </section>
-<section id="id21">
-<h4>사용 사례<a class="headerlink" href="#id21" title="Link to this heading">#</a></h4>
+<section id="id23">
+<h4>사용 사례<a class="headerlink" href="#id23" title="Link to this heading">#</a></h4>
 <ul class="simple">
 <li><p><strong>AI 에이전트 모니터링 서비스</strong>: 에이전트의 활동 추적 및 성능 분석에 대한 결제</p></li>
 <li><p><strong>프리미엄 API 접근</strong>: 유료 API나 데이터셋에 대한 자동 결제</p></li>
@@ -963,8 +938,8 @@ document.write(`
 <li><p><strong>콘텐츠 마이크로 페이먼트</strong>: 뉴스 기사, 연구 논문 등 개별 콘텐츠에 대한 소액 결제</p></li>
 </ul>
 </section>
-<section id="id22">
-<h4>한계점 및 고려사항<a class="headerlink" href="#id22" title="Link to this heading">#</a></h4>
+<section id="id24">
+<h4>한계점 및 고려사항<a class="headerlink" href="#id24" title="Link to this heading">#</a></h4>
 <ul class="simple">
 <li><p><strong>표준 부재</strong>: HTTP 402는 1997년부터 정의되었으나 실제 구현 사례 거의 없음</p></li>
 <li><p><strong>생태계 부재</strong>: 결제 프로세서, 가맹점, 클라이언트 모두 새로 구축 필요</p></li>
@@ -975,13 +950,13 @@ document.write(`
 </section>
 </section>
 </section>
-<section id="id23">
-<h2>전체 결론<a class="headerlink" href="#id23" title="Link to this heading">#</a></h2>
-<section id="id24">
-<h3>세 가지 시나리오 비교<a class="headerlink" href="#id24" title="Link to this heading">#</a></h3>
-<p>AP2 프로토콜은 AI 에이전트 시대의 다양한 결제 요구사항을 충족하기 위해 세 가지 차별화된 접근 방식을 제시합니다.</p>
 <section id="id25">
-<h4>도입 타임라인<a class="headerlink" href="#id25" title="Link to this heading">#</a></h4>
+<h2>전체 결론<a class="headerlink" href="#id25" title="Link to this heading">#</a></h2>
+<section id="id26">
+<h3>세 가지 시나리오 비교<a class="headerlink" href="#id26" title="Link to this heading">#</a></h3>
+<p>AP2 프로토콜은 AI 에이전트 시대의 다양한 결제 요구사항을 충족하기 위해 세 가지 차별화된 접근 방식을 제시합니다.</p>
+<section id="id27">
+<h4>도입 타임라인<a class="headerlink" href="#id27" title="Link to this heading">#</a></h4>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>현재 (2025)          중기 (2027-2030)         장기 (2030+)
     │                      │                      │
   Cards ━━━━━━━━━━━━━&gt; DPC ━━━━━━━━━━━━━&gt; x402
@@ -989,8 +964,8 @@ document.write(`
 </pre></div>
 </div>
 </section>
-<section id="id26">
-<h4>상세 비교<a class="headerlink" href="#id26" title="Link to this heading">#</a></h4>
+<section id="id28">
+<h4>상세 비교<a class="headerlink" href="#id28" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>특징</p></th>
@@ -1070,8 +1045,8 @@ document.write(`
 </div>
 </section>
 </section>
-<section id="id27">
-<h3>각 시나리오의 포지셔닝<a class="headerlink" href="#id27" title="Link to this heading">#</a></h3>
+<section id="id29">
+<h3>각 시나리오의 포지셔닝<a class="headerlink" href="#id29" title="Link to this heading">#</a></h3>
 <p><strong>1. Cards - 현재의 실용적 해결책</strong></p>
 <ul class="simple">
 <li><p>✅ 즉시 도입 가능</p></li>
@@ -1098,8 +1073,8 @@ document.write(`
 <li><p>❌ 채택 불확실성</p></li>
 </ul>
 </section>
-<section id="id28">
-<h3>권장 도입 전략<a class="headerlink" href="#id28" title="Link to this heading">#</a></h3>
+<section id="id30">
+<h3>권장 도입 전략<a class="headerlink" href="#id30" title="Link to this heading">#</a></h3>
 <p><strong>단계별 접근:</strong></p>
 <ol class="arabic simple">
 <li><p><strong>현재 (2025)</strong>: Cards 기반 구현</p>
@@ -1124,8 +1099,8 @@ document.write(`
 </li>
 </ol>
 </section>
-<section id="id29">
-<h3>결론<a class="headerlink" href="#id29" title="Link to this heading">#</a></h3>
+<section id="id31">
+<h3>결론<a class="headerlink" href="#id31" title="Link to this heading">#</a></h3>
 <p>AP2 프로토콜의 세 가지 시나리오는 AI 에이전트 결제의 진화 경로를 보여줍니다:</p>
 <ul class="simple">
 <li><p><strong>Cards</strong>는 오늘의 현실을 다루고</p></li>
@@ -1141,6 +1116,7 @@ document.write(`
 <ul class="simple">
 <li><p><a class="reference external" href="https://cloud.google.com/blog/products/ai-machine-learning/announcing-agents-to-payments-ap2-protocol">Official Documentation</a></p></li>
 <li><p><a class="reference external" href="https://github.com/google-agentic-commerce/AP2">GitHub Repository</a></p></li>
+<li><p><a class="reference external" href="https://en.wikipedia.org/wiki/EU_Digital_Identity_Wallet">EU Digital Identity Wallet ARF overview</a></p></li>
 </ul>
 </section>
 </section>
@@ -1231,29 +1207,32 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dpc-vs-eudi-wallet">DPC vs EUDI Wallet 차이점</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id17">DPC 한계점 및 고려사항</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dpc-next-steps">DPC 개선 방향 (Next Steps)</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#verification-of-signed-token">Verification of signed token</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#ios">iOS 플랫폼 지원 및 상호운용성</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#openid4vp">서명된 OpenID4VP 흐름으로의 전환</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id18">재현 공격 및 키 관리 개선</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#merchant">Merchant 측 보증 수준 상향</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#ios">iOS 및 기타 플랫폼 정합성</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id19">생태계 및 규제 대응</a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#x402">x402 시나리오</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id18">개요</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id19">동작 방식</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id20">주요 특징</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id21">사용 사례</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id22">한계점 및 고려사항</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id20">개요</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id21">동작 방식</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id22">주요 특징</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id23">사용 사례</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id24">한계점 및 고려사항</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id23">전체 결론</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id24">세 가지 시나리오 비교</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id25">도입 타임라인</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id26">상세 비교</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id25">전체 결론</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id26">세 가지 시나리오 비교</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id27">도입 타임라인</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id28">상세 비교</a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id27">각 시나리오의 포지셔닝</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id28">권장 도입 전략</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id29">결론</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id29">각 시나리오의 포지셔닝</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id30">권장 도입 전략</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id31">결론</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
