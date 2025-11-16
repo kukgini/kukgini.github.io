@@ -181,26 +181,193 @@ val transaction = Transaction(
 
 ### DPC 시나리오
 
-#### 동작 방식
+#### Sequence Diagram
 
 ```{mermaid}
 sequenceDiagram
-    participant SA as Shopping Assistant
-    participant MA as Merchant Agent
-    participant ACM as Android Credential Manager API
-    participant CMW as CM Wallet
+    participant User
+    participant ShoppingAgent as Shopping Agent<br/>(Android App)
+    participant MerchantAgent as Merchant Agent<br/>(Python Server)
+    participant CatalogAgent as Catalog Sub-Agent
+    participant CMWallet as CM Wallet<br/>(Credential Manager)
+    participant TrustedUI as Trusted UI<br/>(System UI)
 
-    SA->>MA: (1) 장바구니 확정 요청 (네트워크)
-    MA-->>SA: (2) Cart Mandate 반환
-    SA->>ACM: (3) DPC 요청 생성 (Credential Manager API 호출)
-    ACM->>CMW: (4) CM Wallet 호출<br/>UI 표시 & 서명 생성
-    CMW-->>ACM: (5) 서명된 토큰 반환
-    ACM-->>SA: (5) 토큰 수신
-    SA->>MA: (6) 토큰 전송 (네트워크)
-    MA-->>MA: 토큰 검증 및 결제 처리
+    Note over User,TrustedUI: Phase 1: Product Discovery & Cart Creation
+
+    User->>ShoppingAgent: "I'm looking for a new car"
+    activate ShoppingAgent
+
+    ShoppingAgent->>MerchantAgent: A2A Message: Find items<br/>(text + shopping_agent_id)
+    activate MerchantAgent
+
+    MerchantAgent->>MerchantAgent: Validate shopping_agent_id<br/>(trusted_shopping_agent)
+
+    MerchantAgent->>CatalogAgent: find_items_workflow()
+    activate CatalogAgent
+
+    CatalogAgent->>CatalogAgent: Search product catalog<br/>(using Gemini LLM)
+
+    CatalogAgent-->>MerchantAgent: Product list + CartMandate
+    deactivate CatalogAgent
+
+    MerchantAgent-->>ShoppingAgent: A2A Response: Products<br/>(CartMandate artifact)
+    deactivate MerchantAgent
+
+    ShoppingAgent-->>User: Display product options
+    deactivate ShoppingAgent
+
+    User->>ShoppingAgent: Select product & confirm purchase
+    activate ShoppingAgent
+
+    Note over User,TrustedUI: Phase 2: DPC Request Construction
+
+    ShoppingAgent->>ShoppingAgent: constructDPCRequest()<br/>- Extract cart details<br/>- Generate nonce<br/>- Create DCQL query<br/>- Build transaction_data
+
+    Note over ShoppingAgent: DCQL Claims:<br/>- card_number<br/>- holder_name<br/><br/>Transaction Data:<br/>- merchant_name<br/>- amount<br/>- purchase details
+
+    Note over User,TrustedUI: Phase 3: Credential Request via Credential Manager
+
+    ShoppingAgent->>CMWallet: GetDigitalCredentialOption<br/>(OpenID4VP request)
+    activate CMWallet
+
+    Note over CMWallet: Protocol: openid4vp-v1-unsigned<br/>Format: mso_mdoc<br/>Doctype: com.emvco.payment_card
+
+    CMWallet->>CMWallet: Validate request<br/>Find matching credentials
+
+    CMWallet->>TrustedUI: Show payment confirmation
+    activate TrustedUI
+
+    TrustedUI-->>User: Display:<br/>- Merchant name<br/>- Amount<br/>- Purchase details table<br/>- Card to be used
+
+    User->>TrustedUI: Approve payment
+
+    TrustedUI-->>CMWallet: User consent
+    deactivate TrustedUI
+
+    CMWallet->>CMWallet: Create VP Token:<br/>- Sign transaction_data<br/>- Include requested claims<br/>- Generate device signature
+
+    CMWallet-->>ShoppingAgent: vp_token<br/>(signed DPC response)
+    deactivate CMWallet
+
+    Note over User,TrustedUI: Phase 4: DPC Validation & Payment Finalization
+
+    ShoppingAgent->>MerchantAgent: A2A Message: Validate DPC<br/>(text + dpc_response)
+    activate MerchantAgent
+
+    MerchantAgent->>MerchantAgent: dpc_finish()<br/>- Verify nonce<br/>- Validate signature<br/>- Check transaction_data hash
+
+    Note over MerchantAgent: TODO: Full validation:<br/>- Verify issuer signature<br/>- Verify device signature<br/>- Forward to payment processor
+
+    MerchantAgent->>MerchantAgent: Simulate payment<br/>processing
+
+    MerchantAgent-->>ShoppingAgent: A2A Response:<br/>payment_status: SUCCESS<br/>transaction_id
+    deactivate MerchantAgent
+
+    ShoppingAgent-->>User: Payment successful!<br/>Transaction ID: txn_1234567890
+    deactivate ShoppingAgent
 ```
 
-#### 기술 상세
+#### Key Components
+
+##### 1. OpenID4VP Request Structure
+The DPC request follows the OpenID for Verifiable Presentations protocol:
+
+```json
+{
+  "protocol": "openid4vp-v1-unsigned",
+  "request": {
+    "response_type": "vp_token",
+    "response_mode": "dc_api",
+    "nonce": "<UUID>",
+    "dcql_query": {
+      "credentials": [{
+        "id": "cred1",
+        "format": "mso_mdoc",
+        "meta": {
+          "doctype_value": "com.emvco.payment_card"
+        },
+        "claims": [
+          {"path": ["com.emvco.payment_card.1", "card_number"]},
+          {"path": ["com.emvco.payment_card.1", "holder_name"]}
+        ]
+      }]
+    },
+    "transaction_data": ["<base64url-encoded-json>"],
+    "client_metadata": {
+      "vp_formats_supported": {
+        "mso_mdoc": {
+          "issuerauth_alg_values": [-7],
+          "deviceauth_alg_values": [-7]
+        }
+      }
+    }
+  }
+}
+```
+
+##### 2. Transaction Data Structure
+The `transaction_data` contains payment details that get signed:
+
+```json
+{
+  "type": "payment_card",
+  "credentialIds": ["cred1"],
+  "transactionDataHashesAlg": ["sha-256"],
+  "merchantName": "Example Merchant",
+  "amount": "US 25000.00",
+  "additionalInfo": {
+    "title": "Please confirm your purchase details...",
+    "tableHeader": ["Name", "Qty", "Price", "Total"],
+    "tableRows": [
+      ["Tesla Model 3", "1", "25000.0", "25000.0"]
+    ],
+    "footer": "Your total is 25000.00"
+  }
+}
+```
+
+##### 3. Security Features
+
+- **Nonce**: Prevents replay attacks (should be validated by merchant)
+- **Transaction Data Signing**: User signs over the exact transaction details
+- **Trusted UI**: System-controlled UI prevents UI spoofing
+- **Selective Disclosure**: Only requested claims are shared (DCQL)
+- **Device Authentication**: ES256 signature from secure element
+- **Issuer Authentication**: Credential validity from issuer
+
+#### Protocol Standards
+
+This implementation follows several key standards:
+
+1. **OpenID4VP**: OpenID for Verifiable Presentations protocol
+2. **ISO/IEC 18013-5**: Mobile driver's license (mdoc) format
+3. **DCQL**: Digital Credentials Query Language for selective disclosure
+4. **A2A**: Agent-to-Agent communication protocol (AP2 extension)
+5. **Android Credential Manager**: Platform API for credential access
+
+#### Comparison with EUDI Wallet
+
+| Aspect | DPC Implementation | EUDI Wallet |
+|--------|-------------------|-------------|
+| **Protocol** | OpenID4VP | OpenID4VP ✓ |
+| **Format** | ISO mdoc (mso_mdoc) | ISO mdoc ✓ |
+| **Doctype** | com.emvco.payment_card | eu.europa.ec.eudi.pid.1 |
+| **Use Case** | Payment authentication | Identity verification |
+| **Selective Disclosure** | DCQL ✓ | DCQL ✓ |
+| **Signature** | ES256 (COSE -7) ✓ | ES256 (COSE -7) ✓ |
+| **Platform** | Android Credential Manager | EUDI Wallet App |
+
+#### Notes
+
+- This is a demonstration implementation showing the DPC flow
+- Full signature validation is marked as TODO in the merchant agent
+- Production implementations should:
+  - Validate all cryptographic signatures
+  - Check certificate chains
+  - Verify nonces and timestamps
+  - Forward to payment processors for actual processing
+  - Implement proper error handling
+  - Add fraud detection mechanisms
 
 ##### CMWallet 개요
 
