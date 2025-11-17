@@ -135,24 +135,263 @@ Cards와 DPC는 실제 구현 가능한 시나리오로, x402는 장기적 비�
 
 ### Cards 시나리오
 
+This illustrates the complete flow of the Human Present Card Payment scenario using the AP2 framework with the A2A protocol.
+
 #### 동작 방식
 
 ```{mermaid}
 sequenceDiagram
-    participant Agent as AI Agent
-    participant Merchant as Merchant System
-    participant Gateway as Payment Gateway
-    participant Network as Card Network
-    participant Bank as Issuing Bank
-    
-    Agent->>Merchant: (1) 구매 요청
-    Merchant->>Gateway: (2) 결제 요청
-    Gateway->>Network: (3) 승인 요청 전송
-    Network->>Bank: (4) 사용자 계좌 확인
-    Bank-->>Network: (5) 승인/거절 응답
-    Network-->>Gateway: (6) 응답 전달
-    Gateway-->>Merchant: (7) 결제 결과
-    Merchant-->>Agent: (8) 구매 완료 확인
+sequenceDiagram
+    participant User
+    participant ShoppingAgent as Shopping Agent
+    participant MerchantAgent as Merchant Agent
+    participant CredentialsProvider as Credentials Provider
+    participant PaymentProcessor as Payment Processor
+
+    Note over User,PaymentProcessor: Phase 1: Product Discovery and Cart Creation
+
+    User->>ShoppingAgent: I want to buy a coffee maker
+    activate ShoppingAgent
+    ShoppingAgent->>ShoppingAgent: Create IntentMandate
+    Note over ShoppingAgent: IntentMandate: natural language description, merchants, SKUs
+
+    ShoppingAgent->>MerchantAgent: A2A Message: Find products
+    activate MerchantAgent
+    Note over MerchantAgent: Validate shopping_agent_id
+    MerchantAgent->>MerchantAgent: Search product catalog
+    MerchantAgent->>MerchantAgent: Create CartMandate
+    Note over MerchantAgent: CartMandate signed by merchant
+    MerchantAgent-->>ShoppingAgent: CartMandate with products
+    deactivate MerchantAgent
+
+    ShoppingAgent-->>User: Display product options
+    User->>ShoppingAgent: Select product
+    ShoppingAgent->>ShoppingAgent: Store selected CartMandate
+
+    Note over User,PaymentProcessor: Phase 2: Shipping Address Collection
+
+    ShoppingAgent->>User: Request shipping address
+    User->>ShoppingAgent: Provide shipping address
+    ShoppingAgent->>ShoppingAgent: Store ContactAddress
+
+    ShoppingAgent->>MerchantAgent: A2A Message: Update cart with shipping
+    activate MerchantAgent
+    MerchantAgent->>MerchantAgent: Update CartMandate with shipping
+    MerchantAgent->>MerchantAgent: Re-sign CartMandate
+    MerchantAgent-->>ShoppingAgent: Updated CartMandate
+    deactivate MerchantAgent
+
+    Note over User,PaymentProcessor: Phase 3: Payment Method Collection
+
+    ShoppingAgent->>User: Link your Credentials Provider
+    User->>ShoppingAgent: Confirm link
+
+    ShoppingAgent->>CredentialsProvider: A2A Message: Get payment methods
+    activate CredentialsProvider
+    Note over CredentialsProvider: Filter by supported payment methods
+    CredentialsProvider-->>ShoppingAgent: List of payment method aliases
+    deactivate CredentialsProvider
+
+    ShoppingAgent-->>User: Display payment methods
+    User->>ShoppingAgent: Select payment method
+
+    ShoppingAgent->>CredentialsProvider: A2A Message: Get payment credential token
+    activate CredentialsProvider
+    CredentialsProvider->>CredentialsProvider: Generate token for payment method
+    Note over CredentialsProvider: Token includes DPAN card data
+    CredentialsProvider-->>ShoppingAgent: Payment credential token
+    deactivate CredentialsProvider
+
+    Note over User,PaymentProcessor: Phase 4: Payment Mandate Creation and Signing
+
+    ShoppingAgent->>ShoppingAgent: Create PaymentMandate
+    Note over ShoppingAgent: PaymentMandate contains: cart details, payment method, shipping address
+
+    ShoppingAgent-->>User: Display final purchase details
+    Note over User: Merchant, item, price, shipping, tax, total
+    User->>ShoppingAgent: Confirm purchase
+
+    ShoppingAgent->>ShoppingAgent: sign_mandates_on_user_device
+    Note over ShoppingAgent: Generate hash of CartMandate and PaymentMandate
+    Note over ShoppingAgent: Simulate device signing with user private key
+
+    ShoppingAgent->>ShoppingAgent: Store signed PaymentMandate
+    Note over ShoppingAgent: PaymentMandate now has user_authorization
+
+    ShoppingAgent->>CredentialsProvider: A2A Message: Send signed PaymentMandate
+    activate CredentialsProvider
+    CredentialsProvider->>CredentialsProvider: Store signed PaymentMandate
+    CredentialsProvider-->>ShoppingAgent: Acknowledgment
+    deactivate CredentialsProvider
+
+    Note over User,PaymentProcessor: Phase 5: Payment Initiation and OTP Challenge
+
+    ShoppingAgent->>MerchantAgent: A2A Message: Initiate payment
+    activate MerchantAgent
+    Note over MerchantAgent: Validate shopping_agent_id
+
+    MerchantAgent->>PaymentProcessor: A2A Message: Process payment
+    activate PaymentProcessor
+    PaymentProcessor->>PaymentProcessor: Validate PaymentMandate
+    PaymentProcessor->>PaymentProcessor: Check payment method
+
+    PaymentProcessor->>CredentialsProvider: A2A Message: Get payment credentials
+    activate CredentialsProvider
+    CredentialsProvider->>CredentialsProvider: Verify token and signed mandate
+    CredentialsProvider->>CredentialsProvider: Decrypt DPAN card data
+    CredentialsProvider-->>PaymentProcessor: Payment credentials
+    deactivate CredentialsProvider
+
+    PaymentProcessor->>PaymentProcessor: Initiate OTP challenge
+    Note over PaymentProcessor: Generate OTP request
+
+    PaymentProcessor-->>MerchantAgent: Challenge required
+    deactivate PaymentProcessor
+    MerchantAgent-->>ShoppingAgent: OTP challenge request
+    deactivate MerchantAgent
+
+    ShoppingAgent-->>User: Enter verification code
+    Note over User: Display OTP challenge text
+
+    Note over User,PaymentProcessor: Phase 6: OTP Verification and Payment Completion
+
+    User->>ShoppingAgent: Provide OTP code
+    ShoppingAgent->>MerchantAgent: A2A Message: Initiate payment with OTP
+    activate MerchantAgent
+
+    MerchantAgent->>PaymentProcessor: A2A Message: Process payment with challenge response
+    activate PaymentProcessor
+    PaymentProcessor->>PaymentProcessor: Validate OTP code
+    PaymentProcessor->>PaymentProcessor: Process payment transaction
+    Note over PaymentProcessor: Charge card via payment network
+    PaymentProcessor->>PaymentProcessor: Generate transaction ID
+    PaymentProcessor-->>MerchantAgent: Payment SUCCESS
+    deactivate PaymentProcessor
+
+    MerchantAgent-->>ShoppingAgent: Payment confirmation
+    deactivate MerchantAgent
+
+    ShoppingAgent-->>User: Payment Receipt
+    Note over User: Display receipt with transaction details
+    deactivate ShoppingAgent
+```
+
+#### Key Components
+
+##### 1. IntentMandate Structure
+The IntentMandate captures the user's shopping intent:
+
+```json
+{
+  "intent_mandate_id": "uuid",
+  "natural_language_description": "I want to buy a coffee maker",
+  "user_prompt_required": true,
+  "merchants": ["merchant_agent"],
+  "skus": ["coffee-maker-001"],
+  "intent_expiry": "2025-11-18T10:00:00Z",
+  "requires_refundability": false
+}
+```
+
+##### 2. CartMandate Structure
+The CartMandate contains product and payment request details:
+
+```json
+{
+  "cart_mandate_id": "uuid",
+  "merchant_name": "Example Merchant",
+  "cart_expiry": "2025-11-18T10:00:00Z",
+  "refund_period": "P30D",
+  "payment_request": {
+    "method_data": [{
+      "supported_methods": ["CARD"]
+    }],
+    "details": {
+      "id": "order-123",
+      "total": {
+        "label": "Total",
+        "amount": {"currency": "USD", "value": "79.99"}
+      },
+      "displayItems": [
+        {"label": "Coffee Maker", "amount": {"value": "69.99"}},
+        {"label": "Shipping", "amount": {"value": "5.00"}},
+        {"label": "Tax", "amount": {"value": "5.00"}}
+      ]
+    }
+  },
+  "merchant_signature": "signature_by_merchant"
+}
+```
+
+##### 3. PaymentMandate Structure
+The PaymentMandate authorizes the payment:
+
+```json
+{
+  "payment_mandate_contents": {
+    "payment_mandate_id": "uuid",
+    "timestamp": "2025-11-17T12:00:00Z",
+    "payment_details_id": "order-123",
+    "payment_details_total": {
+      "label": "Total",
+      "amount": {"currency": "USD", "value": "79.99"}
+    },
+    "payment_response": {
+      "request_id": "order-123",
+      "method_name": "CARD",
+      "details": {
+        "token": {
+          "value": "encrypted_token",
+          "url": "http://localhost:8002/a2a/credentials_provider"
+        }
+      },
+      "shipping_address": {
+        "streetAddress": "123 Main St",
+        "city": "San Francisco",
+        "state": "CA",
+        "zipCode": "94102"
+      },
+      "payer_email": "user@example.com"
+    },
+    "merchant_agent": "merchant_agent"
+  },
+  "user_authorization": "cart_hash_payment_hash_signature"
+}
+```
+
+##### 4. Payment Credential Token
+The token contains DPAN card data:
+
+```json
+{
+  "value": "encrypted_payment_token",
+  "url": "http://localhost:8002/a2a/credentials_provider"
+}
+```
+
+The Credentials Provider decrypts this to reveal:
+
+```json
+{
+  "card_number": "4111111111111111",
+  "expiry_month": "12",
+  "expiry_year": "2025",
+  "cvv": "123",
+  "holder_name": "John Doe",
+  "is_dpan": true
+}
+```
+
+##### 5. OTP Challenge
+The OTP challenge structure:
+
+```json
+{
+  "challenge": {
+    "type": "otp",
+    "display_text": "The payment method issuer sent a verification code to the phone number on file..."
+  }
+}
 ```
 
 #### AI 에이전트 통합 방식
