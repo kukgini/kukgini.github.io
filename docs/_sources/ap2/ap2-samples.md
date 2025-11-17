@@ -141,7 +141,6 @@ This illustrates the complete flow of the Human Present Card Payment scenario us
 
 ```{mermaid}
 sequenceDiagram
-sequenceDiagram
     participant User
     participant ShoppingAgent as Shopping Agent
     participant MerchantAgent as Merchant Agent
@@ -393,6 +392,69 @@ The OTP challenge structure:
   }
 }
 ```
+
+#### Protocol Flow Details
+
+##### Mandate Lifecycle
+
+1. **IntentMandate**: Created by Shopping Agent to express user's shopping intent
+2. **CartMandate**: Created by Merchant Agent with product details and pricing
+3. **PaymentMandate**: Created by Shopping Agent with selected payment method
+
+##### Security Features
+
+- **Merchant Signature**: CartMandate is signed by merchant to ensure authenticity
+- **User Authorization**: PaymentMandate is signed by user to authorize purchase
+- **Hash Binding**: User signature includes hashes of both CartMandate and PaymentMandate
+- **Token-Based Credentials**: Payment details are never directly shared, only tokens
+- **DPAN**: Tokenized card number instead of primary account number (PAN)
+- **OTP Challenge**: Additional authentication layer for high-confidence transactions
+
+##### Agent Responsibilities
+
+| Agent | Responsibilities |
+|-------|-----------------|
+| **Shopping Agent** | Orchestrates flow, manages user interaction, creates IntentMandate and PaymentMandate |
+| **Merchant Agent** | Product catalog, creates and signs CartMandate, validates shopping_agent_id |
+| **Credentials Provider** | Manages payment methods, provides DPAN tokens, decrypts credentials |
+| **Payment Processor** | Processes payments, implements OTP challenge, charges card |
+
+##### Key Differences from DPC Scenario
+
+| Aspect | Cards Scenario | DPC Scenario |
+|--------|---------------|--------------|
+| **Payment Method** | Tokenized card (DPAN) | Digital Payment Credential |
+| **Credential Storage** | Credentials Provider | CM Wallet (Credential Manager) |
+| **User Authorization** | Sign PaymentMandate hashes | Sign transaction_data in Trusted UI |
+| **Additional Auth** | OTP challenge | Device biometric |
+| **Mandate Types** | Intent → Cart → Payment | Cart only |
+| **Protocol** | AP2 via A2A | OpenID4VP via Credential Manager API |
+| **Agents Involved** | 4 agents | 2 agents + Wallet |
+
+##### Protocol Standards
+
+This implementation follows several key standards:
+
+1. **A2A (Agent-to-Agent)**: Communication protocol between agents
+2. **AP2 (Agent Payments Protocol)**: Payment-specific extension to A2A
+3. **Mandate Pattern**: Structured, signed data objects for cart and payment
+4. **DPAN**: Tokenized card numbers for enhanced security
+5. **JSON-RPC 2.0**: Message format for agent communication
+
+##### Notes
+
+- This is a demonstration implementation showing the card payment flow
+- The signing simulation uses simple hash concatenation instead of real cryptographic signatures
+- OTP validation uses a hardcoded value (123) for demo purposes
+- Production implementations should:
+  - Use real cryptographic signatures (e.g., JWT, JWS)
+  - Implement proper certificate validation
+  - Use secure OTP generation and validation
+  - Add fraud detection mechanisms
+  - Implement proper error handling and retry logic
+  - Store sensitive data securely (encrypted at rest)
+  - Use secure communication channels (TLS/HTTPS)
+
 
 #### AI 에이전트 통합 방식
 
