@@ -1,0 +1,246 @@
+/* Custom styles for better print/PDF output */
+
+@media print {
+    /* Hide navigation elements */
+    .bd-sidebar-primary,
+    .bd-sidebar-secondary,
+    .bd-header,
+    .bd-footer,
+    .prev-next-area,
+    .topbar,
+    nav.bd-links,
+    .navbar,
+    .header-article-items,
+    button,
+    .toggle-button {
+        display: none !important;
+    }
+
+    /* Expand main content to full width */
+    .bd-main,
+    .bd-article-container,
+    .bd-content {
+        max-width: 100% !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    article.bd-article {
+        max-width: 100% !important;
+    }
+
+    /* Better page breaks */
+    h1, h2, h3, h4, h5, h6 {
+        page-break-after: avoid;
+        break-after: avoid;
+    }
+
+    p, li, table, figure {
+        page-break-inside: avoid;
+        break-inside: avoid;
+    }
+
+    /* Add page header/footer */
+    @page {
+        margin: 2cm;
+        
+        @top-left {
+            content: "Knowledge Utility Kit";
+            font-size: 9pt;
+            color: #666;
+        }
+        
+        @top-right {
+            content: counter(page);
+            font-size: 9pt;
+        }
+        
+        @bottom-center {
+            content: "© 2017-2025 Gini";
+            font-size: 8pt;
+            color: #999;
+        }
+    }
+
+    /* First page styling */
+    @page :first {
+        @top-left {
+            content: none;
+        }
+        @top-right {
+            content: none;
+        }
+    }
+
+    /* Better typography for print */
+    body {
+        font-size: 11pt;
+        line-height: 1.5;
+        color: #000;
+        background: #fff;
+    }
+
+    h1 {
+        font-size: 24pt;
+        margin-top: 0;
+        padding-top: 0;
+        border-bottom: 2px solid #000;
+        padding-bottom: 10pt;
+    }
+
+    h2 {
+        font-size: 18pt;
+        margin-top: 20pt;
+        border-bottom: 1px solid #ccc;
+        padding-bottom: 5pt;
+    }
+
+    h3 {
+        font-size: 14pt;
+        margin-top: 15pt;
+    }
+
+    h4 {
+        font-size: 12pt;
+        margin-top: 12pt;
+    }
+
+    /* Code blocks */
+    pre, code {
+        border: 1px solid #ccc;
+        background-color: #f5f5f5 !important;
+        padding: 8pt;
+        font-size: 9pt;
+        font-family: "Courier New", monospace;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+    }
+
+    code {
+        padding: 2pt 4pt;
+    }
+
+    /* Tables */
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 12pt 0;
+        font-size: 10pt;
+    }
+
+    table th {
+        background-color: #f0f0f0 !important;
+        border: 1px solid #000;
+        padding: 8pt;
+        font-weight: bold;
+        text-align: left;
+    }
+
+    table td {
+        border: 1px solid #666;
+        padding: 6pt;
+    }
+
+    /* Links */
+    a {
+        color: #000;
+        text-decoration: none;
+    }
+
+    a[href^="http"]:after {
+        content: " (" attr(href) ")";
+        font-size: 8pt;
+        color: #666;
+    }
+
+    /* Don't print external link URLs for internal links */
+    a[href^="#"]:after,
+    a[href^="/"]:after {
+        content: "";
+    }
+
+    /* Lists */
+    ul, ol {
+        padding-left: 20pt;
+    }
+
+    /* Blockquotes */
+    blockquote {
+        border-left: 3pt solid #ccc;
+        padding-left: 12pt;
+        margin-left: 0;
+        font-style: italic;
+        color: #333;
+    }
+
+    /* Images */
+    img {
+        max-width: 100%;
+        page-break-inside: avoid;
+    }
+
+    /* Admonitions/Notes */
+    .admonition {
+        border: 1px solid #ccc;
+        padding: 8pt;
+        margin: 12pt 0;
+        page-break-inside: avoid;
+    }
+
+    .admonition-title {
+        font-weight: bold;
+        margin-bottom: 8pt;
+    }
+
+    /* Hide interactive elements */
+    .copybutton,
+    .headerlink,
+    .download,
+    iframe {
+        display: none !important;
+    }
+
+    /* Mermaid diagrams - try to keep on one page */
+    .mermaid {
+        page-break-inside: avoid;
+        max-width: 100%;
+    }
+
+    /* Add "Printed from" footer on first page */
+    article.bd-article::before {
+        content: "Downloaded from: https://kukgini.github.io/";
+        display: block;
+        text-align: center;
+        color: #999;
+        font-size: 9pt;
+        padding: 10pt 0;
+        border-bottom: 1px solid #eee;
+        margin-bottom: 20pt;
+    }
+}
+
+/* Screen styles - Add print button hint */
+@media screen {
+    .bd-article::after {
+        content: "💡 Tip: Use Ctrl+P (or Cmd+P) to print or save as PDF";
+        display: block;
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: #f0f0f0;
+        padding: 10px 15px;
+        border-radius: 5px;
+        font-size: 12px;
+        color: #666;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        z-index: 1000;
+        opacity: 0.8;
+        transition: opacity 0.3s;
+    }
+
+    .bd-article::after:hover {
+        opacity: 1;
+    }
+}
+
