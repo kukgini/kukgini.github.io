@@ -70,7 +70,7 @@ release = u''
 #
 # This is also used if you do content translation via gettext catalogs.
 # Usually you set "language" from the command line for these cases.
-language = None
+language = 'ko'  # Korean language support
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -118,31 +118,92 @@ htmlhelp_basename = 'kukginidoc'
 
 # -- Options for LaTeX output ---------------------------------------------
 
+latex_engine = 'xelatex'  # Use XeLaTeX for better Unicode and font support
+
 latex_elements = {
     # The paper size ('letterpaper' or 'a4paper').
-    #
-    # 'papersize': 'letterpaper',
+    'papersize': 'a4paper',
 
     # The font size ('10pt', '11pt' or '12pt').
-    #
-    # 'pointsize': '10pt',
+    'pointsize': '11pt',
 
     # Additional stuff for the LaTeX preamble.
-    #
-    # 'preamble': '',
+    'preamble': r'''
+\usepackage{kotex}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{datetime}
+\usepackage{hyperref}
+
+% Set Korean fonts
+\setmainfont{NanumGothic}
+\setsansfont{NanumGothic}
+\setmonofont{D2Coding}
+
+% Custom header and footer
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\nouppercase{\leftmark}}
+\fancyhead[R]{Knowledge Utility Kit}
+\fancyfoot[C]{\thepage\ / \pageref{LastPage}}
+\fancyfoot[R]{\today}
+
+% Adjust margins
+\setlength{\headheight}{14pt}
+
+% Better code block formatting
+\usepackage{listings}
+\lstset{
+    basicstyle=\ttfamily\footnotesize,
+    breaklines=true,
+    frame=single,
+    backgroundcolor=\color{gray!10}
+}
+
+% Table formatting
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{array}
+\setlength{\arrayrulewidth}{0.5pt}
+\renewcommand{\arraystretch}{1.3}
+''',
 
     # Latex figure (float) alignment
-    #
-    # 'figure_align': 'htbp',
+    'figure_align': 'H',
+    
+    # Remove blank pages
+    'extraclassoptions': 'openany,oneside',
+    
+    # Table of contents depth
+    'maxlistdepth': '10',
 }
 
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'mysphinx.tex', u'my.sphinx Documentation',
-     u'me', 'manual'),
+    (master_doc, 'kukgini.tex', u'Knowledge Utility Kit for Global Intelligence Integration',
+     u'Gini', 'manual'),
 ]
+
+# LaTeX logo
+latex_logo = None
+
+# For "manual" documents, if this is true, then toplevel headings are parts,
+# not chapters.
+latex_use_parts = False
+
+# If true, show page references after internal links.
+latex_show_pagerefs = True
+
+# If true, show URL addresses after external links.
+latex_show_urls = 'footnote'
+
+# Documents to append as an appendix to all manuals.
+latex_appendices = []
+
+# If false, no module index is generated.
+latex_domain_indices = True
 
 
 # -- Options for manual page output ---------------------------------------
