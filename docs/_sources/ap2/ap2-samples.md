@@ -718,7 +718,6 @@ This illustrates the complete flow of the Human Present x402 Payment scenario us
 
 ```{mermaid}
 sequenceDiagram
-sequenceDiagram
     participant User
     participant ShoppingAgent
     participant MerchantAgent
