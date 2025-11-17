@@ -396,13 +396,7 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">개요</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">주요 특징</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">사용 사례</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">한계점</a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">동작 방식</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sequence-diagram">Sequence Diagram</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-components">Key Components</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#intentmandate-structure">1. IntentMandate Structure</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cartmandate-structure">2. CartMandate Structure</a></li>
@@ -435,40 +429,8 @@ document.write(`
   <section id="cards">
 <h1>Cards 시나리오<a class="headerlink" href="#cards" title="Link to this heading">#</a></h1>
 <p>This illustrates the complete flow of the Human Present Card Payment scenario using the AP2 framework with the A2A protocol.</p>
-<section id="id1">
-<h2>개요<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
-<p>Cards 시나리오는 기존의 <strong>카드 결제 네트워크</strong>(Visa, Mastercard 등)를 통해 AI 에이전트가 자동으로 결제를 수행하는 방식입니다. AP2의 세 가지 시나리오 중 <strong>가장 현실적이고 즉시 도입 가능한</strong> 접근 방식으로, <strong>이미 검증된 기존 카드 결제 인프라</strong>를 그대로 활용하여 빠른 도입과 높은 호환성을 제공합니다.</p>
-<section id="id2">
-<h3>주요 특징<a class="headerlink" href="#id2" title="Link to this heading">#</a></h3>
-<ol class="arabic simple">
-<li><p><strong>기존 인프라 활용</strong>: Visa, Mastercard, AMEX 등 전 세계적으로 구축된 카드 네트워크 사용</p></li>
-<li><p><strong>즉시 적용 가능</strong>: 새로운 표준이나 프로토콜 도입 없이 기존 시스템과 호환</p></li>
-<li><p><strong>높은 신뢰성</strong>: 수십 년간 검증된 보안 및 사기 방지 시스템</p></li>
-<li><p><strong>PCI DSS 준수</strong>: 카드 산업 데이터 보안 표준을 따르는 안전한 처리</p></li>
-<li><p><strong>광범위한 수용성</strong>: 대부분의 가맹점에서 이미 지원하는 결제 수단</p></li>
-</ol>
-</section>
-<section id="id3">
-<h3>사용 사례<a class="headerlink" href="#id3" title="Link to this heading">#</a></h3>
-<ul class="simple">
-<li><p><strong>구독 서비스 자동 결제</strong>: AI 에이전트가 필요한 서비스를 자동으로 구독하고 결제</p></li>
-<li><p><strong>일상 구매</strong>: 온라인 쇼핑에서 에이전트가 가격 비교 후 자동 구매</p></li>
-<li><p><strong>B2B 거래</strong>: 기업용 카드를 통한 자동 발주 및 결제</p></li>
-<li><p><strong>동적 예산 관리</strong>: 설정된 예산 범위 내에서 최적의 구매 결정</p></li>
-</ul>
-</section>
-<section id="id4">
-<h3>한계점<a class="headerlink" href="#id4" title="Link to this heading">#</a></h3>
-<ul class="simple">
-<li><p><strong>수수료</strong>: 카드 네트워크 수수료 (보통 2-3%) 존재</p></li>
-<li><p><strong>보안 요구사항</strong>: PCI DSS 준수를 위한 추가 보안 조치 필요</p></li>
-<li><p><strong>지역별 제약</strong>: 일부 국가에서는 카드 사용 제한 또는 높은 수수료</p></li>
-<li><p><strong>개인정보</strong>: 카드 정보 저장 및 관리에 대한 규제 준수 필요</p></li>
-</ul>
-</section>
-</section>
-<section id="id5">
-<h2>동작 방식<a class="headerlink" href="#id5" title="Link to this heading">#</a></h2>
+<section id="sequence-diagram">
+<h2>Sequence Diagram<a class="headerlink" href="#sequence-diagram" title="Link to this heading">#</a></h2>
 <pre  class="mermaid">
         sequenceDiagram
     participant User
@@ -913,13 +875,7 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">개요</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">주요 특징</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">사용 사례</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">한계점</a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">동작 방식</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sequence-diagram">Sequence Diagram</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-components">Key Components</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#intentmandate-structure">1. IntentMandate Structure</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cartmandate-structure">2. CartMandate Structure</a></li>

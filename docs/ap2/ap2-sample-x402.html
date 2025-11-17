@@ -396,14 +396,7 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">개요</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">주요 특징</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">사용 사례</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">한계점 및 고려사항</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">x402의 미래 전망</a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">동작 방식</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sequence-diagram">Sequence Diagram</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-components">Key Components</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#intentmandate-structure">1. IntentMandate Structure</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cartmandate-structure-with-x402-support">2. CartMandate Structure with x402 Support</a></li>
@@ -413,10 +406,10 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#transaction-receipt">6. Transaction Receipt</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">기술 상세</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">기술 상세</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#http-402">HTTP 402 상태 코드</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">에이전트 자동 결제 로직</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">결제 토큰 검증</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">에이전트 자동 결제 로직</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">결제 토큰 검증</a></li>
 </ul>
 </li>
 </ul>
@@ -433,62 +426,8 @@ document.write(`
   <section id="x402">
 <h1>x402 시나리오<a class="headerlink" href="#x402" title="Link to this heading">#</a></h1>
 <p>This illustrates the complete flow of the Human Present x402 Payment scenario using the AP2 framework with the A2A protocol and x402 payment standard.</p>
-<section id="id1">
-<h2>개요<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
-<p>x402는 1997년 HTTP/1.1 표준에 정의되었지만 거의 사용되지 않았던 <strong>HTTP 402 상태 코드</strong>를 현대적인 AI 에이전트 생태계에 맞게 재해석한 프로토콜입니다. AP2 샘플의 x402 시나리오는 이 개념을 구현한 것으로, AI 에이전트들이 웹 리소스나 서비스에 접근할 때 자동으로 결제를 처리할 수 있도록 합니다.</p>
-<section id="id2">
-<h3>주요 특징<a class="headerlink" href="#id2" title="Link to this heading">#</a></h3>
-<ol class="arabic simple">
-<li><p><strong>AI 에이전트 친화적</strong>: 사람의 개입 없이 에이전트가 자율적으로 결제 결정</p></li>
-<li><p><strong>프로토콜 독립적</strong>: 특정 결제 수단이나 통화에 종속되지 않음</p></li>
-<li><p><strong>표준 기반</strong>: HTTP 표준을 확장하여 웹 생태계와 자연스럽게 통합</p></li>
-<li><p><strong>마이크로 페이먼트</strong>: 소액 결제에 최적화 (거의 무료에 가까운 수수료)</p></li>
-<li><p><strong>중개자 불필요</strong>: 판매자와 구매자 간 직접 거래 조건 설정 가능</p></li>
-</ol>
-</section>
-<section id="id3">
-<h3>사용 사례<a class="headerlink" href="#id3" title="Link to this heading">#</a></h3>
-<ul class="simple">
-<li><p><strong>AI 에이전트 모니터링 서비스</strong>: 에이전트의 활동 추적 및 성능 분석에 대한 결제</p></li>
-<li><p><strong>프리미엄 API 접근</strong>: 유료 API나 데이터셋에 대한 자동 결제</p></li>
-<li><p><strong>컴퓨팅 리소스</strong>: 필요한 만큼만 사용하고 즉시 결제하는 온디맨드 서비스</p></li>
-<li><p><strong>콘텐츠 마이크로 페이먼트</strong>: 뉴스 기사, 연구 논문 등 개별 콘텐츠에 대한 소액 결제</p></li>
-</ul>
-</section>
-<section id="id4">
-<h3>한계점 및 고려사항<a class="headerlink" href="#id4" title="Link to this heading">#</a></h3>
-<ul class="simple">
-<li><p><strong>표준 부재</strong>: HTTP 402는 1997년부터 정의되었으나 실제 구현 사례 거의 없음</p></li>
-<li><p><strong>생태계 부재</strong>: 결제 프로세서, 가맹점, 클라이언트 모두 새로 구축 필요</p></li>
-<li><p><strong>보안 표준</strong>: 아직 확립된 보안 표준이나 모범 사례 부족</p></li>
-<li><p><strong>채택 장벽</strong>: 기존 시스템과의 호환성 없어 전면적인 생태계 전환 필요</p></li>
-<li><p><strong>불확실성</strong>: 실험적 단계로 장기적 실용화 여부 불확실</p></li>
-</ul>
-</section>
-<section id="id5">
-<h3>x402의 미래 전망<a class="headerlink" href="#id5" title="Link to this heading">#</a></h3>
-<p><strong>단기 (2025-2027):</strong></p>
-<ul class="simple">
-<li><p>실험적 파일럿 프로젝트 및 PoC (Proof of Concept)</p></li>
-<li><p>특정 도메인(예: AI 서비스 마켓플레이스)에서 제한적 사용</p></li>
-<li><p>표준화 논의 시작 (IETF, W3C)</p></li>
-</ul>
-<p><strong>중기 (2027-2030):</strong></p>
-<ul class="simple">
-<li><p>마이크로서비스 및 API 경제에서 점진적 채택</p></li>
-<li><p>암호화폐 및 블록체인 기반 결제 시스템과의 통합</p></li>
-<li><p>주요 클라우드 제공업체의 실험적 지원</p></li>
-</ul>
-<p><strong>장기 (2030+):</strong></p>
-<ul class="simple">
-<li><p>AI 에이전트 생태계의 표준 결제 프로토콜로 자리잡을 가능성</p></li>
-<li><p>웹의 근본적인 비즈니스 모델 변화 (광고 기반 → 마이크로 페이먼트)</p></li>
-<li><p>사람 간 거래보다는 M2M 거래의 주류 프로토콜로 발전</p></li>
-</ul>
-</section>
-</section>
-<section id="id6">
-<h2>동작 방식<a class="headerlink" href="#id6" title="Link to this heading">#</a></h2>
+<section id="sequence-diagram">
+<h2>Sequence Diagram<a class="headerlink" href="#sequence-diagram" title="Link to this heading">#</a></h2>
 <pre  class="mermaid">
         sequenceDiagram
     participant User
@@ -714,8 +653,8 @@ document.write(`
 </div>
 </section>
 </section>
-<section id="id7">
-<h2>기술 상세<a class="headerlink" href="#id7" title="Link to this heading">#</a></h2>
+<section id="id1">
+<h2>기술 상세<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
 <section id="http-402">
 <h3>HTTP 402 상태 코드<a class="headerlink" href="#http-402" title="Link to this heading">#</a></h3>
 <div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">402</span> <span class="ne">Payment Required</span>
@@ -732,8 +671,8 @@ document.write(`
 </pre></div>
 </div>
 </section>
-<section id="id8">
-<h3>에이전트 자동 결제 로직<a class="headerlink" href="#id8" title="Link to this heading">#</a></h3>
+<section id="id2">
+<h3>에이전트 자동 결제 로직<a class="headerlink" href="#id2" title="Link to this heading">#</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">fetch_with_payment</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">agent_wallet</span><span class="p">):</span>
     <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">http_client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
     
@@ -758,8 +697,8 @@ document.write(`
 </pre></div>
 </div>
 </section>
-<section id="id9">
-<h3>결제 토큰 검증<a class="headerlink" href="#id9" title="Link to this heading">#</a></h3>
+<section id="id3">
+<h3>결제 토큰 검증<a class="headerlink" href="#id3" title="Link to this heading">#</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">verify_payment_token</span><span class="p">(</span><span class="n">token</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">resource_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">decoded</span> <span class="o">=</span> <span class="n">jwt</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">public_key</span><span class="p">,</span> <span class="n">algorithms</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;RS256&#39;</span><span class="p">])</span>
@@ -823,14 +762,7 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">개요</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">주요 특징</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">사용 사례</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">한계점 및 고려사항</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">x402의 미래 전망</a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">동작 방식</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sequence-diagram">Sequence Diagram</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-components">Key Components</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#intentmandate-structure">1. IntentMandate Structure</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cartmandate-structure-with-x402-support">2. CartMandate Structure with x402 Support</a></li>
@@ -840,10 +772,10 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#transaction-receipt">6. Transaction Receipt</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">기술 상세</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">기술 상세</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#http-402">HTTP 402 상태 코드</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">에이전트 자동 결제 로직</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">결제 토큰 검증</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">에이전트 자동 결제 로직</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">결제 토큰 검증</a></li>
 </ul>
 </li>
 </ul>
