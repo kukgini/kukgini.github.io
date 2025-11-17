@@ -192,12 +192,12 @@ sequenceDiagram
     participant CMWallet as CM Wallet<br/>(Credential Manager)
     participant TrustedUI as Trusted UI<br/>(System UI)
 
-    Note over User,TrustedUI: Phase 1: Product Discovery & Cart Creation
+    Note over User,TrustedUI: Phase 1 - Product Discovery & Cart Creation
 
-    User->>ShoppingAgent: I'm looking for a new car
+    User->>ShoppingAgent: I am looking for a new car
     activate ShoppingAgent
 
-    ShoppingAgent->>MerchantAgent: A2A Message: Find items<br/>(text + shopping_agent_id)
+    ShoppingAgent->>MerchantAgent: A2A Message - Find items<br/>(text + shopping_agent_id)
     activate MerchantAgent
 
     MerchantAgent->>MerchantAgent: Validate shopping_agent_id<br/>(trusted_shopping_agent)
@@ -210,7 +210,7 @@ sequenceDiagram
     CatalogAgent-->>MerchantAgent: Product list + CartMandate
     deactivate CatalogAgent
 
-    MerchantAgent-->>ShoppingAgent: A2A Response: Products<br/>(CartMandate artifact)
+    MerchantAgent-->>ShoppingAgent: A2A Response - Products<br/>(CartMandate artifact)
     deactivate MerchantAgent
 
     ShoppingAgent-->>User: Display product options
@@ -219,51 +219,51 @@ sequenceDiagram
     User->>ShoppingAgent: Select product & confirm purchase
     activate ShoppingAgent
 
-    Note over User,TrustedUI: Phase 2: DPC Request Construction
+    Note over User,TrustedUI: Phase 2 - DPC Request Construction
 
     ShoppingAgent->>ShoppingAgent: constructDPCRequest()<br/>- Extract cart details<br/>- Generate nonce<br/>- Create DCQL query<br/>- Build transaction_data
 
-    Note over ShoppingAgent: DCQL Claims:<br/>- card_number<br/>- holder_name<br/><br/>Transaction Data:<br/>- merchant_name<br/>- amount<br/>- purchase details
+    Note over ShoppingAgent: DCQL Claims<br/>- card_number<br/>- holder_name<br/><br/>Transaction Data<br/>- merchant_name<br/>- amount<br/>- purchase details
 
-    Note over User,TrustedUI: Phase 3: Credential Request via Credential Manager
+    Note over User,TrustedUI: Phase 3 - Credential Request via Credential Manager
 
     ShoppingAgent->>CMWallet: GetDigitalCredentialOption<br/>(OpenID4VP request)
     activate CMWallet
 
-    Note over CMWallet: Protocol: openid4vp-v1-unsigned<br/>Format: mso_mdoc<br/>Doctype: com.emvco.payment_card
+    Note over CMWallet: Protocol - openid4vp-v1-unsigned<br/>Format - mso_mdoc<br/>Doctype - com.emvco.payment_card
 
     CMWallet->>CMWallet: Validate request<br/>Find matching credentials
 
     CMWallet->>TrustedUI: Show payment confirmation
     activate TrustedUI
 
-    TrustedUI-->>User: Display:<br/>- Merchant name<br/>- Amount<br/>- Purchase details table<br/>- Card to be used
+    TrustedUI-->>User: Display<br/>- Merchant name<br/>- Amount<br/>- Purchase details table<br/>- Card to be used
 
     User->>TrustedUI: Approve payment
 
     TrustedUI-->>CMWallet: User consent
     deactivate TrustedUI
 
-    CMWallet->>CMWallet: Create VP Token:<br/>- Sign transaction_data<br/>- Include requested claims<br/>- Generate device signature
+    CMWallet->>CMWallet: Create VP Token<br/>- Sign transaction_data<br/>- Include requested claims<br/>- Generate device signature
 
     CMWallet-->>ShoppingAgent: vp_token<br/>(signed DPC response)
     deactivate CMWallet
 
-    Note over User,TrustedUI: Phase 4: DPC Validation & Payment Finalization
+    Note over User,TrustedUI: Phase 4 - DPC Validation & Payment Finalization
 
-    ShoppingAgent->>MerchantAgent: A2A Message: Validate DPC<br/>(text + dpc_response)
+    ShoppingAgent->>MerchantAgent: A2A Message - Validate DPC<br/>(text + dpc_response)
     activate MerchantAgent
 
     MerchantAgent->>MerchantAgent: dpc_finish()<br/>- Verify nonce<br/>- Validate signature<br/>- Check transaction_data hash
 
-    Note over MerchantAgent: TODO: Full validation:<br/>- Verify issuer signature<br/>- Verify device signature<br/>- Forward to payment processor
+    Note over MerchantAgent: TODO - Full validation<br/>- Verify issuer signature<br/>- Verify device signature<br/>- Forward to payment processor
 
     MerchantAgent->>MerchantAgent: Simulate payment<br/>processing
 
-    MerchantAgent-->>ShoppingAgent: A2A Response:<br/>payment_status: SUCCESS<br/>transaction_id
+    MerchantAgent-->>ShoppingAgent: A2A Response<br/>payment_status - SUCCESS<br/>transaction_id
     deactivate MerchantAgent
 
-    ShoppingAgent-->>User: Payment successful!<br/>Transaction ID: txn_1234567890
+    ShoppingAgent-->>User: Payment successful!<br/>Transaction ID - txn_1234567890
     deactivate ShoppingAgent
 ```
 
