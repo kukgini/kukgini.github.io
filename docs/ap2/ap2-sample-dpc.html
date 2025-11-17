@@ -396,12 +396,6 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">개요</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">주요 특징</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">사용 사례</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">한계점</a></li>
-</ul>
-</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sequence-diagram">Sequence Diagram</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-components">Key Components</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#openid4vp-request-structure">1. OpenID4VP Request Structure</a></li>
@@ -414,22 +408,22 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notes">Notes</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cmwallet">CMWallet 개요</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#android-credential-manager-api">Android Credential Manager API 통합 흐름</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">DPC 기술 상세 분석</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">DPC 기술 상세 분석</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#euid-wallet-eu-digital-identity-wallet">EUID Wallet (EU Digital Identity Wallet) 표준 연관성</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#oid4vp-openid-for-verifiable-presentaiton">OID4VP (OpenID for Verifiable Presentaiton) 프로토콜 사용</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#iso-iec-18013-5-mode">ISO/IEC 18013-5 mode 형식 지원</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dcql-digital-credentials-query-language">DCQL (Digital Credentials Query Language) 사용</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Android Credential Manager API 통합</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Android Credential Manager API 통합</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dpc-vs-eudi-wallet">DPC vs EUDI Wallet 차이점</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">DPC 한계점 및 고려사항</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">DPC 한계점 및 고려사항</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dpc-next-steps">DPC 개선 방향 (Next Steps)</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#openid4vp">서명된 OpenID4VP 흐름으로의 전환</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">재현 공격 및 키 관리 개선</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">재현 공격 및 키 관리 개선</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#merchant">Merchant 측 보증 수준 상향</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ios">iOS 및 기타 플랫폼 정합성</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">생태계 및 규제 대응</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">생태계 및 규제 대응</a></li>
 </ul>
 </li>
 </ul>
@@ -446,40 +440,6 @@ document.write(`
   <section id="dpc">
 <h1>DPC 시나리오<a class="headerlink" href="#dpc" title="Link to this heading">#</a></h1>
 <p>This illustrates the complete flow of the Digital Payment Credentials scenario using the AP2 framework with the A2A protocol.</p>
-<section id="id1">
-<h2>개요<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
-<p>DPC(Digital Payment Credential) 시나리오는 <strong>암호학적으로 검증 가능한 디지털 자격증명</strong>을 결제 수단으로 활용하는 혁신적인 접근 방식입니다. Cards가 기존 카드 네트워크에 기반한다면, DPC는 <strong>EUDI Wallet과 같은 디지털 신원 표준</strong>을 결제 영역으로 확장한 것입니다.</p>
-<p>샘플 시나리오는 Android 앱이므로 Android Credential Manager API를 통해 상호작용하며, 사용자는 암호학적으로 서명된 증명(cryptographic proof)을 제시하여 결제를 완료합니다. 이는 단순히 카드 정보를 전달하는 것이 아니라, <strong>사용자가 결제카드 소유자이며 이 거래을 승인했음을 증명</strong>하는 방식입니다.</p>
-<section id="id2">
-<h3>주요 특징<a class="headerlink" href="#id2" title="Link to this heading">#</a></h3>
-<ol class="arabic simple">
-<li><p><strong>암호학적 보안</strong>: 공개키 암호화 기반의 서명으로 위변조 불가능</p></li>
-<li><p><strong>선택적 공개 (Selective Disclosure)</strong>: 필요한 정보만 선택적으로 공개</p></li>
-<li><p><strong>사용자 통제</strong>: 모든 거래에서 사용자가 명시적으로 승인</p></li>
-<li><p><strong>표준 기반</strong>: OpenID4VP, ISO 18013-5 mDOC, DCQL 등 국제 표준 준수</p></li>
-<li><p><strong>프라이버시 보호</strong>: 최소한의 정보만 공유하며, 추적 방지 메커니즘 내장</p></li>
-</ol>
-</section>
-<section id="id3">
-<h3>사용 사례<a class="headerlink" href="#id3" title="Link to this heading">#</a></h3>
-<ul class="simple">
-<li><p><strong>프라이버시 중심 결제</strong>: 최소한의 개인정보만 공개하면서 결제</p></li>
-<li><p><strong>규제 준수 환경</strong>: GDPR, EUDI Wallet 등 엄격한 프라이버시 규제가 있는 EU 시장</p></li>
-<li><p><strong>고가 거래</strong>: 강력한 인증이 필요한 고액 결제</p></li>
-<li><p><strong>신원 연계 결제</strong>: 결제와 동시에 연령 확인이나 자격 증명이 필요한 경우</p></li>
-<li><p><strong>크로스보더 거래</strong>: 국제 표준 기반으로 국경을 넘는 거래에 적합</p></li>
-</ul>
-</section>
-<section id="id4">
-<h3>한계점<a class="headerlink" href="#id4" title="Link to this heading">#</a></h3>
-<ul class="simple">
-<li><p><strong>플랫폼 한정</strong>: 현재 Android 에만 구현, iOS 지원 제한적</p></li>
-<li><p><strong>생태계 미성숙</strong>: Credential provider가 아직 초기 단계</p></li>
-<li><p><strong>사용자 교육</strong>: 새로운 개념으로 사용자 이해와 신뢰 구축 필요</p></li>
-<li><p><strong>표준화 진행 중</strong>: OpenID4VP, mDOC 등이 아직 완전히 확립되지 않음</p></li>
-</ul>
-</section>
-</section>
 <section id="sequence-diagram">
 <h2>Sequence Diagram<a class="headerlink" href="#sequence-diagram" title="Link to this heading">#</a></h2>
 <pre  class="mermaid">
@@ -744,8 +704,8 @@ document.write(`
 </pre></div>
 </div>
 </section>
-<section id="id5">
-<h2>DPC 기술 상세 분석<a class="headerlink" href="#id5" title="Link to this heading">#</a></h2>
+<section id="id1">
+<h2>DPC 기술 상세 분석<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
 <p>이 예제 시나리오는 DPC (Digital Payment Credential) 요청을 생성합니다. 주요 기능은 쇼핑 카트 정보를 받아 OID4VP (OpenID 4 Verifiable Presentation) 프로토콜 기반의 인증 요청을 생성하는 것입니다.</p>
 </section>
 <section id="euid-wallet-eu-digital-identity-wallet">
@@ -753,8 +713,8 @@ document.write(`
 <p>DPC 시나리오는 EUID Wallet 표준과 여러 측면에서 밀접하게 연관되어 있습니다</p>
 <section id="oid4vp-openid-for-verifiable-presentaiton">
 <h3>OID4VP (OpenID for Verifiable Presentaiton) 프로토콜 사용<a class="headerlink" href="#oid4vp-openid-for-verifiable-presentaiton" title="Link to this heading">#</a></h3>
-<div class="literal-block-wrapper docutils container" id="id10">
-<div class="code-block-caption"><span class="caption-text">DpcHelper.kt:110~120</span><a class="headerlink" href="#id10" title="Link to this code">#</a></div>
+<div class="literal-block-wrapper docutils container" id="id6">
+<div class="code-block-caption"><span class="caption-text">DpcHelper.kt:110~120</span><a class="headerlink" href="#id6" title="Link to this code">#</a></div>
 <div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="kd">val</span><span class="w"> </span><span class="nv">dcRequest</span><span class="w"> </span><span class="o">=</span>
 <span class="w">  </span><span class="n">Request</span><span class="p">(</span>
 <span class="w">    </span><span class="n">responseType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;vp_token&quot;</span><span class="p">,</span>
@@ -777,8 +737,8 @@ document.write(`
 </section>
 <section id="iso-iec-18013-5-mode">
 <h3>ISO/IEC 18013-5 mode 형식 지원<a class="headerlink" href="#iso-iec-18013-5-mode" title="Link to this heading">#</a></h3>
-<div class="literal-block-wrapper docutils container" id="id11">
-<div class="code-block-caption"><span class="caption-text">DpcHelper.kt:85~91</span><a class="headerlink" href="#id11" title="Link to this code">#</a></div>
+<div class="literal-block-wrapper docutils container" id="id7">
+<div class="code-block-caption"><span class="caption-text">DpcHelper.kt:85~91</span><a class="headerlink" href="#id7" title="Link to this code">#</a></div>
 <div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="kd">val</span><span class="w"> </span><span class="nv">credentialQuery</span><span class="w"> </span><span class="o">=</span>
 <span class="w">    </span><span class="n">CredentialQuery</span><span class="p">(</span>
 <span class="w">        </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">credId</span><span class="p">,</span>
@@ -789,8 +749,8 @@ document.write(`
 </pre></div>
 </div>
 </div>
-<div class="literal-block-wrapper docutils container" id="id12">
-<div class="code-block-caption"><span class="caption-text">DpcHelper.kt:96~100</span><a class="headerlink" href="#id12" title="Link to this code">#</a></div>
+<div class="literal-block-wrapper docutils container" id="id8">
+<div class="code-block-caption"><span class="caption-text">DpcHelper.kt:96~100</span><a class="headerlink" href="#id8" title="Link to this code">#</a></div>
 <div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="kd">val</span><span class="w"> </span><span class="nv">mdocFormatsSupported</span><span class="w"> </span><span class="o">=</span>
 <span class="w">    </span><span class="n">MdocFormatsSupported</span><span class="p">(</span>
 <span class="w">        </span><span class="n">issuerauthAlgValues</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">listOf</span><span class="p">(</span><span class="o">-</span><span class="m">7</span><span class="p">),</span><span class="w"> </span><span class="c1">// ES256</span>
@@ -807,8 +767,8 @@ document.write(`
 </section>
 <section id="dcql-digital-credentials-query-language">
 <h3>DCQL (Digital Credentials Query Language) 사용<a class="headerlink" href="#dcql-digital-credentials-query-language" title="Link to this heading">#</a></h3>
-<div class="literal-block-wrapper docutils container" id="id13">
-<div class="code-block-caption"><span class="caption-text">DpcHelper.kt:78~93</span><a class="headerlink" href="#id13" title="Link to this code">#</a></div>
+<div class="literal-block-wrapper docutils container" id="id9">
+<div class="code-block-caption"><span class="caption-text">DpcHelper.kt:78~93</span><a class="headerlink" href="#id9" title="Link to this code">#</a></div>
 <div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="c1">// Build the DCQL query to request specific credential claims.</span>
 <span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="nv">claims</span><span class="w"> </span><span class="o">=</span>
 <span class="w">    </span><span class="n">listOf</span><span class="p">(</span>
@@ -834,10 +794,10 @@ document.write(`
 <li><p>EUDI Wallet 도 동일한 방식으로 사용자가 공개할 정보를 선택할 수 있습니다</p></li>
 </ul>
 </section>
-<section id="id6">
-<h3>Android Credential Manager API 통합<a class="headerlink" href="#id6" title="Link to this heading">#</a></h3>
-<div class="literal-block-wrapper docutils container" id="id14">
-<div class="code-block-caption"><span class="caption-text">DpcHelpper.kt:67~76</span><a class="headerlink" href="#id14" title="Link to this code">#</a></div>
+<section id="id2">
+<h3>Android Credential Manager API 통합<a class="headerlink" href="#id2" title="Link to this heading">#</a></h3>
+<div class="literal-block-wrapper docutils container" id="id10">
+<div class="code-block-caption"><span class="caption-text">DpcHelpper.kt:67~76</span><a class="headerlink" href="#id10" title="Link to this code">#</a></div>
 <div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="c1">// Build transaction_data payload.</span>
 <span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="nv">transactionData</span><span class="w"> </span><span class="o">=</span>
 <span class="w">    </span><span class="n">TransactionData</span><span class="p">(</span>
@@ -856,8 +816,8 @@ document.write(`
 <li><p>Transaction Data 에 대한 서명 - EUDI Wallet 에서도 중요한 보안 메커니즘입니다</p></li>
 <li><p>transactionDataHashesAlg = “sha-256” - 거래 무결성을 보장합니다</p></li>
 </ul>
-<div class="literal-block-wrapper docutils container" id="id15">
-<div class="code-block-caption"><span class="caption-text">DpcHelper.kt:59~65</span><a class="headerlink" href="#id15" title="Link to this code">#</a></div>
+<div class="literal-block-wrapper docutils container" id="id11">
+<div class="code-block-caption"><span class="caption-text">DpcHelper.kt:59~65</span><a class="headerlink" href="#id11" title="Link to this code">#</a></div>
 <div class="highlight-kotkin notranslate"><div class="highlight"><pre><span></span>  val additionalInfo =
     AdditionalInfo(
       title = &quot;Please confirm your purchase details...&quot;,
@@ -881,8 +841,8 @@ document.write(`
 <li><p><strong>서명</strong>: 현재는 unsigned 버전을 사용하지만, EUDI Wallet은 강력한 암호화 서명 요구</p></li>
 </ul>
 </section>
-<section id="id7">
-<h3>DPC 한계점 및 고려사항<a class="headerlink" href="#id7" title="Link to this heading">#</a></h3>
+<section id="id3">
+<h3>DPC 한계점 및 고려사항<a class="headerlink" href="#id3" title="Link to this heading">#</a></h3>
 <p><strong>현재의 제약사항:</strong></p>
 <ul class="simple">
 <li><p><strong>플랫폼 한정</strong>: 현재 Android에만 구현, iOS 지원 제한적</p></li>
@@ -924,8 +884,8 @@ document.write(`
 <li><p><strong>Trust Framework 정합성</strong>: ARF 가이드라인에서 요구하는 신뢰 anchor(국가/회원국 발급자 루트 인증서)와 Revocation 검사를 통합합니다.</p></li>
 </ul>
 </section>
-<section id="id8">
-<h3>재현 공격 및 키 관리 개선<a class="headerlink" href="#id8" title="Link to this heading">#</a></h3>
+<section id="id4">
+<h3>재현 공격 및 키 관리 개선<a class="headerlink" href="#id4" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>Replay 방지</strong>: nonce·session binding을 강화하고 Merchants/logger 쪽에서 사용된 토큰을 기록하여 재사용을 차단합니다.</p></li>
 <li><p><strong>지갑 키보호</strong>: Android 하드웨어 백업 키 저장소(Keystore) 및 향후 iOS Secure Enclave를 이용한 키 저장/attestation을 도입합니다.</p></li>
@@ -946,8 +906,8 @@ document.write(`
 <li><p><strong>플랫폼 추상화</strong>: Credential Manager (Android)·IdentityCredential(iOS)·WebAuthn 기반 브라우저 API를 아우르는 공통 추상화 레이어를 설계하여, 지갑/발급자/검증자 역할을 ARF와 동일한 구조로 매핑합니다.</p></li>
 </ul>
 </section>
-<section id="id9">
-<h3>생태계 및 규제 대응<a class="headerlink" href="#id9" title="Link to this heading">#</a></h3>
+<section id="id5">
+<h3>생태계 및 규제 대응<a class="headerlink" href="#id5" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>규제 일치</strong>: EMVCo DC-API, ETSI TS 119 495(수신자 서명) 등 결제용 표준을 모니터링하고, EUDI Wallet 시행규정(2024/1183)에서 요구하는 PID/EAA(전자 속성) 처리 절차를 문서화합니다.</p></li>
 <li><p><strong>인증 준비</strong>: 지갑·검증자 모듈을 EUDI Wallet Conformity Assessment (BR-EL, DR-EL) 요구사항에 맞춰 테스트하고, 파일럿 참여국(예: EWC, NOBCCS)에서 공개한 상호운용성 체크리스트를 반영합니다.</p></li>
@@ -1001,12 +961,6 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">개요</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">주요 특징</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">사용 사례</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">한계점</a></li>
-</ul>
-</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sequence-diagram">Sequence Diagram</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-components">Key Components</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#openid4vp-request-structure">1. OpenID4VP Request Structure</a></li>
@@ -1019,22 +973,22 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notes">Notes</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cmwallet">CMWallet 개요</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#android-credential-manager-api">Android Credential Manager API 통합 흐름</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">DPC 기술 상세 분석</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">DPC 기술 상세 분석</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#euid-wallet-eu-digital-identity-wallet">EUID Wallet (EU Digital Identity Wallet) 표준 연관성</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#oid4vp-openid-for-verifiable-presentaiton">OID4VP (OpenID for Verifiable Presentaiton) 프로토콜 사용</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#iso-iec-18013-5-mode">ISO/IEC 18013-5 mode 형식 지원</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dcql-digital-credentials-query-language">DCQL (Digital Credentials Query Language) 사용</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Android Credential Manager API 통합</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Android Credential Manager API 통합</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dpc-vs-eudi-wallet">DPC vs EUDI Wallet 차이점</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">DPC 한계점 및 고려사항</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">DPC 한계점 및 고려사항</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dpc-next-steps">DPC 개선 방향 (Next Steps)</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#openid4vp">서명된 OpenID4VP 흐름으로의 전환</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">재현 공격 및 키 관리 개선</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">재현 공격 및 키 관리 개선</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#merchant">Merchant 측 보증 수준 상향</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ios">iOS 및 기타 플랫폼 정합성</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">생태계 및 규제 대응</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">생태계 및 규제 대응</a></li>
 </ul>
 </li>
 </ul>
