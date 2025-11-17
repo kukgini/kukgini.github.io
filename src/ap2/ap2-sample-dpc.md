@@ -4,72 +4,54 @@ This illustrates the complete flow of the Digital Payment Credentials scenario u
 
 ## Sequence Diagram
 
-```{mermaid}
+```mermaid
 sequenceDiagram
     participant User
-    participant ShoppingAgent as Shopping Agent
-    participant MerchantAgent as Merchant Agent
-    participant CatalogAgent as Catalog Agent
-    participant CMWallet as CM Wallet
-    participant TrustedUI as Trusted UI
+    participant ShoppingAgent
+    participant MerchantAgent
+    participant CMWallet
+    participant TrustedUI
 
-    Note over User,TrustedUI: Phase 1: Product Discovery and Cart Creation
+    Note right of User: Phase 1: Product Discovery
 
     User->>ShoppingAgent: I'm looking for a new car
-    activate ShoppingAgent
     ShoppingAgent->>MerchantAgent: A2A Message: Find items
-    activate MerchantAgent
     MerchantAgent->>MerchantAgent: Validate shopping_agent_id
-    MerchantAgent->>CatalogAgent: find_items_workflow()
-    activate CatalogAgent
-    CatalogAgent->>CatalogAgent: Search product catalog
-    CatalogAgent-->>MerchantAgent: Product list + CartMandate
-    deactivate CatalogAgent
+    MerchantAgent->>MerchantAgent: Search product catalog
+    MerchantAgent->>MerchantAgent: Create CartMandate
     MerchantAgent-->>ShoppingAgent: A2A Response with CartMandate
-    deactivate MerchantAgent
     ShoppingAgent-->>User: Display product options
-    deactivate ShoppingAgent
 
     User->>ShoppingAgent: Select product and confirm purchase
-    activate ShoppingAgent
 
-    Note over User,TrustedUI: Phase 2: DPC Request Construction
+    Note right of User: Phase 2: DPC Request Construction
 
     ShoppingAgent->>ShoppingAgent: constructDPCRequest()
-    Note over ShoppingAgent: Generate nonce and build OpenID4VP request
-    Note over ShoppingAgent: DCQL: card_number, holder_name
-    Note over ShoppingAgent: Transaction data: merchant, amount, details
+    ShoppingAgent->>ShoppingAgent: Generate nonce
+    ShoppingAgent->>ShoppingAgent: Create DCQL query
+    ShoppingAgent->>ShoppingAgent: Build transaction_data
 
-    Note over User,TrustedUI: Phase 3: Credential Request via Credential Manager
+    Note right of User: Phase 3: Credential Manager
 
     ShoppingAgent->>CMWallet: GetDigitalCredentialOption
-    activate CMWallet
-    Note over CMWallet: Protocol: openid4vp-v1-unsigned
-    Note over CMWallet: Format: mso_mdoc
     CMWallet->>CMWallet: Validate request
     CMWallet->>TrustedUI: Show payment confirmation
-    activate TrustedUI
-    Note over TrustedUI: Display merchant, amount, details
+    TrustedUI-->>User: Display merchant, amount, details
     User->>TrustedUI: Approve payment
     TrustedUI-->>CMWallet: User consent
-    deactivate TrustedUI
     CMWallet->>CMWallet: Sign transaction_data
     CMWallet->>CMWallet: Generate VP Token
     CMWallet-->>ShoppingAgent: vp_token
-    deactivate CMWallet
 
-    Note over User,TrustedUI: Phase 4: DPC Validation and Payment Finalization
+    Note right of User: Phase 4: DPC Validation
 
     ShoppingAgent->>MerchantAgent: A2A Message: Validate DPC
-    activate MerchantAgent
     MerchantAgent->>MerchantAgent: dpc_finish()
-    Note over MerchantAgent: Verify nonce and signature
-    Note over MerchantAgent: Validate transaction_data hash
+    MerchantAgent->>MerchantAgent: Verify nonce and signature
+    MerchantAgent->>MerchantAgent: Validate transaction_data hash
     MerchantAgent->>MerchantAgent: Simulate payment processing
     MerchantAgent-->>ShoppingAgent: Payment status: SUCCESS
-    deactivate MerchantAgent
     ShoppingAgent-->>User: Payment successful!
-    deactivate ShoppingAgent
 ```
 
 ## Key Components
