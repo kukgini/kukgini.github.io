@@ -194,7 +194,7 @@ sequenceDiagram
 
     Note over User,TrustedUI: Phase 1: Product Discovery & Cart Creation
 
-    User->>ShoppingAgent: "I'm looking for a new car"
+    User->>ShoppingAgent: I'm looking for a new car
     activate ShoppingAgent
 
     ShoppingAgent->>MerchantAgent: A2A Message: Find items<br/>(text + shopping_agent_id)
