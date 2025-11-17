@@ -2,35 +2,6 @@
 
 This illustrates the complete flow of the Digital Payment Credentials scenario using the AP2 framework with the A2A protocol.
 
-## 개요
-
-DPC(Digital Payment Credential) 시나리오는 **암호학적으로 검증 가능한 디지털 자격증명**을 결제 수단으로 활용하는 혁신적인 접근 방식입니다. Cards가 기존 카드 네트워크에 기반한다면, DPC는 **EUDI Wallet과 같은 디지털 신원 표준**을 결제 영역으로 확장한 것입니다.
-
-샘플 시나리오는 Android 앱이므로 Android Credential Manager API를 통해 상호작용하며, 사용자는 암호학적으로 서명된 증명(cryptographic proof)을 제시하여 결제를 완료합니다. 이는 단순히 카드 정보를 전달하는 것이 아니라, **사용자가 결제카드 소유자이며 이 거래을 승인했음을 증명**하는 방식입니다.
-
-### 주요 특징
-
-1. **암호학적 보안**: 공개키 암호화 기반의 서명으로 위변조 불가능
-2. **선택적 공개 (Selective Disclosure)**: 필요한 정보만 선택적으로 공개
-3. **사용자 통제**: 모든 거래에서 사용자가 명시적으로 승인
-4. **표준 기반**: OpenID4VP, ISO 18013-5 mDOC, DCQL 등 국제 표준 준수
-5. **프라이버시 보호**: 최소한의 정보만 공유하며, 추적 방지 메커니즘 내장
-
-### 사용 사례
-
-- **프라이버시 중심 결제**: 최소한의 개인정보만 공개하면서 결제
-- **규제 준수 환경**: GDPR, EUDI Wallet 등 엄격한 프라이버시 규제가 있는 EU 시장
-- **고가 거래**: 강력한 인증이 필요한 고액 결제
-- **신원 연계 결제**: 결제와 동시에 연령 확인이나 자격 증명이 필요한 경우
-- **크로스보더 거래**: 국제 표준 기반으로 국경을 넘는 거래에 적합
-
-### 한계점
-
-- **플랫폼 한정**: 현재 Android 에만 구현, iOS 지원 제한적
-- **생태계 미성숙**: Credential provider가 아직 초기 단계
-- **사용자 교육**: 새로운 개념으로 사용자 이해와 신뢰 구축 필요
-- **표준화 진행 중**: OpenID4VP, mDOC 등이 아직 완전히 확립되지 않음
-
 ## Sequence Diagram
 
 ```{mermaid}
