@@ -172,3 +172,17 @@ myst_enable_extensions = [
     "colon_fence",
 ]
 
+# -- Mermaid configuration ------------------------------------------------
+mermaid_version = "11.4.0"  # Use a stable version
+mermaid_init_js = """
+mermaid.initialize({
+    startOnLoad: true,
+    theme: 'default',
+    securityLevel: 'loose',
+    sequence: {
+        useMaxWidth: true,
+        wrap: true
+    }
+});
+"""
+

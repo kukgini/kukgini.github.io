@@ -1,5 +1,5 @@
-sphinx
+sphinx>=7.0.0
 sphinx_rtd_theme
-myst-parser
-sphinx-book-theme
-sphinxcontrib-mermaid
+myst-parser>=2.0.0
+sphinx-book-theme>=1.0.0
+sphinxcontrib-mermaid>=0.9.0
