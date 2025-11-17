@@ -157,21 +157,40 @@ AP2 프로토콜은 AI 에이전트 시대의 다양한 결제 요구사항을 �
 
 #### 상세 비교
 
+##### 비즈니스 관점
+
 | 특징 | Cards | DPC | x402 |
 |------|-------|-----|------|
-| **기반 기술** | 카드 네트워크 | Digital Credentials | HTTP 402 |
-| **보안 수준** | PCI DSS | 암호학적 증명 | 토큰 기반 |
-| **프라이버시** | 낮음 | 매우 높음 (Selective Disclosure) | 중간 |
-| **사용자 경험** | 익숙함 | 명시적 승인 필요 | 투명함 |
-| **도입 장벽** | 낮음 | 중간 | 매우 높음 |
+| **기반 기술** | 카드 네트워크 (Visa, Mastercard) | Digital Credentials (ISO mDOC) | HTTP 402 + Blockchain |
+| **도입 시기** | 즉시 가능 (2025) | 중기 (2027-2030) | 장기 (2030+) |
 | **도입 난이도** | 낮음 (기존 인프라) | 중간 (새로운 API) | 높음 (신규 표준) |
 | **적용 범위** | 전통적 커머스 | 모바일 중심 | 웹 리소스/API |
-| **사용자 개입** | 초기 설정 후 없음 | 승인 시 필요 | 거의 없음 |
-| **미래 전망** | 안정적 | 성장 가능성 높음 | 실험적 |
-| **국제 표준** | 확립됨 | 표준화 진행 중 (EUDI) | 제안 단계 |
-| **거래 비용** | 2-3% 수수료 | 매우 낮음 | 거의 없음 |
-| **오프라인 지원** | 제한적 | 가능 (서명 검증) | 불가능 |
-| **주요 장점** | 즉시 사용 가능 | 향후 표준 | M2M 최적화 |
+| **거래 비용** | 2-3% 수수료 | 매우 낮음 (네트워크 비용만) | 거의 없음 (가스비만) |
+| **국제 표준** | 확립됨 (PCI DSS) | 표준화 진행 중 (EUDI, OpenID4VP) | 제안 단계 (실험적) |
+| **미래 전망** | 안정적 유지 | 성장 가능성 높음 | 실험적, 불확실 |
+
+##### 기술 구현 관점
+
+| 특징 | Cards | DPC | x402 |
+|------|-------|-----|------|
+| **결제 수단** | 토큰화된 카드 (DPAN) | Digital Payment Credential | 디지털 화폐 (USDC 등) |
+| **자격증명 저장** | Credentials Provider | CM Wallet (Credential Manager) | Crypto Wallet |
+| **통신 프로토콜** | AP2 via A2A (JSON-RPC 2.0) | OpenID4VP via Credential Manager API | HTTP 402 + Blockchain RPC |
+| **Mandate 구조** | Intent → Cart → Payment | Cart only | Cart + Blockchain Transaction |
+| **관련 에이전트** | 4개 (Shopping, Merchant, Credentials, Payment) | 2개 (Shopping, Merchant) + Wallet | 3개 (Shopping, Merchant, Credentials) + Blockchain |
+| **플랫폼 지원** | 범용 (웹/모바일) | Android (iOS 제한적) | 범용 (웹 우선) |
+
+##### 보안 및 사용자 경험
+
+| 특징 | Cards | DPC | x402 |
+|------|-------|-----|------|
+| **보안 수준** | PCI DSS 표준 | 암호학적 증명 (ES256 서명) | 토큰 기반 + 블록체인 검증 |
+| **프라이버시** | 낮음 (카드사 추적 가능) | 매우 높음 (Selective Disclosure) | 중간 (퍼블릭 블록체인) |
+| **사용자 인증** | PaymentMandate 해시 서명 + OTP | transaction_data 서명 (Trusted UI) | 트랜잭션 서명 (Wallet) |
+| **추가 인증** | OTP 챌린지 | 기기 생체인증 | 없음 (서명으로 충분) |
+| **사용자 개입** | 초기 설정 후 최소화 | 매 거래마다 명시적 승인 | 거래 확인 (Wallet UI) |
+| **사용자 경험** | 익숙함 (기존 카드 결제) | 학습 필요 (새로운 개념) | 학습 필요 (암호화폐) |
+| **오프라인 지원** | 제한적 | 가능 (오프라인 서명 검증) | 불가능 (네트워크 필수) |
 
 ### 각 시나리오의 포지셔닝
 

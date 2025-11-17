@@ -284,18 +284,6 @@ The OTP challenge structure:
 | **Credentials Provider** | Manages payment methods, provides DPAN tokens, decrypts credentials |
 | **Payment Processor** | Processes payments, implements OTP challenge, charges card |
 
-### Key Differences from DPC Scenario
-
-| Aspect | Cards Scenario | DPC Scenario |
-|--------|---------------|--------------|
-| **Payment Method** | Tokenized card (DPAN) | Digital Payment Credential |
-| **Credential Storage** | Credentials Provider | CM Wallet (Credential Manager) |
-| **User Authorization** | Sign PaymentMandate hashes | Sign transaction_data in Trusted UI |
-| **Additional Auth** | OTP challenge | Device biometric |
-| **Mandate Types** | Intent → Cart → Payment | Cart only |
-| **Protocol** | AP2 via A2A | OpenID4VP via Credential Manager API |
-| **Agents Involved** | 4 agents | 2 agents + Wallet |
-
 ### Protocol Standards
 
 This implementation follows several key standards:

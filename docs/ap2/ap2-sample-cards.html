@@ -409,7 +409,6 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mandate-lifecycle">Mandate Lifecycle</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#security-features">Security Features</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#agent-responsibilities">Agent Responsibilities</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-differences-from-dpc-scenario">Key Differences from DPC Scenario</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#protocol-standards">Protocol Standards</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#notes">Notes</a></li>
 </ul>
@@ -729,48 +728,6 @@ document.write(`
 </table>
 </div>
 </section>
-<section id="key-differences-from-dpc-scenario">
-<h3>Key Differences from DPC Scenario<a class="headerlink" href="#key-differences-from-dpc-scenario" title="Link to this heading">#</a></h3>
-<div class="pst-scrollable-table-container"><table class="table">
-<thead>
-<tr class="row-odd"><th class="head"><p>Aspect</p></th>
-<th class="head"><p>Cards Scenario</p></th>
-<th class="head"><p>DPC Scenario</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p><strong>Payment Method</strong></p></td>
-<td><p>Tokenized card (DPAN)</p></td>
-<td><p>Digital Payment Credential</p></td>
-</tr>
-<tr class="row-odd"><td><p><strong>Credential Storage</strong></p></td>
-<td><p>Credentials Provider</p></td>
-<td><p>CM Wallet (Credential Manager)</p></td>
-</tr>
-<tr class="row-even"><td><p><strong>User Authorization</strong></p></td>
-<td><p>Sign PaymentMandate hashes</p></td>
-<td><p>Sign transaction_data in Trusted UI</p></td>
-</tr>
-<tr class="row-odd"><td><p><strong>Additional Auth</strong></p></td>
-<td><p>OTP challenge</p></td>
-<td><p>Device biometric</p></td>
-</tr>
-<tr class="row-even"><td><p><strong>Mandate Types</strong></p></td>
-<td><p>Intent → Cart → Payment</p></td>
-<td><p>Cart only</p></td>
-</tr>
-<tr class="row-odd"><td><p><strong>Protocol</strong></p></td>
-<td><p>AP2 via A2A</p></td>
-<td><p>OpenID4VP via Credential Manager API</p></td>
-</tr>
-<tr class="row-even"><td><p><strong>Agents Involved</strong></p></td>
-<td><p>4 agents</p></td>
-<td><p>2 agents + Wallet</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-</section>
 <section id="protocol-standards">
 <h3>Protocol Standards<a class="headerlink" href="#protocol-standards" title="Link to this heading">#</a></h3>
 <p>This implementation follows several key standards:</p>
@@ -888,7 +845,6 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mandate-lifecycle">Mandate Lifecycle</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#security-features">Security Features</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#agent-responsibilities">Agent Responsibilities</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-differences-from-dpc-scenario">Key Differences from DPC Scenario</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#protocol-standards">Protocol Standards</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#notes">Notes</a></li>
 </ul>
