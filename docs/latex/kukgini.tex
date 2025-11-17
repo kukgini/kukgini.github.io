@@ -1393,6 +1393,56 @@ This illustrates the complete flow of the Digital Payment Credentials scenario u
 
 \section{Sequence Diagram}
 \label{\detokenize{ap2/ap2-sample-dpc:sequence-diagram}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+sequenceDiagram
+    participant User
+    participant ShoppingAgent
+    participant MerchantAgent
+    participant CMWallet
+    participant TrustedUI
+
+    Note right of User: Phase 1: Product Discovery
+
+    User\PYGZhy{}\PYGZgt{}\PYGZgt{}ShoppingAgent: I\PYGZsq{}m looking for a new car
+    ShoppingAgent\PYGZhy{}\PYGZgt{}\PYGZgt{}MerchantAgent: A2A Message: Find items
+    MerchantAgent\PYGZhy{}\PYGZgt{}\PYGZgt{}MerchantAgent: Validate shopping\PYGZus{}agent\PYGZus{}id
+    MerchantAgent\PYGZhy{}\PYGZgt{}\PYGZgt{}MerchantAgent: Search product catalog
+    MerchantAgent\PYGZhy{}\PYGZgt{}\PYGZgt{}MerchantAgent: Create CartMandate
+    MerchantAgent\PYGZhy{}\PYGZhy{}\PYGZgt{}\PYGZgt{}ShoppingAgent: A2A Response with CartMandate
+    ShoppingAgent\PYGZhy{}\PYGZhy{}\PYGZgt{}\PYGZgt{}User: Display product options
+
+    User\PYGZhy{}\PYGZgt{}\PYGZgt{}ShoppingAgent: Select product and confirm purchase
+
+    Note right of User: Phase 2: DPC Request Construction
+
+    ShoppingAgent\PYGZhy{}\PYGZgt{}\PYGZgt{}ShoppingAgent: constructDPCRequest()
+    ShoppingAgent\PYGZhy{}\PYGZgt{}\PYGZgt{}ShoppingAgent: Generate nonce
+    ShoppingAgent\PYGZhy{}\PYGZgt{}\PYGZgt{}ShoppingAgent: Create DCQL query
+    ShoppingAgent\PYGZhy{}\PYGZgt{}\PYGZgt{}ShoppingAgent: Build transaction\PYGZus{}data
+
+    Note right of User: Phase 3: Credential Manager
+
+    ShoppingAgent\PYGZhy{}\PYGZgt{}\PYGZgt{}CMWallet: GetDigitalCredentialOption
+    CMWallet\PYGZhy{}\PYGZgt{}\PYGZgt{}CMWallet: Validate request
+    CMWallet\PYGZhy{}\PYGZgt{}\PYGZgt{}TrustedUI: Show payment confirmation
+    TrustedUI\PYGZhy{}\PYGZhy{}\PYGZgt{}\PYGZgt{}User: Display merchant, amount, details
+    User\PYGZhy{}\PYGZgt{}\PYGZgt{}TrustedUI: Approve payment
+    TrustedUI\PYGZhy{}\PYGZhy{}\PYGZgt{}\PYGZgt{}CMWallet: User consent
+    CMWallet\PYGZhy{}\PYGZgt{}\PYGZgt{}CMWallet: Sign transaction\PYGZus{}data
+    CMWallet\PYGZhy{}\PYGZgt{}\PYGZgt{}CMWallet: Generate VP Token
+    CMWallet\PYGZhy{}\PYGZhy{}\PYGZgt{}\PYGZgt{}ShoppingAgent: vp\PYGZus{}token
+
+    Note right of User: Phase 4: DPC Validation
+
+    ShoppingAgent\PYGZhy{}\PYGZgt{}\PYGZgt{}MerchantAgent: A2A Message: Validate DPC
+    MerchantAgent\PYGZhy{}\PYGZgt{}\PYGZgt{}MerchantAgent: dpc\PYGZus{}finish()
+    MerchantAgent\PYGZhy{}\PYGZgt{}\PYGZgt{}MerchantAgent: Verify nonce and signature
+    MerchantAgent\PYGZhy{}\PYGZgt{}\PYGZgt{}MerchantAgent: Validate transaction\PYGZus{}data hash
+    MerchantAgent\PYGZhy{}\PYGZgt{}\PYGZgt{}MerchantAgent: Simulate payment processing
+    MerchantAgent\PYGZhy{}\PYGZhy{}\PYGZgt{}\PYGZgt{}ShoppingAgent: Payment status: SUCCESS
+    ShoppingAgent\PYGZhy{}\PYGZhy{}\PYGZgt{}\PYGZgt{}User: Payment successful!
+\end{sphinxVerbatim}
+
 
 \section{Key Components}
 \label{\detokenize{ap2/ap2-sample-dpc:key-components}}

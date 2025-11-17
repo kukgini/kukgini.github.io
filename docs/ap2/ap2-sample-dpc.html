@@ -444,73 +444,56 @@ document.write(`
 <p>This illustrates the complete flow of the Digital Payment Credentials scenario using the AP2 framework with the A2A protocol.</p>
 <section id="sequence-diagram">
 <h2>Sequence Diagram<a class="headerlink" href="#sequence-diagram" title="Link to this heading">#</a></h2>
-<pre  class="mermaid">
-        sequenceDiagram
+<div class="highlight-mermaid notranslate"><div class="highlight"><pre><span></span>sequenceDiagram
     participant User
-    participant ShoppingAgent as Shopping Agent
-    participant MerchantAgent as Merchant Agent
-    participant CatalogAgent as Catalog Agent
-    participant CMWallet as CM Wallet
-    participant TrustedUI as Trusted UI
+    participant ShoppingAgent
+    participant MerchantAgent
+    participant CMWallet
+    participant TrustedUI
 
-    Note over User,TrustedUI: Phase 1: Product Discovery and Cart Creation
+    Note right of User: Phase 1: Product Discovery
 
-    User-&gt;&gt;ShoppingAgent: I'm looking for a new car
-    activate ShoppingAgent
+    User-&gt;&gt;ShoppingAgent: I&#39;m looking for a new car
     ShoppingAgent-&gt;&gt;MerchantAgent: A2A Message: Find items
-    activate MerchantAgent
     MerchantAgent-&gt;&gt;MerchantAgent: Validate shopping_agent_id
-    MerchantAgent-&gt;&gt;CatalogAgent: find_items_workflow()
-    activate CatalogAgent
-    CatalogAgent-&gt;&gt;CatalogAgent: Search product catalog
-    CatalogAgent--&gt;&gt;MerchantAgent: Product list + CartMandate
-    deactivate CatalogAgent
+    MerchantAgent-&gt;&gt;MerchantAgent: Search product catalog
+    MerchantAgent-&gt;&gt;MerchantAgent: Create CartMandate
     MerchantAgent--&gt;&gt;ShoppingAgent: A2A Response with CartMandate
-    deactivate MerchantAgent
     ShoppingAgent--&gt;&gt;User: Display product options
-    deactivate ShoppingAgent
 
     User-&gt;&gt;ShoppingAgent: Select product and confirm purchase
-    activate ShoppingAgent
 
-    Note over User,TrustedUI: Phase 2: DPC Request Construction
+    Note right of User: Phase 2: DPC Request Construction
 
     ShoppingAgent-&gt;&gt;ShoppingAgent: constructDPCRequest()
-    Note over ShoppingAgent: Generate nonce and build OpenID4VP request
-    Note over ShoppingAgent: DCQL: card_number, holder_name
-    Note over ShoppingAgent: Transaction data: merchant, amount, details
+    ShoppingAgent-&gt;&gt;ShoppingAgent: Generate nonce
+    ShoppingAgent-&gt;&gt;ShoppingAgent: Create DCQL query
+    ShoppingAgent-&gt;&gt;ShoppingAgent: Build transaction_data
 
-    Note over User,TrustedUI: Phase 3: Credential Request via Credential Manager
+    Note right of User: Phase 3: Credential Manager
 
     ShoppingAgent-&gt;&gt;CMWallet: GetDigitalCredentialOption
-    activate CMWallet
-    Note over CMWallet: Protocol: openid4vp-v1-unsigned
-    Note over CMWallet: Format: mso_mdoc
     CMWallet-&gt;&gt;CMWallet: Validate request
     CMWallet-&gt;&gt;TrustedUI: Show payment confirmation
-    activate TrustedUI
-    Note over TrustedUI: Display merchant, amount, details
+    TrustedUI--&gt;&gt;User: Display merchant, amount, details
     User-&gt;&gt;TrustedUI: Approve payment
     TrustedUI--&gt;&gt;CMWallet: User consent
-    deactivate TrustedUI
     CMWallet-&gt;&gt;CMWallet: Sign transaction_data
     CMWallet-&gt;&gt;CMWallet: Generate VP Token
     CMWallet--&gt;&gt;ShoppingAgent: vp_token
-    deactivate CMWallet
 
-    Note over User,TrustedUI: Phase 4: DPC Validation and Payment Finalization
+    Note right of User: Phase 4: DPC Validation
 
     ShoppingAgent-&gt;&gt;MerchantAgent: A2A Message: Validate DPC
-    activate MerchantAgent
     MerchantAgent-&gt;&gt;MerchantAgent: dpc_finish()
-    Note over MerchantAgent: Verify nonce and signature
-    Note over MerchantAgent: Validate transaction_data hash
+    MerchantAgent-&gt;&gt;MerchantAgent: Verify nonce and signature
+    MerchantAgent-&gt;&gt;MerchantAgent: Validate transaction_data hash
     MerchantAgent-&gt;&gt;MerchantAgent: Simulate payment processing
     MerchantAgent--&gt;&gt;ShoppingAgent: Payment status: SUCCESS
-    deactivate MerchantAgent
     ShoppingAgent--&gt;&gt;User: Payment successful!
-    deactivate ShoppingAgent
-    </pre></section>
+</pre></div>
+</div>
+</section>
 <section id="key-components">
 <h2>Key Components<a class="headerlink" href="#key-components" title="Link to this heading">#</a></h2>
 <section id="openid4vp-request-structure">

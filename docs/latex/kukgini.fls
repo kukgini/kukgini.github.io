@@ -325,6 +325,12 @@ INPUT /usr/share/texlive/texmf-dist/tex/latex/fontawesome5/tufontawesomefree.fd
 INPUT /usr/share/texlive/texmf-dist/tex/latex/fontawesome5/tufontawesomebrands.fd
 INPUT /usr/share/texlive/texmf-dist/tex/latex/fontawesome5/tufontawesomebrands.fd
 INPUT /usr/share/texlive/texmf-dist/tex/latex/fontawesome5/tufontawesomebrands.fd
+INPUT ./kukgini.out
+INPUT ./kukgini.out
+INPUT kukgini.out
+INPUT kukgini.out
+INPUT ./kukgini.out
+INPUT ./kukgini.out
 OUTPUT kukgini.out
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmmi12.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmmi12.tfm
@@ -346,6 +352,9 @@ INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm10.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm10.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmr17.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmr12.tfm
+INPUT ./kukgini.toc
+INPUT ./kukgini.toc
+INPUT kukgini.toc
 OUTPUT kukgini.toc
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmmi6.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmsy6.tfm
