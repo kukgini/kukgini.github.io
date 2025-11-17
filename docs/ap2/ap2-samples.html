@@ -466,43 +466,52 @@ document.write(`
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id24">x402 시나리오</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id25">동작 방식</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id26">기술 상세</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id26">Key Components</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id27">1. IntentMandate Structure</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#cartmandate-structure-with-x402-support">2. CartMandate Structure with x402 Support</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#paymentmandate-structure-for-x402">3. PaymentMandate Structure for x402</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#x402-payment-credential-token">4. x402 Payment Credential Token</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#blockchain-transaction-structure">5. Blockchain Transaction Structure</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#transaction-receipt">6. Transaction Receipt</a></li>
+</ul>
+</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id28">기술 상세</a><ul class="nav section-nav flex-column">
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#http-402">HTTP 402 상태 코드</a></li>
-<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id27">에이전트 자동 결제 로직</a></li>
-<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id28">결제 토큰 검증</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id29">에이전트 자동 결제 로직</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id30">결제 토큰 검증</a></li>
 </ul>
 </li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id29">DPC 기술 상세 분석</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id31">DPC 기술 상세 분석</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#euid-wallet-eu-digital-identity-wallet">EUID Wallet (EU Digital Identity Wallet) 표준 연관성</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#oid4vp-openid-for-verifiable-presentaiton">OID4VP (OpenID for Verifiable Presentaiton) 프로토콜 사용</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#iso-iec-18013-5-mode">ISO/IEC 18013-5 mode 형식 지원</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dcql-digital-credentials-query-language">DCQL (Digital Credentials Query Language) 사용</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id30">Android Credential Manager API 통합</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id32">Android Credential Manager API 통합</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dpc-vs-eudi-wallet">DPC vs EUDI Wallet 차이점</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id31">DPC 한계점 및 고려사항</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id33">DPC 한계점 및 고려사항</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dpc-next-steps">DPC 개선 방향 (Next Steps)</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#openid4vp">서명된 OpenID4VP 흐름으로의 전환</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id32">재현 공격 및 키 관리 개선</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id34">재현 공격 및 키 관리 개선</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#merchant">Merchant 측 보증 수준 상향</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#ios">iOS 및 기타 플랫폼 정합성</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id33">생태계 및 규제 대응</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id35">생태계 및 규제 대응</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id34">전체 결론</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id35">세 가지 시나리오 비교</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id36">도입 타임라인</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id37">상세 비교</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id36">전체 결론</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id37">세 가지 시나리오 비교</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id38">도입 타임라인</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id39">상세 비교</a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id38">각 시나리오의 포지셔닝</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id39">권장 도입 전략</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id40">결론</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id40">각 시나리오의 포지셔닝</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id41">권장 도입 전략</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id42">결론</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
@@ -1083,6 +1092,7 @@ document.write(`
 </section>
 <section id="id19">
 <h3>DPC 시나리오<a class="headerlink" href="#id19" title="Link to this heading">#</a></h3>
+<p>This illustrates the complete flow of the Digital Payment Credentials scenario using the AP2 framework with the A2A protocol.</p>
 <section id="sequence-diagram">
 <h4>Sequence Diagram<a class="headerlink" href="#sequence-diagram" title="Link to this heading">#</a></h4>
 <pre  class="mermaid">
@@ -1350,25 +1360,237 @@ document.write(`
 </section>
 <section id="id24">
 <h3>x402 시나리오<a class="headerlink" href="#id24" title="Link to this heading">#</a></h3>
+<p>This illustrates the complete flow of the Human Present x402 Payment scenario using the AP2 framework with the A2A protocol and x402 payment standard.</p>
 <section id="id25">
 <h4>동작 방식<a class="headerlink" href="#id25" title="Link to this heading">#</a></h4>
 <pre  class="mermaid">
         sequenceDiagram
-    participant Agent as AI Agent
-    participant Server as Resource Server
-    participant Payment as Payment Processor
-    
-    Agent-&gt;&gt;Server: (1) 리소스 요청 (GET /api/data)
-    Server--&gt;&gt;Agent: (2) HTTP 402 Payment Required&lt;br/&gt;+ Payment Details
-    Agent-&gt;&gt;Agent: (3) 결제 필요 여부 자동 판단
-    Agent-&gt;&gt;Payment: (4) 자동 결제 처리
-    Payment--&gt;&gt;Agent: (5) 결제 증명 (Payment Token)
-    Agent-&gt;&gt;Server: (6) Authorization 헤더와 함께 재요청
-    Server-&gt;&gt;Server: (7) 토큰 검증
-    Server--&gt;&gt;Agent: (8) HTTP 200 OK + 리소스 제공
+sequenceDiagram
+    participant User
+    participant ShoppingAgent
+    participant MerchantAgent
+    participant CredentialsProvider
+    participant PaymentProcessor
+    participant Blockchain
+
+    Note right of User: Phase 1: Product Discovery
+
+    User-&gt;&gt;ShoppingAgent: I want to buy a coffee maker
+    ShoppingAgent-&gt;&gt;ShoppingAgent: Create IntentMandate
+    ShoppingAgent-&gt;&gt;MerchantAgent: A2A Message: Find products
+    MerchantAgent-&gt;&gt;MerchantAgent: Validate shopping_agent_id
+    MerchantAgent-&gt;&gt;MerchantAgent: Check x402 support
+    MerchantAgent-&gt;&gt;MerchantAgent: Search product catalog
+    MerchantAgent-&gt;&gt;MerchantAgent: Create CartMandate with x402
+    MerchantAgent--&gt;&gt;ShoppingAgent: CartMandate with products
+    ShoppingAgent--&gt;&gt;User: Display product options
+    User-&gt;&gt;ShoppingAgent: Select product
+
+    Note right of User: Phase 2: Shipping Address
+
+    User-&gt;&gt;ShoppingAgent: Provide shipping address
+    ShoppingAgent-&gt;&gt;MerchantAgent: A2A Message: Update cart
+    MerchantAgent-&gt;&gt;MerchantAgent: Update and re-sign CartMandate
+    MerchantAgent--&gt;&gt;ShoppingAgent: Updated CartMandate
+
+    Note right of User: Phase 3: x402 Payment Method
+
+    ShoppingAgent-&gt;&gt;CredentialsProvider: Get payment methods
+    CredentialsProvider-&gt;&gt;CredentialsProvider: Filter x402 methods
+    CredentialsProvider-&gt;&gt;CredentialsProvider: Check wallet balances
+    CredentialsProvider--&gt;&gt;ShoppingAgent: x402 payment methods
+    ShoppingAgent--&gt;&gt;User: Display digital currencies
+    User-&gt;&gt;ShoppingAgent: Select digital currency
+    ShoppingAgent-&gt;&gt;CredentialsProvider: Get payment token
+    CredentialsProvider-&gt;&gt;CredentialsProvider: Generate x402 token
+    CredentialsProvider--&gt;&gt;ShoppingAgent: x402 credential token
+
+    Note right of User: Phase 4: Payment Mandate
+
+    ShoppingAgent-&gt;&gt;ShoppingAgent: Create PaymentMandate
+    ShoppingAgent--&gt;&gt;User: Display final details with gas fee
+    User-&gt;&gt;ShoppingAgent: Confirm purchase
+    ShoppingAgent-&gt;&gt;ShoppingAgent: sign_mandates_on_user_device
+    ShoppingAgent-&gt;&gt;ShoppingAgent: Generate mandate hashes
+    ShoppingAgent-&gt;&gt;CredentialsProvider: Send signed PaymentMandate
+    CredentialsProvider-&gt;&gt;CredentialsProvider: Validate wallet balance
+    CredentialsProvider--&gt;&gt;ShoppingAgent: Acknowledgment
+
+    Note right of User: Phase 5: Payment Initiation
+
+    ShoppingAgent-&gt;&gt;MerchantAgent: A2A Message: Initiate payment
+    MerchantAgent-&gt;&gt;PaymentProcessor: Process x402 payment
+    PaymentProcessor-&gt;&gt;PaymentProcessor: Validate PaymentMandate
+    PaymentProcessor-&gt;&gt;CredentialsProvider: Get payment credentials
+    CredentialsProvider-&gt;&gt;CredentialsProvider: Retrieve wallet credentials
+    CredentialsProvider--&gt;&gt;PaymentProcessor: Wallet address and signing key
+    PaymentProcessor-&gt;&gt;PaymentProcessor: Prepare blockchain transaction
+    PaymentProcessor-&gt;&gt;PaymentProcessor: Sign transaction
+
+    Note right of User: Phase 6: Blockchain Execution
+
+    PaymentProcessor-&gt;&gt;Blockchain: Submit transaction
+    Blockchain-&gt;&gt;Blockchain: Validate transaction
+    Blockchain-&gt;&gt;Blockchain: Execute smart contract
+    Blockchain-&gt;&gt;Blockchain: Deduct gas fee
+    Blockchain-&gt;&gt;Blockchain: Transfer digital currency
+    Blockchain-&gt;&gt;Blockchain: Confirm in block
+    Blockchain--&gt;&gt;PaymentProcessor: Transaction hash and receipt
+    PaymentProcessor-&gt;&gt;PaymentProcessor: Verify confirmation
+    PaymentProcessor-&gt;&gt;PaymentProcessor: Generate transaction ID
+    PaymentProcessor--&gt;&gt;MerchantAgent: Payment SUCCESS
+    MerchantAgent--&gt;&gt;ShoppingAgent: Confirmation with tx hash
+    ShoppingAgent--&gt;&gt;User: Payment Receipt with blockchain details
     </pre></section>
 <section id="id26">
-<h4>기술 상세<a class="headerlink" href="#id26" title="Link to this heading">#</a></h4>
+<h4>Key Components<a class="headerlink" href="#id26" title="Link to this heading">#</a></h4>
+<section id="id27">
+<h5>1. IntentMandate Structure<a class="headerlink" href="#id27" title="Link to this heading">#</a></h5>
+<p>The IntentMandate captures the user’s shopping intent:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;intent_mandate_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;uuid&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;natural_language_description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;I want to buy a coffee maker&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;user_prompt_required&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;merchants&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;merchant_agent&quot;</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;skus&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;coffee-maker-001&quot;</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;intent_expiry&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2025-11-18T10:00:00Z&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;requires_refundability&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="cartmandate-structure-with-x402-support">
+<h5>2. CartMandate Structure with x402 Support<a class="headerlink" href="#cartmandate-structure-with-x402-support" title="Link to this heading">#</a></h5>
+<p>The CartMandate contains product and x402 payment request details:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;cart_mandate_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;uuid&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;merchant_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Example Merchant&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;cart_expiry&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2025-11-18T10:00:00Z&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;refund_period&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;P30D&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;payment_request&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;method_data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span>
+<span class="w">      </span><span class="nt">&quot;supported_methods&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;x402&quot;</span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;supported_chains&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;ethereum&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;polygon&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;base&quot;</span><span class="p">],</span>
+<span class="w">        </span><span class="nt">&quot;supported_currencies&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;USDC&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;USDT&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;DAI&quot;</span><span class="p">],</span>
+<span class="w">        </span><span class="nt">&quot;merchant_wallet_address&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0x1234567890abcdef...&quot;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}],</span>
+<span class="w">    </span><span class="nt">&quot;details&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;order-123&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;total&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Total&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;amount&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;currency&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;USDC&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;79.99&quot;</span><span class="p">}</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;displayItems&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span><span class="nt">&quot;label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Coffee Maker&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;amount&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;69.99&quot;</span><span class="p">}},</span>
+<span class="w">        </span><span class="p">{</span><span class="nt">&quot;label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Shipping&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;amount&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;5.00&quot;</span><span class="p">}},</span>
+<span class="w">        </span><span class="p">{</span><span class="nt">&quot;label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Tax&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;amount&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;5.00&quot;</span><span class="p">}},</span>
+<span class="w">        </span><span class="p">{</span><span class="nt">&quot;label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Estimated Gas Fee&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;amount&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0.50&quot;</span><span class="p">}}</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;merchant_signature&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;signature_by_merchant&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="paymentmandate-structure-for-x402">
+<h5>3. PaymentMandate Structure for x402<a class="headerlink" href="#paymentmandate-structure-for-x402" title="Link to this heading">#</a></h5>
+<p>The PaymentMandate authorizes the x402 payment:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;payment_mandate_contents&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;payment_mandate_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;uuid&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2025-11-17T12:00:00Z&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;payment_details_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;order-123&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;payment_details_total&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Total&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;amount&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;currency&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;USDC&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;79.99&quot;</span><span class="p">}</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;payment_response&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;request_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;order-123&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;method_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;x402&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;details&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;token&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;encrypted_x402_token&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;http://localhost:8002/a2a/credentials_provider&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="nt">&quot;chain_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;currency&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;USDC&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;contract_address&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;shipping_address&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;streetAddress&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;123 Main St&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;city&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;San Francisco&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;state&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;CA&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;zipCode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;94102&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;payer_email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;user@example.com&quot;</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;merchant_agent&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;merchant_agent&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;user_authorization&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;cart_hash_payment_hash_signature&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="x402-payment-credential-token">
+<h5>4. x402 Payment Credential Token<a class="headerlink" href="#x402-payment-credential-token" title="Link to this heading">#</a></h5>
+<p>The token contains blockchain wallet credentials:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;encrypted_x402_payment_token&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;http://localhost:8002/a2a/credentials_provider&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The Credentials Provider decrypts this to reveal:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;wallet_address&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0xabcdef1234567890...&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;chain_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;currency&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;USDC&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;balance&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1000.00&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;signing_authority&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;delegated_signer_key&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;is_smart_wallet&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="blockchain-transaction-structure">
+<h5>5. Blockchain Transaction Structure<a class="headerlink" href="#blockchain-transaction-structure" title="Link to this heading">#</a></h5>
+<p>The transaction submitted to the blockchain:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;from&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0xabcdef1234567890...&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;to&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0x1234567890abcdef...&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0xa9059cbb...&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;chainId&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;nonce&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">42</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;gasLimit&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;100000&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;maxFeePerGas&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;50000000000&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;maxPriorityFeePerGas&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2000000000&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="transaction-receipt">
+<h5>6. Transaction Receipt<a class="headerlink" href="#transaction-receipt" title="Link to this heading">#</a></h5>
+<p>The blockchain receipt confirming the transaction:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;transactionHash&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0x123abc...&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;blockNumber&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">12345678</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;blockHash&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0x789def...&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;from&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0xabcdef1234567890...&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;to&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;gasUsed&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;65000&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;effectiveGasPrice&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;50000000000&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;success&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="id28">
+<h4>기술 상세<a class="headerlink" href="#id28" title="Link to this heading">#</a></h4>
 <section id="http-402">
 <h5>HTTP 402 상태 코드<a class="headerlink" href="#http-402" title="Link to this heading">#</a></h5>
 <div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">402</span> <span class="ne">Payment Required</span>
@@ -1385,8 +1607,8 @@ document.write(`
 </pre></div>
 </div>
 </section>
-<section id="id27">
-<h5>에이전트 자동 결제 로직<a class="headerlink" href="#id27" title="Link to this heading">#</a></h5>
+<section id="id29">
+<h5>에이전트 자동 결제 로직<a class="headerlink" href="#id29" title="Link to this heading">#</a></h5>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">fetch_with_payment</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">agent_wallet</span><span class="p">):</span>
     <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">http_client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
     
@@ -1411,8 +1633,8 @@ document.write(`
 </pre></div>
 </div>
 </section>
-<section id="id28">
-<h5>결제 토큰 검증<a class="headerlink" href="#id28" title="Link to this heading">#</a></h5>
+<section id="id30">
+<h5>결제 토큰 검증<a class="headerlink" href="#id30" title="Link to this heading">#</a></h5>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">verify_payment_token</span><span class="p">(</span><span class="n">token</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">resource_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">decoded</span> <span class="o">=</span> <span class="n">jwt</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">public_key</span><span class="p">,</span> <span class="n">algorithms</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;RS256&#39;</span><span class="p">])</span>
@@ -1431,8 +1653,8 @@ document.write(`
 </section>
 </section>
 </section>
-<section id="id29">
-<h2>DPC 기술 상세 분석<a class="headerlink" href="#id29" title="Link to this heading">#</a></h2>
+<section id="id31">
+<h2>DPC 기술 상세 분석<a class="headerlink" href="#id31" title="Link to this heading">#</a></h2>
 <p>이 예제 시나리오는 DPC (Digital Payment Credential) 요청을 생성합니다. 주요 기능은 쇼핑 카트 정보를 받아 OID4VP (OpenID 4 Verifiable Presentation) 프로토콜 기반의 인증 요청을 생성하는 것입니다.</p>
 </section>
 <section id="euid-wallet-eu-digital-identity-wallet">
@@ -1440,8 +1662,8 @@ document.write(`
 <p>DPC 시나리오는 EUID Wallet 표준과 여러 측면에서 밀접하게 연관되어 있습니다</p>
 <section id="oid4vp-openid-for-verifiable-presentaiton">
 <h3>OID4VP (OpenID for Verifiable Presentaiton) 프로토콜 사용<a class="headerlink" href="#oid4vp-openid-for-verifiable-presentaiton" title="Link to this heading">#</a></h3>
-<div class="literal-block-wrapper docutils container" id="id41">
-<div class="code-block-caption"><span class="caption-text">DpcHelper.kt:110~120</span><a class="headerlink" href="#id41" title="Link to this code">#</a></div>
+<div class="literal-block-wrapper docutils container" id="id43">
+<div class="code-block-caption"><span class="caption-text">DpcHelper.kt:110~120</span><a class="headerlink" href="#id43" title="Link to this code">#</a></div>
 <div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="kd">val</span><span class="w"> </span><span class="nv">dcRequest</span><span class="w"> </span><span class="o">=</span>
 <span class="w">  </span><span class="n">Request</span><span class="p">(</span>
 <span class="w">    </span><span class="n">responseType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;vp_token&quot;</span><span class="p">,</span>
@@ -1464,8 +1686,8 @@ document.write(`
 </section>
 <section id="iso-iec-18013-5-mode">
 <h3>ISO/IEC 18013-5 mode 형식 지원<a class="headerlink" href="#iso-iec-18013-5-mode" title="Link to this heading">#</a></h3>
-<div class="literal-block-wrapper docutils container" id="id42">
-<div class="code-block-caption"><span class="caption-text">DpcHelper.kt:85~91</span><a class="headerlink" href="#id42" title="Link to this code">#</a></div>
+<div class="literal-block-wrapper docutils container" id="id44">
+<div class="code-block-caption"><span class="caption-text">DpcHelper.kt:85~91</span><a class="headerlink" href="#id44" title="Link to this code">#</a></div>
 <div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="kd">val</span><span class="w"> </span><span class="nv">credentialQuery</span><span class="w"> </span><span class="o">=</span>
 <span class="w">    </span><span class="n">CredentialQuery</span><span class="p">(</span>
 <span class="w">        </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">credId</span><span class="p">,</span>
@@ -1476,8 +1698,8 @@ document.write(`
 </pre></div>
 </div>
 </div>
-<div class="literal-block-wrapper docutils container" id="id43">
-<div class="code-block-caption"><span class="caption-text">DpcHelper.kt:96~100</span><a class="headerlink" href="#id43" title="Link to this code">#</a></div>
+<div class="literal-block-wrapper docutils container" id="id45">
+<div class="code-block-caption"><span class="caption-text">DpcHelper.kt:96~100</span><a class="headerlink" href="#id45" title="Link to this code">#</a></div>
 <div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="kd">val</span><span class="w"> </span><span class="nv">mdocFormatsSupported</span><span class="w"> </span><span class="o">=</span>
 <span class="w">    </span><span class="n">MdocFormatsSupported</span><span class="p">(</span>
 <span class="w">        </span><span class="n">issuerauthAlgValues</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">listOf</span><span class="p">(</span><span class="o">-</span><span class="m">7</span><span class="p">),</span><span class="w"> </span><span class="c1">// ES256</span>
@@ -1494,8 +1716,8 @@ document.write(`
 </section>
 <section id="dcql-digital-credentials-query-language">
 <h3>DCQL (Digital Credentials Query Language) 사용<a class="headerlink" href="#dcql-digital-credentials-query-language" title="Link to this heading">#</a></h3>
-<div class="literal-block-wrapper docutils container" id="id44">
-<div class="code-block-caption"><span class="caption-text">DpcHelper.kt:78~93</span><a class="headerlink" href="#id44" title="Link to this code">#</a></div>
+<div class="literal-block-wrapper docutils container" id="id46">
+<div class="code-block-caption"><span class="caption-text">DpcHelper.kt:78~93</span><a class="headerlink" href="#id46" title="Link to this code">#</a></div>
 <div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="c1">// Build the DCQL query to request specific credential claims.</span>
 <span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="nv">claims</span><span class="w"> </span><span class="o">=</span>
 <span class="w">    </span><span class="n">listOf</span><span class="p">(</span>
@@ -1521,10 +1743,10 @@ document.write(`
 <li><p>EUDI Wallet 도 동일한 방식으로 사용자가 공개할 정보를 선택할 수 있습니다</p></li>
 </ul>
 </section>
-<section id="id30">
-<h3>Android Credential Manager API 통합<a class="headerlink" href="#id30" title="Link to this heading">#</a></h3>
-<div class="literal-block-wrapper docutils container" id="id45">
-<div class="code-block-caption"><span class="caption-text">DpcHelpper.kt:67~76</span><a class="headerlink" href="#id45" title="Link to this code">#</a></div>
+<section id="id32">
+<h3>Android Credential Manager API 통합<a class="headerlink" href="#id32" title="Link to this heading">#</a></h3>
+<div class="literal-block-wrapper docutils container" id="id47">
+<div class="code-block-caption"><span class="caption-text">DpcHelpper.kt:67~76</span><a class="headerlink" href="#id47" title="Link to this code">#</a></div>
 <div class="highlight-kotlin notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="c1">// Build transaction_data payload.</span>
 <span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="nv">transactionData</span><span class="w"> </span><span class="o">=</span>
 <span class="w">    </span><span class="n">TransactionData</span><span class="p">(</span>
@@ -1543,8 +1765,8 @@ document.write(`
 <li><p>Transaction Data 에 대한 서명 - EUDI Wallet 에서도 중요한 보안 메커니즘입니다</p></li>
 <li><p>transactionDataHashesAlg = “sha-256” - 거래 무결성을 보장합니다</p></li>
 </ul>
-<div class="literal-block-wrapper docutils container" id="id46">
-<div class="code-block-caption"><span class="caption-text">DpcHelper.kt:59~65</span><a class="headerlink" href="#id46" title="Link to this code">#</a></div>
+<div class="literal-block-wrapper docutils container" id="id48">
+<div class="code-block-caption"><span class="caption-text">DpcHelper.kt:59~65</span><a class="headerlink" href="#id48" title="Link to this code">#</a></div>
 <div class="highlight-kotkin notranslate"><div class="highlight"><pre><span></span>  val additionalInfo =
     AdditionalInfo(
       title = &quot;Please confirm your purchase details...&quot;,
@@ -1568,8 +1790,8 @@ document.write(`
 <li><p><strong>서명</strong>: 현재는 unsigned 버전을 사용하지만, EUDI Wallet은 강력한 암호화 서명 요구</p></li>
 </ul>
 </section>
-<section id="id31">
-<h3>DPC 한계점 및 고려사항<a class="headerlink" href="#id31" title="Link to this heading">#</a></h3>
+<section id="id33">
+<h3>DPC 한계점 및 고려사항<a class="headerlink" href="#id33" title="Link to this heading">#</a></h3>
 <p><strong>현재의 제약사항:</strong></p>
 <ul class="simple">
 <li><p><strong>플랫폼 한정</strong>: 현재 Android에만 구현, iOS 지원 제한적</p></li>
@@ -1610,8 +1832,8 @@ document.write(`
 <li><p><strong>Trust Framework 정합성</strong>: ARF 가이드라인에서 요구하는 신뢰 anchor(국가/회원국 발급자 루트 인증서)와 Revocation 검사를 통합합니다.</p></li>
 </ul>
 </section>
-<section id="id32">
-<h4>재현 공격 및 키 관리 개선<a class="headerlink" href="#id32" title="Link to this heading">#</a></h4>
+<section id="id34">
+<h4>재현 공격 및 키 관리 개선<a class="headerlink" href="#id34" title="Link to this heading">#</a></h4>
 <ul class="simple">
 <li><p><strong>Replay 방지</strong>: nonce·session binding을 강화하고 Merchants/logger 쪽에서 사용된 토큰을 기록하여 재사용을 차단합니다.</p></li>
 <li><p><strong>지갑 키보호</strong>: Android 하드웨어 백업 키 저장소(Keystore) 및 향후 iOS Secure Enclave를 이용한 키 저장/attestation을 도입합니다.</p></li>
@@ -1632,8 +1854,8 @@ document.write(`
 <li><p><strong>플랫폼 추상화</strong>: Credential Manager (Android)·IdentityCredential(iOS)·WebAuthn 기반 브라우저 API를 아우르는 공통 추상화 레이어를 설계하여, 지갑/발급자/검증자 역할을 ARF와 동일한 구조로 매핑합니다.</p></li>
 </ul>
 </section>
-<section id="id33">
-<h4>생태계 및 규제 대응<a class="headerlink" href="#id33" title="Link to this heading">#</a></h4>
+<section id="id35">
+<h4>생태계 및 규제 대응<a class="headerlink" href="#id35" title="Link to this heading">#</a></h4>
 <ul class="simple">
 <li><p><strong>규제 일치</strong>: EMVCo DC-API, ETSI TS 119 495(수신자 서명) 등 결제용 표준을 모니터링하고, EUDI Wallet 시행규정(2024/1183)에서 요구하는 PID/EAA(전자 속성) 처리 절차를 문서화합니다.</p></li>
 <li><p><strong>인증 준비</strong>: 지갑·검증자 모듈을 EUDI Wallet Conformity Assessment (BR-EL, DR-EL) 요구사항에 맞춰 테스트하고, 파일럿 참여국(예: EWC, NOBCCS)에서 공개한 상호운용성 체크리스트를 반영합니다.</p></li>
@@ -1641,13 +1863,13 @@ document.write(`
 </section>
 </section>
 </section>
-<section id="id34">
-<h2>전체 결론<a class="headerlink" href="#id34" title="Link to this heading">#</a></h2>
-<section id="id35">
-<h3>세 가지 시나리오 비교<a class="headerlink" href="#id35" title="Link to this heading">#</a></h3>
-<p>AP2 프로토콜은 AI 에이전트 시대의 다양한 결제 요구사항을 충족하기 위해 세 가지 차별화된 접근 방식을 제시합니다.</p>
 <section id="id36">
-<h4>도입 타임라인<a class="headerlink" href="#id36" title="Link to this heading">#</a></h4>
+<h2>전체 결론<a class="headerlink" href="#id36" title="Link to this heading">#</a></h2>
+<section id="id37">
+<h3>세 가지 시나리오 비교<a class="headerlink" href="#id37" title="Link to this heading">#</a></h3>
+<p>AP2 프로토콜은 AI 에이전트 시대의 다양한 결제 요구사항을 충족하기 위해 세 가지 차별화된 접근 방식을 제시합니다.</p>
+<section id="id38">
+<h4>도입 타임라인<a class="headerlink" href="#id38" title="Link to this heading">#</a></h4>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>현재 (2025)          중기 (2027-2030)         장기 (2030+)
     │                      │                      │
   Cards ━━━━━━━━━━━━━&gt; DPC ━━━━━━━━━━━━━&gt; x402
@@ -1655,8 +1877,8 @@ document.write(`
 </pre></div>
 </div>
 </section>
-<section id="id37">
-<h4>상세 비교<a class="headerlink" href="#id37" title="Link to this heading">#</a></h4>
+<section id="id39">
+<h4>상세 비교<a class="headerlink" href="#id39" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>특징</p></th>
@@ -1736,8 +1958,8 @@ document.write(`
 </div>
 </section>
 </section>
-<section id="id38">
-<h3>각 시나리오의 포지셔닝<a class="headerlink" href="#id38" title="Link to this heading">#</a></h3>
+<section id="id40">
+<h3>각 시나리오의 포지셔닝<a class="headerlink" href="#id40" title="Link to this heading">#</a></h3>
 <p><strong>1. Cards - 현재의 실용적 해결책</strong></p>
 <ul class="simple">
 <li><p>✅ 즉시 도입 가능</p></li>
@@ -1764,8 +1986,8 @@ document.write(`
 <li><p>❌ 채택 불확실성</p></li>
 </ul>
 </section>
-<section id="id39">
-<h3>권장 도입 전략<a class="headerlink" href="#id39" title="Link to this heading">#</a></h3>
+<section id="id41">
+<h3>권장 도입 전략<a class="headerlink" href="#id41" title="Link to this heading">#</a></h3>
 <p><strong>단계별 접근:</strong></p>
 <ol class="arabic simple">
 <li><p><strong>현재 (2025)</strong>: Cards 기반 구현</p>
@@ -1790,8 +2012,8 @@ document.write(`
 </li>
 </ol>
 </section>
-<section id="id40">
-<h3>결론<a class="headerlink" href="#id40" title="Link to this heading">#</a></h3>
+<section id="id42">
+<h3>결론<a class="headerlink" href="#id42" title="Link to this heading">#</a></h3>
 <p>AP2 프로토콜의 세 가지 시나리오는 AI 에이전트 결제의 진화 경로를 보여줍니다:</p>
 <ul class="simple">
 <li><p><strong>Cards</strong>는 오늘의 현실을 다루고</p></li>
@@ -1930,43 +2152,52 @@ document.write(`
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id24">x402 시나리오</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id25">동작 방식</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id26">기술 상세</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id26">Key Components</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id27">1. IntentMandate Structure</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#cartmandate-structure-with-x402-support">2. CartMandate Structure with x402 Support</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#paymentmandate-structure-for-x402">3. PaymentMandate Structure for x402</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#x402-payment-credential-token">4. x402 Payment Credential Token</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#blockchain-transaction-structure">5. Blockchain Transaction Structure</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#transaction-receipt">6. Transaction Receipt</a></li>
+</ul>
+</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id28">기술 상세</a><ul class="nav section-nav flex-column">
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#http-402">HTTP 402 상태 코드</a></li>
-<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id27">에이전트 자동 결제 로직</a></li>
-<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id28">결제 토큰 검증</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id29">에이전트 자동 결제 로직</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id30">결제 토큰 검증</a></li>
 </ul>
 </li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id29">DPC 기술 상세 분석</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id31">DPC 기술 상세 분석</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#euid-wallet-eu-digital-identity-wallet">EUID Wallet (EU Digital Identity Wallet) 표준 연관성</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#oid4vp-openid-for-verifiable-presentaiton">OID4VP (OpenID for Verifiable Presentaiton) 프로토콜 사용</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#iso-iec-18013-5-mode">ISO/IEC 18013-5 mode 형식 지원</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dcql-digital-credentials-query-language">DCQL (Digital Credentials Query Language) 사용</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id30">Android Credential Manager API 통합</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id32">Android Credential Manager API 통합</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dpc-vs-eudi-wallet">DPC vs EUDI Wallet 차이점</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id31">DPC 한계점 및 고려사항</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id33">DPC 한계점 및 고려사항</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dpc-next-steps">DPC 개선 방향 (Next Steps)</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#openid4vp">서명된 OpenID4VP 흐름으로의 전환</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id32">재현 공격 및 키 관리 개선</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id34">재현 공격 및 키 관리 개선</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#merchant">Merchant 측 보증 수준 상향</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#ios">iOS 및 기타 플랫폼 정합성</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id33">생태계 및 규제 대응</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id35">생태계 및 규제 대응</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id34">전체 결론</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id35">세 가지 시나리오 비교</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id36">도입 타임라인</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id37">상세 비교</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id36">전체 결론</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id37">세 가지 시나리오 비교</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id38">도입 타임라인</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id39">상세 비교</a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id38">각 시나리오의 포지셔닝</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id39">권장 도입 전략</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id40">결론</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id40">각 시나리오의 포지셔닝</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id41">권장 도입 전략</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id42">결론</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
