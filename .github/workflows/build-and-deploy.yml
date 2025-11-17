@@ -37,10 +37,33 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
       
-      - name: Build documentation
+      - name: Install LaTeX and Korean fonts
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            texlive-xetex \
+            texlive-latex-extra \
+            texlive-fonts-extra \
+            texlive-lang-cjk \
+            latexmk \
+            fonts-nanum \
+            fonts-nanum-coding \
+            fonts-nanum-extra
+      
+      - name: Build HTML documentation
         run: |
           sphinx-build -b html src docs
           touch docs/.nojekyll
+      
+      - name: Build PDF documentation
+        run: |
+          sphinx-build -b latex src docs/latex
+          cd docs/latex
+          make
+          cd ../..
+          # Copy PDF to docs root for easy access
+          cp docs/latex/kukgini.pdf docs/kukgini.pdf
+        continue-on-error: true
       
       - name: Check for changes
         id: check_changes
@@ -73,6 +96,12 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           if [ "${{ steps.check_changes.outputs.has_changes }}" == "true" ]; then
             echo "✅ Documentation has been built and deployed!" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### 📄 Outputs" >> $GITHUB_STEP_SUMMARY
+            echo "- 🌐 HTML: https://kukgini.github.io/" >> $GITHUB_STEP_SUMMARY
+            if [ -f "docs/kukgini.pdf" ]; then
+              echo "- 📕 PDF: https://kukgini.github.io/kukgini.pdf" >> $GITHUB_STEP_SUMMARY
+            fi
           else
             echo "ℹ️ No changes in documentation output." >> $GITHUB_STEP_SUMMARY
           fi

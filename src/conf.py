@@ -135,10 +135,13 @@ latex_elements = {
 \usepackage{datetime}
 \usepackage{hyperref}
 
-% Set Korean fonts
-\setmainfont{NanumGothic}
-\setsansfont{NanumGothic}
-\setmonofont{D2Coding}
+% Set Korean fonts (with fallback options)
+\usepackage{ifxetex}
+\ifxetex
+  \setmainfont{NanumGothic}
+  \setsansfont{NanumGothic}
+  \setmonofont[Scale=0.9]{NanumGothicCoding}
+\fi
 
 % Custom header and footer
 \pagestyle{fancy}
