@@ -716,84 +716,68 @@ document.write(`
 <pre  class="mermaid">
         sequenceDiagram
     participant User
-    participant ShoppingAgent as Shopping Agent (Android App)
-    participant MerchantAgent as Merchant Agent (Python Server)
-    participant CatalogAgent as Catalog Sub-Agent
-    participant CMWallet as CM Wallet (Credential Manager)
-    participant TrustedUI as Trusted UI (System UI)
+    participant ShoppingAgent as Shopping Agent
+    participant MerchantAgent as Merchant Agent
+    participant CatalogAgent as Catalog Agent
+    participant CMWallet as CM Wallet
+    participant TrustedUI as Trusted UI
 
-    Note over User,TrustedUI: Phase 1 - Product Discovery &amp; Cart Creation
+    Note over User,TrustedUI: Phase 1: Product Discovery and Cart Creation
 
-    User-&gt;&gt;ShoppingAgent: I am looking for a new car
+    User-&gt;&gt;ShoppingAgent: I'm looking for a new car
     activate ShoppingAgent
-
-    ShoppingAgent-&gt;&gt;MerchantAgent: A2A Message - Find items&lt;br/&gt;(text + shopping_agent_id)
+    ShoppingAgent-&gt;&gt;MerchantAgent: A2A Message: Find items
     activate MerchantAgent
-
-    MerchantAgent-&gt;&gt;MerchantAgent: Validate shopping_agent_id&lt;br/&gt;(trusted_shopping_agent)
-
+    MerchantAgent-&gt;&gt;MerchantAgent: Validate shopping_agent_id
     MerchantAgent-&gt;&gt;CatalogAgent: find_items_workflow()
     activate CatalogAgent
-
-    CatalogAgent-&gt;&gt;CatalogAgent: Search product catalog&lt;br/&gt;(using Gemini LLM)
-
+    CatalogAgent-&gt;&gt;CatalogAgent: Search product catalog
     CatalogAgent--&gt;&gt;MerchantAgent: Product list + CartMandate
     deactivate CatalogAgent
-
-    MerchantAgent--&gt;&gt;ShoppingAgent: A2A Response - Products&lt;br/&gt;(CartMandate artifact)
+    MerchantAgent--&gt;&gt;ShoppingAgent: A2A Response with CartMandate
     deactivate MerchantAgent
-
     ShoppingAgent--&gt;&gt;User: Display product options
     deactivate ShoppingAgent
 
-    User-&gt;&gt;ShoppingAgent: Select product &amp; confirm purchase
+    User-&gt;&gt;ShoppingAgent: Select product and confirm purchase
     activate ShoppingAgent
 
-    Note over User,TrustedUI: Phase 2 - DPC Request Construction
+    Note over User,TrustedUI: Phase 2: DPC Request Construction
 
-    ShoppingAgent-&gt;&gt;ShoppingAgent: constructDPCRequest()&lt;br/&gt;- Extract cart details&lt;br/&gt;- Generate nonce&lt;br/&gt;- Create DCQL query&lt;br/&gt;- Build transaction_data
+    ShoppingAgent-&gt;&gt;ShoppingAgent: constructDPCRequest()
+    Note over ShoppingAgent: Generate nonce and build OpenID4VP request
+    Note over ShoppingAgent: DCQL: card_number, holder_name
+    Note over ShoppingAgent: Transaction data: merchant, amount, details
 
-    Note over ShoppingAgent: DCQL Claims&lt;br/&gt;- card_number&lt;br/&gt;- holder_name&lt;br/&gt;&lt;br/&gt;Transaction Data&lt;br/&gt;- merchant_name&lt;br/&gt;- amount&lt;br/&gt;- purchase details
+    Note over User,TrustedUI: Phase 3: Credential Request via Credential Manager
 
-    Note over User,TrustedUI: Phase 3 - Credential Request via Credential Manager
-
-    ShoppingAgent-&gt;&gt;CMWallet: GetDigitalCredentialOption&lt;br/&gt;(OpenID4VP request)
+    ShoppingAgent-&gt;&gt;CMWallet: GetDigitalCredentialOption
     activate CMWallet
-
-    Note over CMWallet: Protocol - openid4vp-v1-unsigned&lt;br/&gt;Format - mso_mdoc&lt;br/&gt;Doctype - com.emvco.payment_card
-
-    CMWallet-&gt;&gt;CMWallet: Validate request&lt;br/&gt;Find matching credentials
-
+    Note over CMWallet: Protocol: openid4vp-v1-unsigned
+    Note over CMWallet: Format: mso_mdoc
+    CMWallet-&gt;&gt;CMWallet: Validate request
     CMWallet-&gt;&gt;TrustedUI: Show payment confirmation
     activate TrustedUI
-
-    TrustedUI--&gt;&gt;User: Display&lt;br/&gt;- Merchant name&lt;br/&gt;- Amount&lt;br/&gt;- Purchase details table&lt;br/&gt;- Card to be used
-
+    Note over TrustedUI: Display merchant, amount, details
     User-&gt;&gt;TrustedUI: Approve payment
-
     TrustedUI--&gt;&gt;CMWallet: User consent
     deactivate TrustedUI
-
-    CMWallet-&gt;&gt;CMWallet: Create VP Token&lt;br/&gt;- Sign transaction_data&lt;br/&gt;- Include requested claims&lt;br/&gt;- Generate device signature
-
-    CMWallet--&gt;&gt;ShoppingAgent: vp_token&lt;br/&gt;(signed DPC response)
+    CMWallet-&gt;&gt;CMWallet: Sign transaction_data
+    CMWallet-&gt;&gt;CMWallet: Generate VP Token
+    CMWallet--&gt;&gt;ShoppingAgent: vp_token
     deactivate CMWallet
 
-    Note over User,TrustedUI: Phase 4 - DPC Validation &amp; Payment Finalization
+    Note over User,TrustedUI: Phase 4: DPC Validation and Payment Finalization
 
-    ShoppingAgent-&gt;&gt;MerchantAgent: A2A Message - Validate DPC&lt;br/&gt;(text + dpc_response)
+    ShoppingAgent-&gt;&gt;MerchantAgent: A2A Message: Validate DPC
     activate MerchantAgent
-
-    MerchantAgent-&gt;&gt;MerchantAgent: dpc_finish()&lt;br/&gt;- Verify nonce&lt;br/&gt;- Validate signature&lt;br/&gt;- Check transaction_data hash
-
-    Note over MerchantAgent: TODO - Full validation&lt;br/&gt;- Verify issuer signature&lt;br/&gt;- Verify device signature&lt;br/&gt;- Forward to payment processor
-
-    MerchantAgent-&gt;&gt;MerchantAgent: Simulate payment&lt;br/&gt;processing
-
-    MerchantAgent--&gt;&gt;ShoppingAgent: A2A Response&lt;br/&gt;payment_status - SUCCESS&lt;br/&gt;transaction_id
+    MerchantAgent-&gt;&gt;MerchantAgent: dpc_finish()
+    Note over MerchantAgent: Verify nonce and signature
+    Note over MerchantAgent: Validate transaction_data hash
+    MerchantAgent-&gt;&gt;MerchantAgent: Simulate payment processing
+    MerchantAgent--&gt;&gt;ShoppingAgent: Payment status: SUCCESS
     deactivate MerchantAgent
-
-    ShoppingAgent--&gt;&gt;User: Payment successful!&lt;br/&gt;Transaction ID - txn_1234567890
+    ShoppingAgent--&gt;&gt;User: Payment successful!
     deactivate ShoppingAgent
     </pre></section>
 <section id="key-components">
