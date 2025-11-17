@@ -186,11 +186,11 @@ val transaction = Transaction(
 ```{mermaid}
 sequenceDiagram
     participant User
-    participant ShoppingAgent as Shopping Agent<br/>(Android App)
-    participant MerchantAgent as Merchant Agent<br/>(Python Server)
+    participant ShoppingAgent as Shopping Agent (Android App)
+    participant MerchantAgent as Merchant Agent (Python Server)
     participant CatalogAgent as Catalog Sub-Agent
-    participant CMWallet as CM Wallet<br/>(Credential Manager)
-    participant TrustedUI as Trusted UI<br/>(System UI)
+    participant CMWallet as CM Wallet (Credential Manager)
+    participant TrustedUI as Trusted UI (System UI)
 
     Note over User,TrustedUI: Phase 1 - Product Discovery & Cart Creation
 
