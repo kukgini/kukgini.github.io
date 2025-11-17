@@ -11,6 +11,9 @@ Knowledge Utility Kit for Global Intelligence Integration
    :caption: Agent Payment Protocol (AP2)
 
    ap2/ap2-samples.md
+   ap2/ap2-sample-cards.md
+   ap2/ap2-sample-dpc.md
+   ap2/ap2-sample-x402.md
 
 
 

@@ -1,0 +1,903 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>x402 시나리오 &#8212; Knowledge Utility Kit for Global Intelligence Integration  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@11.4.0/dist/mermaid.esm.min.mjs"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs"></script>
+    <script type="module">
+mermaid.initialize({
+    startOnLoad: true,
+    theme: 'default',
+    securityLevel: 'loose',
+    sequence: {
+        useMaxWidth: true,
+        wrap: true
+    }
+});
+</script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+    <script type="module">
+import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.4.0/dist/mermaid.esm.min.mjs";
+window.addEventListener("load", () => mermaid.run());
+</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'ap2/ap2-sample-x402';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="BOSH Agent Development Setup" href="../paas/bosh/bosh-agent-dev-setup.html" />
+    <link rel="prev" title="DPC 시나리오" href="ap2-sample-dpc.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Knowledge Utility Kit for Global Intelligence Integration  documentation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    Knowledge Utility Kit for Global Intelligence Integration
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Agent Payment Protocol (AP2)</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="ap2-samples.html">Agent Payment Protocol Samples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ap2-sample-cards.html">Cards 시나리오</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ap2-sample-dpc.html">DPC 시나리오</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">x402 시나리오</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">PaaS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../paas/bosh/bosh-agent-dev-setup.html">BOSH Agent Development Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../paas/bosh/bosh-stemcell-builder.html">BOSH linux stemcell builder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../paas/bosh/bosh-lite-resizing.html">BOSH lite resizing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../paas/bosh/using-upstart.html">Using upstart on ubuntu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../paas/bosh/reverse-ssh-port-forwarding.html">Bypassing corporate firewall with reverse ssh port forwarding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../paas/bosh/bosh-task.html">BOSH task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../paas/bosh/bosh-inside.html">BOSH Inside</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../paas/bosh/troubleshoot-case-01-openstack.html">OpenStack Case 1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../paas/bosh/troubleshoot-case-02-openstack.html">OpenStack Case 2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../paas/bosh/troubleshoot-case-03-aws.html">Case 3 AWS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../paas/bosh/troubleshoot-case-04-aws.html">Case 4 AWS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../paas/bosh/troubleshoot-case-05-galera-cluster.html">IaaS 네트워크 장비 교체 작업 후 mariadb galera cluster 장애</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../paas/bosh/troubleshoot-case-06-openstack.html">Trouble Shoot case 6 OpenStack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../paas/cf/locket.html">Locket</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../paas/cf/cups.html">Custom User Provided Service (CUPS)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../paas/cf/ch3.html">CF-Extensions projects in incubation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../paas/cf/ch1.1.html">Custom User Provided Service (CUPS)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../paas/cf/ch1.2.html">Cloud Native Application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../paas/cf/ch1.3.html">Failed to push java app (case sensative entries)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../paas/cf/ch1.4.html">bosh-lite 장애 Case 1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../paas/cf/ch1.5.html">Heartbeat Message sample</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../paas/cf/ch1.6.html">BOSH2 CLI 로 VM 에 로그인 하기</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../paas/cf/ch1.7.html">HowTo Simply TcpDump and get.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../paas/cf/ch1.8.html">Inside Cell</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../paas/cf/ch1.9.html">Inside Diego Database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../paas/cf/ch1.10.html">Router Register Log</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../paas/cf/ch1.11.html">Cloud Check 를 통한 vm 장애 복구</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../paas/cf/ch1.12.html">bosh-init 시 Open Stack Nova Bug 관련</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../paas/cf/ch1.13.html">cf-openstack-validator 실행시 floatingip 관련 오류</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../paas/cf/ch1.z.html">Uncategorized</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">IaaS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../iaas/ch1.1.html">Chapter 1 Command-Line Interface (CLI)</a></li>
+
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Git</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../git/git-flow.html">git flow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../git/git-push.html">git push</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../git/git-status.html">git status</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Golang</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../golang/mockery.html">mockery</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Markdown Examples</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../md/markdown_examples.html">Markdown Examples</a></li>
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/kukgini/kukgini.github.io" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/ap2/ap2-sample-x402.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>x402 시나리오</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">개요</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">주요 특징</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">사용 사례</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">한계점 및 고려사항</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">x402의 미래 전망</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">동작 방식</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-components">Key Components</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#intentmandate-structure">1. IntentMandate Structure</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cartmandate-structure-with-x402-support">2. CartMandate Structure with x402 Support</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#paymentmandate-structure-for-x402">3. PaymentMandate Structure for x402</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#x402-payment-credential-token">4. x402 Payment Credential Token</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#blockchain-transaction-structure">5. Blockchain Transaction Structure</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#transaction-receipt">6. Transaction Receipt</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">기술 상세</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#http-402">HTTP 402 상태 코드</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">에이전트 자동 결제 로직</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">결제 토큰 검증</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="x402">
+<h1>x402 시나리오<a class="headerlink" href="#x402" title="Link to this heading">#</a></h1>
+<p>This illustrates the complete flow of the Human Present x402 Payment scenario using the AP2 framework with the A2A protocol and x402 payment standard.</p>
+<section id="id1">
+<h2>개요<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<p>x402는 1997년 HTTP/1.1 표준에 정의되었지만 거의 사용되지 않았던 <strong>HTTP 402 상태 코드</strong>를 현대적인 AI 에이전트 생태계에 맞게 재해석한 프로토콜입니다. AP2 샘플의 x402 시나리오는 이 개념을 구현한 것으로, AI 에이전트들이 웹 리소스나 서비스에 접근할 때 자동으로 결제를 처리할 수 있도록 합니다.</p>
+<section id="id2">
+<h3>주요 특징<a class="headerlink" href="#id2" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>AI 에이전트 친화적</strong>: 사람의 개입 없이 에이전트가 자율적으로 결제 결정</p></li>
+<li><p><strong>프로토콜 독립적</strong>: 특정 결제 수단이나 통화에 종속되지 않음</p></li>
+<li><p><strong>표준 기반</strong>: HTTP 표준을 확장하여 웹 생태계와 자연스럽게 통합</p></li>
+<li><p><strong>마이크로 페이먼트</strong>: 소액 결제에 최적화 (거의 무료에 가까운 수수료)</p></li>
+<li><p><strong>중개자 불필요</strong>: 판매자와 구매자 간 직접 거래 조건 설정 가능</p></li>
+</ol>
+</section>
+<section id="id3">
+<h3>사용 사례<a class="headerlink" href="#id3" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>AI 에이전트 모니터링 서비스</strong>: 에이전트의 활동 추적 및 성능 분석에 대한 결제</p></li>
+<li><p><strong>프리미엄 API 접근</strong>: 유료 API나 데이터셋에 대한 자동 결제</p></li>
+<li><p><strong>컴퓨팅 리소스</strong>: 필요한 만큼만 사용하고 즉시 결제하는 온디맨드 서비스</p></li>
+<li><p><strong>콘텐츠 마이크로 페이먼트</strong>: 뉴스 기사, 연구 논문 등 개별 콘텐츠에 대한 소액 결제</p></li>
+</ul>
+</section>
+<section id="id4">
+<h3>한계점 및 고려사항<a class="headerlink" href="#id4" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>표준 부재</strong>: HTTP 402는 1997년부터 정의되었으나 실제 구현 사례 거의 없음</p></li>
+<li><p><strong>생태계 부재</strong>: 결제 프로세서, 가맹점, 클라이언트 모두 새로 구축 필요</p></li>
+<li><p><strong>보안 표준</strong>: 아직 확립된 보안 표준이나 모범 사례 부족</p></li>
+<li><p><strong>채택 장벽</strong>: 기존 시스템과의 호환성 없어 전면적인 생태계 전환 필요</p></li>
+<li><p><strong>불확실성</strong>: 실험적 단계로 장기적 실용화 여부 불확실</p></li>
+</ul>
+</section>
+<section id="id5">
+<h3>x402의 미래 전망<a class="headerlink" href="#id5" title="Link to this heading">#</a></h3>
+<p><strong>단기 (2025-2027):</strong></p>
+<ul class="simple">
+<li><p>실험적 파일럿 프로젝트 및 PoC (Proof of Concept)</p></li>
+<li><p>특정 도메인(예: AI 서비스 마켓플레이스)에서 제한적 사용</p></li>
+<li><p>표준화 논의 시작 (IETF, W3C)</p></li>
+</ul>
+<p><strong>중기 (2027-2030):</strong></p>
+<ul class="simple">
+<li><p>마이크로서비스 및 API 경제에서 점진적 채택</p></li>
+<li><p>암호화폐 및 블록체인 기반 결제 시스템과의 통합</p></li>
+<li><p>주요 클라우드 제공업체의 실험적 지원</p></li>
+</ul>
+<p><strong>장기 (2030+):</strong></p>
+<ul class="simple">
+<li><p>AI 에이전트 생태계의 표준 결제 프로토콜로 자리잡을 가능성</p></li>
+<li><p>웹의 근본적인 비즈니스 모델 변화 (광고 기반 → 마이크로 페이먼트)</p></li>
+<li><p>사람 간 거래보다는 M2M 거래의 주류 프로토콜로 발전</p></li>
+</ul>
+</section>
+</section>
+<section id="id6">
+<h2>동작 방식<a class="headerlink" href="#id6" title="Link to this heading">#</a></h2>
+<pre  class="mermaid">
+        sequenceDiagram
+    participant User
+    participant ShoppingAgent
+    participant MerchantAgent
+    participant CredentialsProvider
+    participant PaymentProcessor
+    participant Blockchain
+
+    Note right of User: Phase 1: Product Discovery
+
+    User-&gt;&gt;ShoppingAgent: I want to buy a coffee maker
+    ShoppingAgent-&gt;&gt;ShoppingAgent: Create IntentMandate
+    ShoppingAgent-&gt;&gt;MerchantAgent: A2A Message: Find products
+    MerchantAgent-&gt;&gt;MerchantAgent: Validate shopping_agent_id
+    MerchantAgent-&gt;&gt;MerchantAgent: Check x402 support
+    MerchantAgent-&gt;&gt;MerchantAgent: Search product catalog
+    MerchantAgent-&gt;&gt;MerchantAgent: Create CartMandate with x402
+    MerchantAgent--&gt;&gt;ShoppingAgent: CartMandate with products
+    ShoppingAgent--&gt;&gt;User: Display product options
+    User-&gt;&gt;ShoppingAgent: Select product
+
+    Note right of User: Phase 2: Shipping Address
+
+    User-&gt;&gt;ShoppingAgent: Provide shipping address
+    ShoppingAgent-&gt;&gt;MerchantAgent: A2A Message: Update cart
+    MerchantAgent-&gt;&gt;MerchantAgent: Update and re-sign CartMandate
+    MerchantAgent--&gt;&gt;ShoppingAgent: Updated CartMandate
+
+    Note right of User: Phase 3: x402 Payment Method
+
+    ShoppingAgent-&gt;&gt;CredentialsProvider: Get payment methods
+    CredentialsProvider-&gt;&gt;CredentialsProvider: Filter x402 methods
+    CredentialsProvider-&gt;&gt;CredentialsProvider: Check wallet balances
+    CredentialsProvider--&gt;&gt;ShoppingAgent: x402 payment methods
+    ShoppingAgent--&gt;&gt;User: Display digital currencies
+    User-&gt;&gt;ShoppingAgent: Select digital currency
+    ShoppingAgent-&gt;&gt;CredentialsProvider: Get payment token
+    CredentialsProvider-&gt;&gt;CredentialsProvider: Generate x402 token
+    CredentialsProvider--&gt;&gt;ShoppingAgent: x402 credential token
+
+    Note right of User: Phase 4: Payment Mandate
+
+    ShoppingAgent-&gt;&gt;ShoppingAgent: Create PaymentMandate
+    ShoppingAgent--&gt;&gt;User: Display final details with gas fee
+    User-&gt;&gt;ShoppingAgent: Confirm purchase
+    ShoppingAgent-&gt;&gt;ShoppingAgent: sign_mandates_on_user_device
+    ShoppingAgent-&gt;&gt;ShoppingAgent: Generate mandate hashes
+    ShoppingAgent-&gt;&gt;CredentialsProvider: Send signed PaymentMandate
+    CredentialsProvider-&gt;&gt;CredentialsProvider: Validate wallet balance
+    CredentialsProvider--&gt;&gt;ShoppingAgent: Acknowledgment
+
+    Note right of User: Phase 5: Payment Initiation
+
+    ShoppingAgent-&gt;&gt;MerchantAgent: A2A Message: Initiate payment
+    MerchantAgent-&gt;&gt;PaymentProcessor: Process x402 payment
+    PaymentProcessor-&gt;&gt;PaymentProcessor: Validate PaymentMandate
+    PaymentProcessor-&gt;&gt;CredentialsProvider: Get payment credentials
+    CredentialsProvider-&gt;&gt;CredentialsProvider: Retrieve wallet credentials
+    CredentialsProvider--&gt;&gt;PaymentProcessor: Wallet address and signing key
+    PaymentProcessor-&gt;&gt;PaymentProcessor: Prepare blockchain transaction
+    PaymentProcessor-&gt;&gt;PaymentProcessor: Sign transaction
+
+    Note right of User: Phase 6: Blockchain Execution
+
+    PaymentProcessor-&gt;&gt;Blockchain: Submit transaction
+    Blockchain-&gt;&gt;Blockchain: Validate transaction
+    Blockchain-&gt;&gt;Blockchain: Execute smart contract
+    Blockchain-&gt;&gt;Blockchain: Deduct gas fee
+    Blockchain-&gt;&gt;Blockchain: Transfer digital currency
+    Blockchain-&gt;&gt;Blockchain: Confirm in block
+    Blockchain--&gt;&gt;PaymentProcessor: Transaction hash and receipt
+    PaymentProcessor-&gt;&gt;PaymentProcessor: Verify confirmation
+    PaymentProcessor-&gt;&gt;PaymentProcessor: Generate transaction ID
+    PaymentProcessor--&gt;&gt;MerchantAgent: Payment SUCCESS
+    MerchantAgent--&gt;&gt;ShoppingAgent: Confirmation with tx hash
+    ShoppingAgent--&gt;&gt;User: Payment Receipt with blockchain details
+    </pre></section>
+<section id="key-components">
+<h2>Key Components<a class="headerlink" href="#key-components" title="Link to this heading">#</a></h2>
+<section id="intentmandate-structure">
+<h3>1. IntentMandate Structure<a class="headerlink" href="#intentmandate-structure" title="Link to this heading">#</a></h3>
+<p>The IntentMandate captures the user’s shopping intent:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;intent_mandate_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;uuid&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;natural_language_description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;I want to buy a coffee maker&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;user_prompt_required&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;merchants&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;merchant_agent&quot;</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;skus&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;coffee-maker-001&quot;</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;intent_expiry&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2025-11-18T10:00:00Z&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;requires_refundability&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="cartmandate-structure-with-x402-support">
+<h3>2. CartMandate Structure with x402 Support<a class="headerlink" href="#cartmandate-structure-with-x402-support" title="Link to this heading">#</a></h3>
+<p>The CartMandate contains product and x402 payment request details:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;cart_mandate_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;uuid&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;merchant_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Example Merchant&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;cart_expiry&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2025-11-18T10:00:00Z&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;refund_period&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;P30D&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;payment_request&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;method_data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span>
+<span class="w">      </span><span class="nt">&quot;supported_methods&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;x402&quot;</span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;supported_chains&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;ethereum&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;polygon&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;base&quot;</span><span class="p">],</span>
+<span class="w">        </span><span class="nt">&quot;supported_currencies&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;USDC&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;USDT&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;DAI&quot;</span><span class="p">],</span>
+<span class="w">        </span><span class="nt">&quot;merchant_wallet_address&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0x1234567890abcdef...&quot;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}],</span>
+<span class="w">    </span><span class="nt">&quot;details&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;order-123&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;total&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Total&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;amount&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;currency&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;USDC&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;79.99&quot;</span><span class="p">}</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;displayItems&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span><span class="nt">&quot;label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Coffee Maker&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;amount&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;69.99&quot;</span><span class="p">}},</span>
+<span class="w">        </span><span class="p">{</span><span class="nt">&quot;label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Shipping&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;amount&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;5.00&quot;</span><span class="p">}},</span>
+<span class="w">        </span><span class="p">{</span><span class="nt">&quot;label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Tax&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;amount&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;5.00&quot;</span><span class="p">}},</span>
+<span class="w">        </span><span class="p">{</span><span class="nt">&quot;label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Estimated Gas Fee&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;amount&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0.50&quot;</span><span class="p">}}</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;merchant_signature&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;signature_by_merchant&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="paymentmandate-structure-for-x402">
+<h3>3. PaymentMandate Structure for x402<a class="headerlink" href="#paymentmandate-structure-for-x402" title="Link to this heading">#</a></h3>
+<p>The PaymentMandate authorizes the x402 payment:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;payment_mandate_contents&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;payment_mandate_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;uuid&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2025-11-17T12:00:00Z&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;payment_details_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;order-123&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;payment_details_total&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Total&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;amount&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;currency&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;USDC&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;79.99&quot;</span><span class="p">}</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;payment_response&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;request_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;order-123&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;method_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;x402&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;details&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;token&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;encrypted_x402_token&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;http://localhost:8002/a2a/credentials_provider&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="nt">&quot;chain_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;currency&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;USDC&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;contract_address&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;shipping_address&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;streetAddress&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;123 Main St&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;city&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;San Francisco&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;state&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;CA&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;zipCode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;94102&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;payer_email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;user@example.com&quot;</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;merchant_agent&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;merchant_agent&quot;</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;user_authorization&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;cart_hash_payment_hash_signature&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="x402-payment-credential-token">
+<h3>4. x402 Payment Credential Token<a class="headerlink" href="#x402-payment-credential-token" title="Link to this heading">#</a></h3>
+<p>The token contains blockchain wallet credentials:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;encrypted_x402_payment_token&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;http://localhost:8002/a2a/credentials_provider&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The Credentials Provider decrypts this to reveal:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;wallet_address&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0xabcdef1234567890...&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;chain_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;currency&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;USDC&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;balance&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1000.00&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;signing_authority&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;delegated_signer_key&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;is_smart_wallet&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="blockchain-transaction-structure">
+<h3>5. Blockchain Transaction Structure<a class="headerlink" href="#blockchain-transaction-structure" title="Link to this heading">#</a></h3>
+<p>The transaction submitted to the blockchain:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;from&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0xabcdef1234567890...&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;to&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0x1234567890abcdef...&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0xa9059cbb...&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;chainId&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;nonce&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">42</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;gasLimit&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;100000&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;maxFeePerGas&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;50000000000&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;maxPriorityFeePerGas&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2000000000&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="transaction-receipt">
+<h3>6. Transaction Receipt<a class="headerlink" href="#transaction-receipt" title="Link to this heading">#</a></h3>
+<p>The blockchain receipt confirming the transaction:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;transactionHash&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0x123abc...&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;blockNumber&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">12345678</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;blockHash&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0x789def...&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;from&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0xabcdef1234567890...&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;to&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;gasUsed&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;65000&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;effectiveGasPrice&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;50000000000&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;success&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="id7">
+<h2>기술 상세<a class="headerlink" href="#id7" title="Link to this heading">#</a></h2>
+<section id="http-402">
+<h3>HTTP 402 상태 코드<a class="headerlink" href="#http-402" title="Link to this heading">#</a></h3>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">402</span> <span class="ne">Payment Required</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+<span class="na">WWW-Authenticate</span><span class="o">:</span> <span class="l">Bearer realm=&quot;payment-api&quot;</span>
+
+<span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;amount&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0.01&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;currency&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;USD&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;payment_methods&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;crypto&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;micropayment&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;card&quot;</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;payment_endpoint&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://payment.example.com/pay&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;resource_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;api-call-12345&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="id8">
+<h3>에이전트 자동 결제 로직<a class="headerlink" href="#id8" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">fetch_with_payment</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">agent_wallet</span><span class="p">):</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">http_client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">402</span><span class="p">:</span>
+        <span class="n">payment_info</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        
+        <span class="c1"># 자동 결제 판단 로직</span>
+        <span class="k">if</span> <span class="n">agent_wallet</span><span class="o">.</span><span class="n">can_afford</span><span class="p">(</span><span class="n">payment_info</span><span class="p">[</span><span class="s1">&#39;amount&#39;</span><span class="p">]):</span>
+            <span class="c1"># 결제 실행</span>
+            <span class="n">payment_token</span> <span class="o">=</span> <span class="k">await</span> <span class="n">agent_wallet</span><span class="o">.</span><span class="n">pay</span><span class="p">(</span>
+                <span class="n">amount</span><span class="o">=</span><span class="n">payment_info</span><span class="p">[</span><span class="s1">&#39;amount&#39;</span><span class="p">],</span>
+                <span class="n">endpoint</span><span class="o">=</span><span class="n">payment_info</span><span class="p">[</span><span class="s1">&#39;payment_endpoint&#39;</span><span class="p">]</span>
+            <span class="p">)</span>
+            
+            <span class="c1"># 결제 증명과 함께 재요청</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">http_client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                <span class="n">url</span><span class="p">,</span>
+                <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Authorization&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;Bearer </span><span class="si">{</span><span class="n">payment_token</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">}</span>
+            <span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">response</span>
+</pre></div>
+</div>
+</section>
+<section id="id9">
+<h3>결제 토큰 검증<a class="headerlink" href="#id9" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">verify_payment_token</span><span class="p">(</span><span class="n">token</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">resource_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">decoded</span> <span class="o">=</span> <span class="n">jwt</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">public_key</span><span class="p">,</span> <span class="n">algorithms</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;RS256&#39;</span><span class="p">])</span>
+        
+        <span class="c1"># 토큰 유효성 확인</span>
+        <span class="k">assert</span> <span class="n">decoded</span><span class="p">[</span><span class="s1">&#39;resource_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">resource_id</span>
+        <span class="k">assert</span> <span class="n">decoded</span><span class="p">[</span><span class="s1">&#39;exp&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="k">assert</span> <span class="n">decoded</span><span class="p">[</span><span class="s1">&#39;amount_paid&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">required_amount</span>
+        
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="ap2-sample-dpc.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">DPC 시나리오</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../paas/bosh/bosh-agent-dev-setup.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">BOSH Agent Development Setup</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">개요</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">주요 특징</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">사용 사례</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">한계점 및 고려사항</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">x402의 미래 전망</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">동작 방식</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-components">Key Components</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#intentmandate-structure">1. IntentMandate Structure</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cartmandate-structure-with-x402-support">2. CartMandate Structure with x402 Support</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#paymentmandate-structure-for-x402">3. PaymentMandate Structure for x402</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#x402-payment-credential-token">4. x402 Payment Credential Token</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#blockchain-transaction-structure">5. Blockchain Transaction Structure</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#transaction-receipt">6. Transaction Receipt</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">기술 상세</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#http-402">HTTP 402 상태 코드</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">에이전트 자동 결제 로직</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">결제 토큰 검증</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Gini
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2017-2025, Gini.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
