@@ -358,6 +358,60 @@ val mdocFormatsSupported =
 * EUID Wallet 의 핵심 원칙: 사용자가 공유하는 정보를 명확히 보고 동의해야 합니다
 * 구매 세부사항을 표시하여 사용자가 서명하는 내용을 정확히 이해할 수 있게 합니다
 
+#### Payment process in a EUID Wallet
+
+```{mermaid}
+sequenceDiagram
+    autonumber
+    participant User as 사용자 (EUDI Wallet)
+    participant Wallet as EUDI Wallet 앱
+    participant Merchant as 가맹점(POS / 웹)
+    participant PSP as 결제게이트웨이 / PSP
+    participant Verifier as 신원검증자 (optional)
+    participant Issuer as 발급은행 / 카드사
+    participant PaymentNet as 결제망 (예: SEPA/카드네트워크)
+
+    Note over Merchant,User: 1) 결제 요청: 금액·상품·결제 수단 요청
+    Merchant->>User: 결제요청(인보이스, 결제 토큰 요구)
+    User->>Wallet: 승인/인증 요청 (PIN/생체)
+    Wallet->>Verifier: (선택) 신원/자격증명 제시 요청 (VP: selective disclosure)
+    Verifier-->>Wallet: 신원 확인 결과 (OK / 리젝)
+    Wallet->>Merchant: 결제허가(디지털서명 또는 Payment Presentation)
+    Merchant->>PSP: 결제전송(결제허가 + 리스크데이터)
+    PSP->>Issuer: 결제승인 요청 (인증, SCA 필요시 추가 인증)
+    Issuer->>PaymentNet: 자금이체 요청
+    PaymentNet->>Issuer: 지급확인
+    Issuer-->>PSP: 승인/거절 응답 (Auth code)
+    PSP-->>Merchant: 결제결과 전달
+    Merchant-->>User: 결제완료 화면/영수증
+    Note over Wallet,Issuer: (옵션) 영수증/트랜잭션 증명(VC/Verifiable Receipt) 발행
+````
+
+```{mermaid}
+flowchart TD
+    A[가맹점: 결제요청 생성] --> B[사용자: EUDI Wallet 호출]
+    B --> C{사용자 인증 필요?}
+    C -->|필요| D[생체/핀 인증 (SCA)]
+    C -->|불필요| E[승인]
+    D --> E
+    E --> F{신원/자격증명 제시 필요?}
+    F -->|예| G[Wallet: 선택적 공개(Selective Disclosure)로 VP 생성]
+    F -->|아니오| H[Wallet: 결제서명/토큰 생성]
+    G --> I[가맹점/PSP로 Presentation 전송]
+    H --> I
+    I --> J[PSP: 결제 요청 -> 발급은행/결제망]
+    J --> K[발급은행: 인증/승인(SCA 검증 포함)]
+    K --> L[결제망: 정산]
+    L --> M[PSP -> 가맹점 -> 사용자에게 결제결과 반환]
+    M --> N[옵션: 영수증(Verifiable Receipt) 발행/보관]
+````
+
+-	Selective Disclosure: EUDI Wallet은 필요한 최소 정보만 선택적으로 제공(예: “성인임”만 증명) — 프라이버시 보호.
+-	디지털 서명 / VP (Verifiable Presentation): 결제 승인 메시지는 사용자의 서명(혹은 지갑의 결제 토큰)으로 무결성/비부인성 보장.
+-	SCA(강한 고객 인증): 금액·리스크 기준에 따라 지문/페이스ID/PIN 같은 추가 인증이 Wallet에서 실행될 수 있음.
+-	Verifier의 역할(옵션): 가맹점/PSP가 신원을 직접 검증하지 않고 제3자 검증자에게 확인을 요청할 수 있음.
+-	결제 실무(자금 이동): ID/자격 검증은 결제 승인 흐름과 병렬적이거나 선행될 수 있으며, 실제 자금 이체는 기존 결제망(SEPA, 카드네트워크 등)을 통해 이뤄짐.
+
 ### DPC vs EUDI Wallet 차이점
 
 * **용도**: DPC는 결제에 특화 (payment_card), EUDI Wallet은 신원 증명이 주요 목적
