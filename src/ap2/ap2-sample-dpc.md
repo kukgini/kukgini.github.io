@@ -9,8 +9,9 @@ sequenceDiagram
     participant User
     participant ShoppingAgent
     participant MerchantAgent
-    participant CMWallet
+    participant CMWallet as CMWallet<br/>(Credential Provider)
     participant TrustedUI
+    participant PaymentProcessor
 
     Note right of User: Phase 1: Product Discovery
 
@@ -33,7 +34,7 @@ sequenceDiagram
 
     Note right of User: Phase 3: Credential Manager
 
-    ShoppingAgent->>CMWallet: GetDigitalCredentialOption
+    ShoppingAgent->>CMWallet: GetDigitalCredentialOption<br/>(via Android Credential Manager API)
     CMWallet->>CMWallet: Validate request
     CMWallet->>TrustedUI: Show payment confirmation
     TrustedUI-->>User: Display merchant, amount, details
@@ -43,14 +44,28 @@ sequenceDiagram
     CMWallet->>CMWallet: Generate VP Token
     CMWallet-->>ShoppingAgent: vp_token
 
-    Note right of User: Phase 4: DPC Validation
+    Note right of User: Phase 4: DPC Validation & Payment Processing
 
     ShoppingAgent->>MerchantAgent: A2A Message: Validate DPC
     MerchantAgent->>MerchantAgent: dpc_finish()
     MerchantAgent->>MerchantAgent: Verify nonce and signature
     MerchantAgent->>MerchantAgent: Validate transaction_data hash
-    MerchantAgent->>MerchantAgent: Simulate payment processing
-    MerchantAgent-->>ShoppingAgent: Payment status: SUCCESS
+    
+    rect rgb(240, 240, 240)
+        Note over MerchantAgent,PaymentProcessor: Production Implementation (Currently Simulated)
+        MerchantAgent->>PaymentProcessor: A2A Message: Process DPC payment
+        activate PaymentProcessor
+        PaymentProcessor->>PaymentProcessor: Validate VP token
+        PaymentProcessor->>PaymentProcessor: Verify cryptographic signatures
+        PaymentProcessor->>PaymentProcessor: Check issuer certificate chain
+        PaymentProcessor->>PaymentProcessor: Process payment transaction
+        Note over PaymentProcessor: Actual payment processing via network
+        PaymentProcessor->>PaymentProcessor: Generate transaction ID
+        PaymentProcessor-->>MerchantAgent: Payment SUCCESS
+        deactivate PaymentProcessor
+    end
+    
+    MerchantAgent-->>ShoppingAgent: Payment confirmation
     ShoppingAgent-->>User: Payment successful!
 ```
 
@@ -122,6 +137,15 @@ The `transaction_data` contains payment details that get signed:
 - **Device Authentication**: ES256 signature from secure element
 - **Issuer Authentication**: Credential validity from issuer
 
+## Agent Responsibilities
+
+| Agent | Responsibilities |
+|-------|-----------------|
+| **Shopping Agent** | Orchestrates flow, manages user interaction, constructs DPC request with OpenID4VP protocol |
+| **Merchant Agent** | Product catalog, creates and signs CartMandate, validates DPC and forwards to Payment Processor |
+| **CMWallet (Credential Provider)** | Stores digital payment credentials, provides Trusted UI for user approval, generates cryptographically signed VP tokens |
+| **Payment Processor** | Validates VP tokens and cryptographic signatures, processes actual payment transactions, generates transaction IDs |
+
 ## Protocol Standards
 
 This implementation follows several key standards:
@@ -147,14 +171,18 @@ This implementation follows several key standards:
 ## Notes
 
 - This is a demonstration implementation showing the DPC flow
+- **Payment Processor integration is currently simulated** in the sample code for simplicity
+- In the sequence diagram above, the shaded area shows the Payment Processor flow that should be implemented in production
 - Full signature validation is marked as TODO in the merchant agent
 - Production implementations should:
-  - Validate all cryptographic signatures
-  - Check certificate chains
-  - Verify nonces and timestamps
-  - Forward to payment processors for actual processing
-  - Implement proper error handling
+  - **Implement Payment Processor** to handle actual payment transactions
+  - Validate all cryptographic signatures (issuer and device authentication)
+  - Check certificate chains and revocation status
+  - Verify nonces and timestamps to prevent replay attacks
+  - Forward validated VP tokens to payment processors for actual processing
+  - Implement proper error handling and retry logic
   - Add fraud detection mechanisms
+  - Generate and store transaction receipts for non-repudiation
 
 ## CMWallet 개요
 
