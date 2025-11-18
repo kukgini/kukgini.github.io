@@ -1,5 +1,11 @@
 # Cards 시나리오
 
+```{warning}
+**문서 작성 중**
+
+이 문서와 하위 문서들은 현재 작성 중이며, 부정확하거나 불완전한 정보를 포함할 수 있습니다. 
+프로덕션 환경에서 사용하기 전에 반드시 공식 문서와 표준을 참조하시기 바랍니다.
+
 This illustrates the complete flow of the Human Present Card Payment scenario using the AP2 framework with the A2A protocol.
 
 ## Sequence Diagram

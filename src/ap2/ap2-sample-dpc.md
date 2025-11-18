@@ -1,5 +1,11 @@
 # DPC 시나리오
 
+```{warning}
+**문서 작성 중**
+
+이 문서와 하위 문서들은 현재 작성 중이며, 부정확하거나 불완전한 정보를 포함할 수 있습니다. 
+프로덕션 환경에서 사용하기 전에 반드시 공식 문서와 표준을 참조하시기 바랍니다.
+
 This illustrates the complete flow of the Digital Payment Credentials scenario using the AP2 framework with the A2A protocol.
 
 ## Sequence Diagram
@@ -143,7 +149,7 @@ The `transaction_data` contains payment details that get signed:
 |-------|-----------------|
 | **Shopping Agent** | Orchestrates flow, manages user interaction, constructs DPC request with OpenID4VP protocol |
 | **Merchant Agent** | Product catalog, creates and signs CartMandate, validates DPC and forwards to Payment Processor |
-| **CMWallet (Credential Provider)** | Stores digital payment credentials, provides Trusted UI for user approval, generates cryptographically signed VP tokens |
+| **Credential Provider (CMWallet)** | Stores digital payment credentials, provides Trusted UI for user approval, generates cryptographically signed VP tokens |
 | **Payment Processor** | Validates VP tokens and cryptographic signatures, processes actual payment transactions, generates transaction IDs |
 
 ## Protocol Standards
@@ -161,7 +167,7 @@ This implementation follows several key standards:
 | Aspect | DPC Implementation | EUDI Wallet |
 |--------|-------------------|-------------|
 | **Protocol** | OpenID4VP | OpenID4VP ✓ |
-| **Format** | ISO mdoc (mso_mdoc) | ISO mdoc ✓ |
+| **Format** | ISO mdoc (mso_mdoc) | SD-JWT, ISO mdoc ✓ |
 | **Doctype** | com.emvco.payment_card | eu.europa.ec.eudi.pid.1 |
 | **Use Case** | Payment authentication | Identity verification |
 | **Selective Disclosure** | DCQL ✓ | DCQL ✓ |
