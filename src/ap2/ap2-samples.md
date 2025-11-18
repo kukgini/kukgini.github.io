@@ -1,12 +1,3 @@
-```{toctree}
-:maxdepth: 1
-:hidden:
-
-ap2-sample-cards.md
-ap2-sample-dpc.md
-ap2-sample-x402.md
-```
-
 # Agent Payment Protocol Samples
 
 ## 개요
@@ -225,3 +216,14 @@ AP2 프로토콜의 세 가지 시나리오는 AI 에이전트 결제의 진화 
 - [Official Documentation](https://cloud.google.com/blog/products/ai-machine-learning/announcing-agents-to-payments-ap2-protocol)
 - [GitHub Repository](https://github.com/google-agentic-commerce/AP2)
 - [EU Digital Identity Wallet ARF overview](https://en.wikipedia.org/wiki/EU_Digital_Identity_Wallet)
+
+## 시나리오 상세 분석
+
+```{toctree}
+:maxdepth: 1
+:caption: 시나리오 상세 분석
+
+ap2-sample-cards
+ap2-sample-dpc
+ap2-sample-x402
+```
