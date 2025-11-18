@@ -1,0 +1,43 @@
+$ bosh-init deploy ./bosh.yml
+Deployment manifest: '.../bosh.yml'
+Deployment state: '.../bosh-state.json'
+
+Started validating
+  Downloading release 'bosh'... Skipped [Found in local cache] (00:00:00)
+  Validating release 'bosh'... Finished (00:00:01)
+  Downloading release 'bosh-openstack-cpi'... Skipped [Found in local cache] (00:00:00)
+  Validating release 'bosh-openstack-cpi'... Finished (00:00:00)
+  Validating cpi release... Finished (00:00:00)
+  Validating deployment manifest... Finished (00:00:00)
+  Downloading stemcell... Skipped [Found in local cache] (00:00:00)
+  Validating stemcell... Finished (00:00:02)
+Finished validating (00:00:04)
+
+Started installing CPI
+  Compiling package 'ruby_openstack_cpi/6f724febcae828dcbfea470faff5b104d48dd944'... Finished (00:00:00)
+  Compiling package 'bosh_openstack_cpi/119de5f71bee352cabba8575aa97fc993b974f56'... Finished (00:00:00)
+  Installing packages... Finished (00:00:00)
+  Rendering job templates... Finished (00:00:00)
+  Installing job 'openstack_cpi'... Finished (00:00:00)
+Finished installing CPI (00:00:00)
+
+Starting registry... Finished (00:00:00)
+Uploading stemcell 'bosh-openstack-kvm-ubuntu-trusty-go_agent-raw/3363.19'... Skipped [Stemcell already uploaded] (00:00:00)
+
+Started deploying
+  Waiting for the agent on VM '225f36f5-ad48-4347-ac4c-44613f753985'... Failed (00:00:09)
+  Deleting VM '225f36f5-ad48-4347-ac4c-44613f753985'... Finished (00:00:07)
+  Creating VM for instance 'bosh/0' from stemcell 'ea92f9f2-1c18-4acb-8fa8-2e791839caad'... Finished (00:00:41)
+  Waiting for the agent on VM '1973e064-b0f7-4414-8d88-52ca05b6d4de' to be ready... Failed (00:00:00)
+Failed deploying (00:00:59)
+
+Stopping registry... Finished (00:00:00)
+Cleaning up rendered CPI jobs... Finished (00:00:00)
+
+Command 'deploy' failed:
+  Deploying:
+    Creating instance 'bosh/0':
+      Waiting until instance is ready:
+        Starting SSH tunnel:
+          Parsing private key file '.../bosh.pem':
+            asn1: structure error: superfluous leading zeros in length

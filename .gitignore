@@ -1,0 +1,10 @@
+_build
+.venv
+
+# Build artifacts (docs is built by GitHub Actions)
+docs/
+*.pyc
+__pycache__/
+.pytest_cache/
+.coverage
+htmlcov/
