@@ -6,8 +6,6 @@
 Knowledge Utility Kit for Global Intelligence Integration
 ==========================================================
 
-📕 `Download PDF <kukgini.pdf>`_
-
 .. toctree::
    :maxdepth: 2
    :caption: Agent Payment Protocol (AP2)
