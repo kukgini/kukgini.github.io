@@ -344,7 +344,7 @@ val mdocFormatsSupported =
 * Transaction Data 에 대한 서명 - EUDI Wallet 에서도 중요한 보안 메커니즘입니다
 * transactionDataHashesAlg = "sha-256" - 거래 무결성을 보장합니다
 
-```{code-block} kotkin
+```{code-block} kotlin
 :caption: DpcHelper.kt:59~65
   val additionalInfo =
     AdditionalInfo(
@@ -362,6 +362,8 @@ val mdocFormatsSupported =
 
 ```{mermaid}
 sequenceDiagram
+:caption: ARF v2.4.0 Section 5.6.2 “Transactional data using ISO/IEC 18013-5 and OpenID4VP” 
+
     autonumber
     participant User as 사용자 (EUDI Wallet)
     participant Wallet as EUDI Wallet 앱
