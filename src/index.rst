@@ -3,12 +3,13 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Knowledge Utility Kit for Global Intelligence Integration
+Knowledge Utility Kit
 ==========================================================
 
 .. toctree::
    :maxdepth: 2
    :caption: Agentic Commerce
+   :numbered:
 
    ap2/ap2-samples.md
 

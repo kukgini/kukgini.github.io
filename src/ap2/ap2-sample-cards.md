@@ -186,11 +186,6 @@ sequenceDiagram
 
 ### Interacting with the Shopping Agent
 
-This section walks you through a typical interaction with the sample.
-
-1.  **Launching Agent Development Kit UI**: Open a browser on your computer and
-    navigate to 0.0.0.0:8000/dev-ui. Select `shopping_agent` from the `Select an
-    agent` drop down in the upper left hand corner.
 1.  **Initial Request**: In the Shopping Agent's terminal, you'll be prompted to
     start a conversation. You can type something like: "I want to buy a coffee
     maker."
@@ -215,7 +210,7 @@ This section walks you through a typical interaction with the sample.
     and you'll be asked to provide a mock OTP to the agent. Use `123`
 1.  **Purchase Complete**: Once the OTP is provided, the payment will be
     processed, and you'll receive a confirmation message and a digital receipt.
-    
+
 ## Key Components
 
 ### 1. IntentMandate Structure
