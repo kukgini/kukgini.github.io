@@ -385,28 +385,28 @@ sequenceDiagram
     PSP-->>Merchant: 결제결과 전달
     Merchant-->>User: 결제완료 화면/영수증
     Note over Wallet,Issuer: (옵션) 영수증/트랜잭션 증명(VC/Verifiable Receipt) 발행
-````
+```
 
 ```{mermaid}
 flowchart TD
-    A[가맹점: 결제요청 생성] --> B[사용자: EUDI Wallet 호출]
-    B --> C{사용자 인증 필요?}
-    C -->|필요| D[생체/핀 인증 (SCA)]
-    C -->|불필요| E[승인]
+    A["가맹점: 결제요청 생성"] --> B["사용자: EUDI Wallet 호출"]
+    B --> C{"사용자 인증 필요?"}
+    C -->|필요| D["생체/핀 인증 (SCA)"]
+    C -->|불필요| E["승인"]
     D --> E
-    E --> F{신원/자격증명 제시 필요?}
-    F -->|예| G[Wallet: 선택적 공개(Selective Disclosure)로 VP 생성]
-    F -->|아니오| H[Wallet: 결제서명/토큰 생성]
-    G --> I[가맹점/PSP로 Presentation 전송]
+    E --> F{"신원/자격증명 제시 필요?"}
+    F -->|예| G["Wallet: 선택적 공개로 VP 생성"]
+    F -->|아니오| H["Wallet: 결제서명/토큰 생성"]
+    G --> I["가맹점/PSP로 Presentation 전송"]
     H --> I
-    I --> J[PSP: 결제 요청 -> 발급은행/결제망]
-    J --> K[발급은행: 인증/승인(SCA 검증 포함)]
-    K --> L[결제망: 정산]
-    L --> M[PSP -> 가맹점 -> 사용자에게 결제결과 반환]
-    M --> N[옵션: 영수증(Verifiable Receipt) 발행/보관]
-````
+    I --> J["PSP: 결제 요청을 발급은행/결제망으로 전송"]
+    J --> K["발급은행: 인증/승인 (SCA 검증 포함)"]
+    K --> L["결제망: 정산"]
+    L --> M["PSP가 가맹점을 통해 사용자에게 결제결과 반환"]
+    M --> N["옵션: 영수증 발행/보관"]
+```
 
--	Selective Disclosure: EUDI Wallet은 필요한 최소 정보만 선택적으로 제공(예: “성인임”만 증명) — 프라이버시 보호.
+-	Selective Disclosure: EUDI Wallet은 필요한 최소 정보만 선택적으로 제공(예: "성인임"만 증명) — 프라이버시 보호.
 -	디지털 서명 / VP (Verifiable Presentation): 결제 승인 메시지는 사용자의 서명(혹은 지갑의 결제 토큰)으로 무결성/비부인성 보장.
 -	SCA(강한 고객 인증): 금액·리스크 기준에 따라 지문/페이스ID/PIN 같은 추가 인증이 Wallet에서 실행될 수 있음.
 -	Verifier의 역할(옵션): 가맹점/PSP가 신원을 직접 검증하지 않고 제3자 검증자에게 확인을 요청할 수 있음.
