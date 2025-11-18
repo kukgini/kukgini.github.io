@@ -358,12 +358,12 @@ val mdocFormatsSupported =
 * EUID Wallet 의 핵심 원칙: 사용자가 공유하는 정보를 명확히 보고 동의해야 합니다
 * 구매 세부사항을 표시하여 사용자가 서명하는 내용을 정확히 이해할 수 있게 합니다
 
-#### Payment process in a EUID Wallet
+### Payment process in a EUID Wallet
+
+> **Reference:** ARF v2.4.0 Section 5.6.2 "Transactional data using ISO/IEC 18013-5 and OpenID4VP"
 
 ```{mermaid}
 sequenceDiagram
-:caption: ARF v2.4.0 Section 5.6.2 “Transactional data using ISO/IEC 18013-5 and OpenID4VP” 
-
     autonumber
     participant User as 사용자 (EUDI Wallet)
     participant Wallet as EUDI Wallet 앱
