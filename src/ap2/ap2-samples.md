@@ -82,7 +82,7 @@ sequenceDiagram
     participant User
     participant ShoppingAgent
     participant MerchantAgent
-    participant CredentialProvider as Credential Provider (CMWallet)
+    participant CredentialProvider as Credential Provider<br/>(CMWallet)
     participant TrustedUI
     participant PaymentProcessor
 
