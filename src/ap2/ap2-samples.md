@@ -102,7 +102,10 @@ sequenceDiagram
     CredentialProvider-->>ShoppingAgent: vp_token 반환
 
     ShoppingAgent->>MerchantAgent: vp_token 포함 결제 검증 요청
-    MerchantAgent->>PaymentProcessor: (프로덕션에서) 결제 처리 위임
+
+    Note over MerchantAgent,PaymentProcessor: 이하 단계는 샘플에서는 시뮬레이션/생략, 프로덕션에서 구현 필요
+    
+    MerchantAgent->>PaymentProcessor: 결제 처리 위임
     PaymentProcessor->>PaymentProcessor: VP/서명 검증 및 실제 결제 처리
     PaymentProcessor-->>MerchantAgent: 결제 결과
     MerchantAgent-->>ShoppingAgent: 결제 성공/실패 응답
@@ -114,7 +117,7 @@ sequenceDiagram
 1. **암호학적 보안**: 공개키 암호화 기반의 서명으로 위변조 불가능
 2. **프라이버시 보호**: Selective Disclosure 로 필요한 정보만 선택적으로 공개
 3. **사용자 통제**: 모든 거래에서 사용자가 명시적으로 승인
-4. **표준 기반**: OpenID4VP, ISO 18013-5 mDOC, DCQL 등 국제 표준 준수
+5. **신원 검증 연계**: 결제 시 연령 확인이나 자격 증명 등 추가 신원 검증을 같은 지갑/자격증명으로 연계하기 용이함
 
 #### 사용 사례
 
