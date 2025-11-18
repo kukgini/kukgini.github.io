@@ -9,7 +9,7 @@ sequenceDiagram
     participant User
     participant ShoppingAgent
     participant MerchantAgent
-    participant CMWallet as CMWallet<br/>(Credential Provider)
+    participant CredentialProvider as Credential Provider<br/>(CMWallet)
     participant TrustedUI
     participant PaymentProcessor
 
@@ -34,15 +34,15 @@ sequenceDiagram
 
     Note right of User: Phase 3: Credential Manager
 
-    ShoppingAgent->>CMWallet: GetDigitalCredentialOption<br/>(via Android Credential Manager API)
-    CMWallet->>CMWallet: Validate request
-    CMWallet->>TrustedUI: Show payment confirmation
+    ShoppingAgent->>CredentialProvider: GetDigitalCredentialOption<br/>(via Android Credential Manager API)
+    CredentialProvider->>CredentialProvider: Validate request
+    CredentialProvider->>TrustedUI: Show payment confirmation
     TrustedUI-->>User: Display merchant, amount, details
     User->>TrustedUI: Approve payment
-    TrustedUI-->>CMWallet: User consent
-    CMWallet->>CMWallet: Sign transaction_data
-    CMWallet->>CMWallet: Generate VP Token
-    CMWallet-->>ShoppingAgent: vp_token
+    TrustedUI-->>CredentialProvider: User consent
+    CredentialProvider->>CredentialProvider: Sign transaction_data
+    CredentialProvider->>CredentialProvider: Generate VP Token
+    CredentialProvider-->>ShoppingAgent: vp_token
 
     Note right of User: Phase 4: DPC Validation & Payment Processing
 
