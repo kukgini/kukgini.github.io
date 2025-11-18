@@ -7,7 +7,42 @@
 프로덕션 환경에서 사용하기 전에 반드시 공식 문서와 표준을 참조하시기 바랍니다.
 ```
 
-This illustrates the complete flow of the Human Present Card Payment scenario using the AP2 framework with the A2A protocol.
+Human-Present flows refer to all commerce flows where the user is present to confirm the details of what is being purchased, and what payment method is to be used. The user attesting to the details of the purchase allows all parties to have high confidence of the transaction.
+
+The IntentMandate is still leveraged to share the appropriate information with Merchant Agents. This is to maintain consistency across Human-Present and Human-Not-Present flows.
+
+All Human-Present purchases will have a user-signed PaymentMandate authorizing the purchase.
+
+## Key Actors
+
+This sample consists of:
+
+*   **Shopping Agent:** The main orchestrator that handles user's requests to
+    shop and delegates tasks to specialized agents.
+*   **Merchant Agent:** An agent that handles product queries from the shopping
+    agent.
+*   **Merchant Payment Processor Agent:** An agent that takes payments on behalf
+    of the merchant.
+*   **Credentials Provider Agent:** The credentials provider is the holder of a
+    user's payment credentials. As such, it serves two primary roles:
+    *   It provides the shopping agent the list of payment methods available in
+        a user's wallet.
+    *   It facilitates payment between the shopping agent and a merchant's
+        payment processor.
+
+## Key Features
+
+**1. Card purchase with DPAN**
+
+*   The merchant agent will advertise support for card purchases through its
+    agent card and through the CartMandate once shopping is complete.
+*   The preferred payment method in the user's wallet will be a tokenized (DPAN)
+    card.
+
+**2. OTP Challenge**
+
+*   The merchant payment processor agent will request an OTP challenge of the
+    user in order to complete payment.
 
 ## Sequence Diagram
 
@@ -19,7 +54,7 @@ sequenceDiagram
     participant CredentialsProvider as Credentials Provider
     participant PaymentProcessor as Payment Processor
 
-    Note over User,PaymentProcessor: Phase 1: Product Discovery and Cart Creation
+    Note over User,PaymentProcessor: Phase 1: Initial Request and Cart Creation
 
     User->>ShoppingAgent: I want to buy a coffee maker
     activate ShoppingAgent
@@ -34,6 +69,8 @@ sequenceDiagram
     Note over MerchantAgent: CartMandate signed by merchant
     MerchantAgent-->>ShoppingAgent: CartMandate with products
     deactivate MerchantAgent
+
+    Note over User,PaymentProcessor: Phase 2: Product Selection
 
     ShoppingAgent-->>User: Display product options
     User->>ShoppingAgent: Select product
@@ -147,6 +184,38 @@ sequenceDiagram
     deactivate ShoppingAgent
 ```
 
+### Interacting with the Shopping Agent
+
+This section walks you through a typical interaction with the sample.
+
+1.  **Launching Agent Development Kit UI**: Open a browser on your computer and
+    navigate to 0.0.0.0:8000/dev-ui. Select `shopping_agent` from the `Select an
+    agent` drop down in the upper left hand corner.
+1.  **Initial Request**: In the Shopping Agent's terminal, you'll be prompted to
+    start a conversation. You can type something like: "I want to buy a coffee
+    maker."
+1.  **Product Search**: The Shopping Agent will delegate to the Merchant Agent,
+    which will find products matching your intent and present you with options
+    contained in CartMandates.
+1.  **Cart Creation**: The Merchant Agent will create one or more `CartMandate`s
+    and share it with the Shopping Agent. Each CartMandate is signed by the
+    Merchant, ensuring the offer to the user is accurate.
+1.  **Product Selection** The Shopping Agent will present the user with the set
+    of products to choose from.
+1.  **Link Credential Provider**: The Shopping Agent will prompt you to link
+    your preferred Credential Provider in order to access you available payment
+    methods.
+1.  **Payment Method Selection**: After you select a cart, the Shopping Agent
+    will show you a list of available payment methods from the Credentials
+    Provider Agent. You will select a payment method.
+1.  **PaymentMandate creation**: The Shopping Agent will package the cart and
+    transaction information in a PaymentMandate and ask you to sign the
+    mandate. It will initiate payment using the PaymentMandate.
+1.  **OTP Challenge**: The Merchant Payment Processor will then request an OTP,
+    and you'll be asked to provide a mock OTP to the agent. Use `123`
+1.  **Purchase Complete**: Once the OTP is provided, the payment will be
+    processed, and you'll receive a confirmation message and a digital receipt.
+    
 ## Key Components
 
 ### 1. IntentMandate Structure
