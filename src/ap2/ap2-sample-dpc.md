@@ -184,65 +184,7 @@ This implementation follows several key standards:
   - Add fraud detection mechanisms
   - Generate and store transaction receipts for non-repudiation
 
-## CMWallet 개요
-
-CMWallet은 Android Credential Manager 생태계에서 **Credential Provider** 역할을 하는 앱입니다. Digital Credential을 관리하는 전용 앱으로, 샘플에서는 2개의 가상 신용카드를 제공합니다.
-
-![CMWallet Architecture](files/cmwallet-architecture.png "CMWallet Architecture")
-
-**핵심 기능:**
-- **Digital Payment Credentials (DPC) 보관**: 사용자의 결제 카드 정보를 디지털 자격 증명서로 보관합니다
-- **Credential Manager 통합**: Android 시스템의 Credential Manager API를 통해 다른 앱에 자격 증명을 제공합니다
-- **사용자 승인 UI**: 결제 승인 시 거래 세부 정보를 표시하고 사용자 확인을 요청합니다
-- **암호화 서명**: 기기의 보안 요소를 사용하여 거래에 암호화 서명을 생성합니다
-
-**기술 사양:**
-- 사용자는 결제 시 복수의 카드 중 선택 가능
-- 각 카드는 ISO 18013-5 mDOC 형식으로 저장
-- ES256 알고리즘으로 서명되어 위변조 방지
-
-**왜 별도 앱인가?**
-- **역할 분리**: Shopping Agent는 쇼핑 경험에 집중, CMWallet은 결제 자격 증명 관리 역할에 집중합니다
-- **보안 격리**: 민감한 결제 정보를 별도 앱에서 관리하여 보안을 강화합니다
-- **재사용성**: 하나의 CMWallet이 여러 쇼핑 앱에서 사용 가능합니다
-- **표준 준수**: Android Credential Manager의 표준 아키텍처 패턴을 준수합니다
-
-**필수 요구사항:**
-- CMWallet은 Shopping Agent와 동일 기기에 설치되어야 합니다
-
-## Android Credential Manager API 통합 흐름
-
-```{mermaid}
-sequenceDiagram
-    participant SA as Shopping Assistant
-    participant ACM as Android Credential Manager API
-    participant CMW as CM Wallet (Credential Provider)
-
-    SA->>ACM: (1) credentialManager.getCredential(request)
-    ACM->>ACM: (2) Find appropriate Credential Provider
-    ACM->>CMW: (3) Invoke CM Wallet
-    CMW->>CMW: (4) Show UI & get user approval
-    CMW->>ACM: (5) Generate signed token
-    ACM->>SA: (6) Return token
-```
-
-**코드 예시:**
-
-```kotlin
-// Credential Manager를 통한 DPC 요청
-val credentialManager = CredentialManager.create(context)
-val result = credentialManager.getCredential(
-    request = GetCredentialRequest(
-        credentialOptions = listOf(dpcRequest)
-    )
-)
-```
-
-## DPC 기술 상세 분석
-
-이 예제 시나리오는 DPC (Digital Payment Credential) 요청을 생성합니다. 주요 기능은 쇼핑 카트 정보를 받아 OID4VP (OpenID 4 Verifiable Presentation) 프로토콜 기반의 인증 요청을 생성하는 것입니다.
-
-## EUID Wallet (EU Digital Identity Wallet) 표준 연관성
+## EUID Wallet (EU Digital Identity Wallet) 연관성
 
 DPC 시나리오는 EUID Wallet 표준과 여러 측면에서 밀접하게 연관되어 있습니다
 
@@ -362,11 +304,12 @@ val mdocFormatsSupported =
 
 > **Reference:** ARF v2.4.0 Section 5.6.2 "Transactional data using ISO/IEC 18013-5 and OpenID4VP"
 
+
 ```{mermaid}
 sequenceDiagram
     autonumber
-    participant User as 사용자 (EUDI Wallet)
-    participant Wallet as EUDI Wallet 앱
+    participant User as 사용자
+    participant Wallet as EUDI Wallet
     participant Merchant as 가맹점(POS / 웹)
     participant PSP as 결제게이트웨이 / PSP
     participant Verifier as 신원검증자 (optional)
@@ -389,6 +332,8 @@ sequenceDiagram
     Note over Wallet,Issuer: (옵션) 영수증/트랜잭션 증명(VC/Verifiable Receipt) 발행
 ```
 
+<div style="width: 60%; margin: 0 auto;">
+
 ```{mermaid}
 flowchart TD
     A["가맹점: 결제요청 생성"] --> B["사용자: EUDI Wallet 호출"]
@@ -407,6 +352,8 @@ flowchart TD
     L --> M["PSP가 가맹점을 통해 사용자에게 결제결과 반환"]
     M --> N["옵션: 영수증 발행/보관"]
 ```
+
+</div>
 
 -	Selective Disclosure: EUDI Wallet은 필요한 최소 정보만 선택적으로 제공(예: "성인임"만 증명) — 프라이버시 보호.
 -	디지털 서명 / VP (Verifiable Presentation): 결제 승인 메시지는 사용자의 서명(혹은 지갑의 결제 토큰)으로 무결성/비부인성 보장.
