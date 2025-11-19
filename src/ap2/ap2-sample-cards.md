@@ -218,15 +218,27 @@ The IntentMandate captures the user's shopping intent:
 
 ```json
 {
-  "intent_mandate_id": "uuid",
+  "user_cart_confirmation_required": true,
   "natural_language_description": "I want to buy a coffee maker",
-  "user_prompt_required": true,
   "merchants": ["merchant_agent"],
   "skus": ["coffee-maker-001"],
-  "intent_expiry": "2025-11-18T10:00:00Z",
-  "requires_refundability": false
+  "requires_refundability": false,
+  "intent_expiry": "2025-11-18T10:00:00Z"
 }
 ```
+
+**Key Fields:**
+- `user_cart_confirmation_required`: If false, the agent can make purchases automatically once conditions are satisfied
+- `natural_language_description`: User's intent in natural language, confirmed by the user
+- `merchants`: Optional list of allowed merchants (null = any merchant)
+- `skus`: Optional list of specific product SKUs (null = any SKU)
+- `requires_refundability`: Whether items must be refundable
+- `intent_expiry`: Expiration time in ISO 8601 format
+
+**Note:** In actual A2A messages, the IntentMandate is wrapped in a Message structure that includes additional metadata:
+- `contextId` (shopping context identifier)
+- `messageId`, `taskId`, `role` (A2A protocol fields)
+- `risk_data` (optional, sent as a separate DataPart for fraud prevention)
 
 ### 2. CartMandate Structure
 The CartMandate contains product and payment request details:
