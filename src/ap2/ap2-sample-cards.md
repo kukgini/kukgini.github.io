@@ -242,43 +242,61 @@ The IntentMandate captures the user's shopping intent:
 - `risk_data` (optional, sent as a separate DataPart for fraud prevention)
 
 ### 2. CartMandate Structure
-The CartMandate contains product and payment request details:
+The CartMandate is a merchant-signed cart whose contents are guaranteed:
 
 ```json
 {
-  "cart_mandate_id": "uuid",
-  "merchant_name": "Example Merchant",
-  "cart_expiry": "2025-11-18T10:00:00Z",
-  "refund_period": "P30D",
-  "payment_request": {
-    "method_data": [{
-      "supported_methods": ["CARD"]
-    }],
-    "details": {
-      "id": "order-123",
-      "total": {
-        "label": "Total",
-        "amount": {"currency": "USD", "value": "79.99"}
-      },
-      "displayItems": [
-        {"label": "Coffee Maker", "amount": {"value": "69.99"}},
-        {"label": "Shipping", "amount": {"value": "5.00"}},
-        {"label": "Tax", "amount": {"value": "5.00"}}
-      ]
+  "contents": {
+    "id": "cart_123",
+    "user_cart_confirmation_required": true,
+    "merchant_name": "Example Merchant",
+    "cart_expiry": "2025-11-18T10:00:00Z",
+    "payment_request": {
+      "method_data": [{
+        "supported_methods": "CARD",
+        "data": {}
+      }],
+      "details": {
+        "id": "order-123",
+        "total": {
+          "label": "Total",
+          "amount": {"currency": "USD", "value": "79.99"}
+        },
+        "display_items": [
+          {
+            "label": "Coffee Maker",
+            "amount": {"currency": "USD", "value": "69.99"},
+            "refund_period": 30
+          },
+          {"label": "Shipping", "amount": {"currency": "USD", "value": "5.00"}},
+          {"label": "Tax", "amount": {"currency": "USD", "value": "5.00"}}
+        ]
+      }
     }
   },
-  "merchant_signature": "signature_by_merchant"
+  "merchant_authorization": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjIwMjQwOTA..."
 }
 ```
 
+**Key Fields:**
+- `contents`: The CartContents object containing cart details
+  - `id`: Unique cart identifier
+  - `user_cart_confirmation_required`: Whether user must confirm before purchase
+  - `merchant_name`: Name of the merchant
+  - `cart_expiry`: Expiration time in ISO 8601 format
+  - `payment_request`: W3C PaymentRequest object with items, prices, and accepted payment methods
+- `merchant_authorization`: Optional JWT (base64url-encoded) signing the cart contents
+  - Header: signing algorithm and key ID
+  - Payload: `iss`, `sub`, `aud`, `iat`, `exp`, `jti`, `cart_hash`
+  - Signature: Merchant's digital signature for authenticity verification
+
 ### 3. PaymentMandate Structure
-The PaymentMandate authorizes the payment:
+The PaymentMandate contains user's payment authorization and provides transaction visibility to the payment ecosystem:
 
 ```json
 {
   "payment_mandate_contents": {
-    "payment_mandate_id": "uuid",
-    "timestamp": "2025-11-17T12:00:00Z",
+    "payment_mandate_id": "pm_uuid_123",
     "payment_details_id": "order-123",
     "payment_details_total": {
       "label": "Total",
@@ -294,18 +312,33 @@ The PaymentMandate authorizes the payment:
         }
       },
       "shipping_address": {
-        "streetAddress": "123 Main St",
+        "street_address": "123 Main St",
         "city": "San Francisco",
         "state": "CA",
-        "zipCode": "94102"
+        "zip_code": "94102"
       },
       "payer_email": "user@example.com"
     },
-    "merchant_agent": "merchant_agent"
+    "merchant_agent": "merchant_agent",
+    "timestamp": "2025-11-17T12:00:00Z"
   },
-  "user_authorization": "cart_hash_payment_hash_signature"
+  "user_authorization": "eyJhbGciOiJFUzI1NksiLCJraWQiOiJkaWQ6ZXhhbXBsZ..."
 }
 ```
+
+**Key Fields:**
+- `payment_mandate_contents`: Core payment data
+  - `payment_mandate_id`: Unique payment mandate identifier
+  - `payment_details_id`: Payment request identifier
+  - `payment_details_total`: Total payment amount (PaymentItem)
+  - `payment_response`: PaymentResponse with selected payment method details
+  - `merchant_agent`: Merchant identifier
+  - `timestamp`: Mandate creation time (ISO 8601)
+- `user_authorization`: Optional base64url-encoded verifiable presentation (e.g., sd-jwt-vc)
+  - Issuer-signed JWT authorizing a 'cnf' claim
+  - Key-binding JWT with `aud`, `nonce`, `sd_hash`
+  - `transaction_data`: Array containing secure hashes of CartMandate and PaymentMandateContents
+  - Purpose: Helps network/issuer build trust in agentic transactions
 
 ### 4. Payment Credential Token
 The token contains DPAN card data:

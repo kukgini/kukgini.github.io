@@ -120,49 +120,66 @@ The IntentMandate captures the user's shopping intent:
 - `risk_data` (optional, sent as a separate DataPart for fraud prevention)
 
 ### 2. CartMandate Structure with x402 Support
-The CartMandate contains product and x402 payment request details:
+The CartMandate is a merchant-signed cart for x402 blockchain payments:
 
 ```json
 {
-  "cart_mandate_id": "uuid",
-  "merchant_name": "Example Merchant",
-  "cart_expiry": "2025-11-18T10:00:00Z",
-  "refund_period": "P30D",
-  "payment_request": {
-    "method_data": [{
-      "supported_methods": ["x402"],
-      "data": {
-        "supported_chains": ["ethereum", "polygon", "base"],
-        "supported_currencies": ["USDC", "USDT", "DAI"],
-        "merchant_wallet_address": "0x1234567890abcdef..."
+  "contents": {
+    "id": "cart_x402_123",
+    "user_cart_confirmation_required": true,
+    "merchant_name": "Example Merchant",
+    "cart_expiry": "2025-11-18T10:00:00Z",
+    "payment_request": {
+      "method_data": [{
+        "supported_methods": "x402",
+        "data": {
+          "supported_chains": ["ethereum", "polygon", "base"],
+          "supported_currencies": ["USDC", "USDT", "DAI"],
+          "merchant_wallet_address": "0x1234567890abcdef..."
+        }
+      }],
+      "details": {
+        "id": "order-123",
+        "total": {
+          "label": "Total",
+          "amount": {"currency": "USDC", "value": "79.99"}
+        },
+        "display_items": [
+          {
+            "label": "Coffee Maker",
+            "amount": {"currency": "USDC", "value": "69.99"},
+            "refund_period": 30
+          },
+          {"label": "Shipping", "amount": {"currency": "USDC", "value": "5.00"}},
+          {"label": "Tax", "amount": {"currency": "USDC", "value": "5.00"}},
+          {"label": "Estimated Gas Fee", "amount": {"currency": "USDC", "value": "0.50"}}
+        ]
       }
-    }],
-    "details": {
-      "id": "order-123",
-      "total": {
-        "label": "Total",
-        "amount": {"currency": "USDC", "value": "79.99"}
-      },
-      "displayItems": [
-        {"label": "Coffee Maker", "amount": {"value": "69.99"}},
-        {"label": "Shipping", "amount": {"value": "5.00"}},
-        {"label": "Tax", "amount": {"value": "5.00"}},
-        {"label": "Estimated Gas Fee", "amount": {"value": "0.50"}}
-      ]
     }
   },
-  "merchant_signature": "signature_by_merchant"
+  "merchant_authorization": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjIwMjQwOTA..."
 }
 ```
 
+**Key Fields:**
+- `contents`: The CartContents object containing cart details
+  - `id`: Unique cart identifier
+  - `user_cart_confirmation_required`: Whether user must confirm before purchase
+  - `merchant_name`: Name of the merchant
+  - `cart_expiry`: Expiration time in ISO 8601 format
+  - `payment_request`: W3C PaymentRequest with x402-specific data
+    - `supported_chains`: Blockchain networks accepted
+    - `supported_currencies`: Cryptocurrencies accepted
+    - `merchant_wallet_address`: Merchant's blockchain wallet address
+- `merchant_authorization`: Optional JWT (base64url-encoded) signing the cart contents
+
 ### 3. PaymentMandate Structure for x402
-The PaymentMandate authorizes the x402 payment:
+The PaymentMandate contains user's x402 payment authorization:
 
 ```json
 {
   "payment_mandate_contents": {
-    "payment_mandate_id": "uuid",
-    "timestamp": "2025-11-17T12:00:00Z",
+    "payment_mandate_id": "pm_x402_123",
     "payment_details_id": "order-123",
     "payment_details_total": {
       "label": "Total",
@@ -181,18 +198,34 @@ The PaymentMandate authorizes the x402 payment:
         "contract_address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
       },
       "shipping_address": {
-        "streetAddress": "123 Main St",
+        "street_address": "123 Main St",
         "city": "San Francisco",
         "state": "CA",
-        "zipCode": "94102"
+        "zip_code": "94102"
       },
       "payer_email": "user@example.com"
     },
-    "merchant_agent": "merchant_agent"
+    "merchant_agent": "merchant_agent",
+    "timestamp": "2025-11-17T12:00:00Z"
   },
-  "user_authorization": "cart_hash_payment_hash_signature"
+  "user_authorization": "eyJhbGciOiJFUzI1NksiLCJraWQiOiJkaWQ6ZXhhbXBsZ..."
 }
 ```
+
+**Key Fields:**
+- `payment_mandate_contents`: Core payment data
+  - `payment_mandate_id`: Unique payment mandate identifier
+  - `payment_details_id`: Payment request identifier
+  - `payment_details_total`: Total payment amount (PaymentItem)
+  - `payment_response`: PaymentResponse with x402-specific details
+    - `chain_id`: Blockchain network identifier
+    - `currency`: Cryptocurrency used (e.g., USDC, USDT, DAI)
+    - `contract_address`: Token contract address on the blockchain
+  - `merchant_agent`: Merchant identifier
+  - `timestamp`: Mandate creation time (ISO 8601)
+- `user_authorization`: Optional base64url-encoded verifiable presentation
+  - Contains secure hashes of CartMandate and PaymentMandateContents
+  - Used by blockchain payment processor to verify transaction authenticity
 
 ### 4. x402 Payment Credential Token
 The token contains blockchain wallet credentials:
