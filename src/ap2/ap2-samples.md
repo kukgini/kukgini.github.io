@@ -302,6 +302,7 @@ AP2 프로토콜의 세 가지 시나리오는 AI 에이전트 결제의 진화 
 ```{toctree}
 :maxdepth: 1
 :caption: 시나리오 상세 분석
+:numbered: 2
 
 ap2-sample-cards
 ap2-sample-dpc
