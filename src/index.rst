@@ -9,7 +9,7 @@ Knowledge Utility Kit
 .. toctree::
    :maxdepth: 2
    :caption: Agentic Commerce
-   :numbered:
+   :numbered: 2
 
    ap2/ap2-samples.md
 

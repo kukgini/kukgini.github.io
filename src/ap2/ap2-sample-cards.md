@@ -214,6 +214,7 @@ sequenceDiagram
 ## Key Components
 
 ### 1. IntentMandate Structure
+
 The IntentMandate captures the user's shopping intent:
 
 ```json
