@@ -44,7 +44,7 @@ Store Key (32 bytes, ChaCha20Poly1305 키)
 - KDF: Argon2i
 - Time Cost: 6 (moderate) 또는 4 (interactive)
 - Memory Cost: 131072 (128MB, moderate) 또는 32768 (32MB, interactive)
-- Parallelism: 4
+- Parallelism: argon2 라이브러리 기본값 사용 (명시적으로 설정되지 않음)
 - Hash Length: 32 bytes
 
 ### 2. Profile 생성 및 Profile Key 암호화
@@ -85,7 +85,7 @@ Nonce = HMAC 결과의 첫 12 bytes
     ↓
 ChaCha20Poly1305(Category, category_key, Nonce)
     ↓
-[Version Byte (1 byte)][Nonce (12 bytes)][Ciphertext + Tag (16 bytes)]
+[Nonce (12 bytes)][Ciphertext + Tag (16 bytes)]
 ```
 
 **특징:**
@@ -234,8 +234,6 @@ CBOR 디코딩
 ```
 암호화된 Category
     ↓
-Version Byte 제거
-    ↓
 Nonce 추출 (첫 12 bytes)
     ↓
 ChaCha20Poly1305 복호화 (category_key 사용)
@@ -344,7 +342,7 @@ graph LR
     subgraph "Category 암호화"
         PC -->|HMAC-SHA-256| HMC[HMAC 결과]
         HMC -->|첫 12 bytes| NC[Nonce]
-        PC -->|ChaCha20Poly1305| EC[암호화된 Category<br/>Version + Nonce + Ciphertext + Tag]
+        PC -->|ChaCha20Poly1305| EC[암호화된 Category<br/>Nonce + Ciphertext + Tag]
         CK -->|암호화 키| EC
         NC -->|Nonce| EC
     end
