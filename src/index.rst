@@ -13,6 +13,13 @@ Knowledge Utility Kit
 
    ap2/ap2-samples.md
 
+.. toctree::
+   :maxdepth: 2
+   :caption: Open Wallet Foundation
+   :numbered: 2
+
+   owf/sckar_multitenancy_encryption_ko.md
+
 .. .. toctree::
 ..    :maxdepth: 2
 ..    :caption: Platform as a Service (PaaS)
