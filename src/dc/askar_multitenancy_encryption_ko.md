@@ -167,40 +167,31 @@ ChaCha20Poly1305(Tag Value, tag_value_key, Nonce)
 ## 데이터베이스 스키마
 
 ```mermaid
-erDiagram
-    CONFIG ||--o{ PROFILES : "참조"
-    PROFILES ||--o{ ITEMS : "profile_id"
-    ITEMS ||--o{ ITEMS_TAGS : "item_id"
-
-    CONFIG {
-        string name PK
-        string value
-    }
-
-    PROFILES {
-        bigint id PK
-        string name UK
-        bytea profile_key "암호화된 Profile Key"
-        string reference
-    }
-
-    ITEMS {
-        bigint id PK
-        bigint profile_id FK
-        smallint kind
-        bytea category "암호화된 Category"
-        bytea name "암호화된 Name"
-        bytea value "암호화된 Value"
-        timestamp expiry
-    }
-
-    ITEMS_TAGS {
-        bigint id PK
-        bigint item_id FK
-        bytea name "암호화된 Tag Name"
-        bytea value "암호화된 Tag Value"
-        boolean plaintext
-    }
+graph LR
+    subgraph CONFIG["CONFIG"]
+        C1["name PK<br/>value"]
+    end
+    
+    subgraph PROFILES["PROFILES"]
+        P1["id PK<br/>name UK<br/>profile_key<br/>reference"]
+    end
+    
+    subgraph ITEMS["ITEMS"]
+        I1["id PK<br/>profile_id FK<br/>kind<br/>category<br/>name<br/>value<br/>expiry"]
+    end
+    
+    subgraph ITEMS_TAGS["ITEMS_TAGS"]
+        T1["id PK<br/>item_id FK<br/>name<br/>value<br/>plaintext"]
+    end
+    
+    CONFIG -->|참조| PROFILES
+    PROFILES -->|profile_id| ITEMS
+    ITEMS -->|item_id| ITEMS_TAGS
+    
+    style CONFIG fill:#e1f5ff
+    style PROFILES fill:#e1f5ff
+    style ITEMS fill:#e1f5ff
+    style ITEMS_TAGS fill:#e1f5ff
 ```
 
 ### config 테이블
