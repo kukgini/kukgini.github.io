@@ -204,31 +204,42 @@ erDiagram
 ```
 
 ### config 테이블
-- `default_profile`: 기본 profile 이름
-- `key`: Store Key 메타데이터 (예: `kdf:argon2i:13:mod?salt=...`)
-- `version`: 스키마 버전
+
+| 컬럼명 | 타입 | 설명 |
+|--------|------|------|
+| `name` | string | 설정 키 (PK, 예: `default_profile`, `key`, `version`) |
+| `value` | string | 설정 값 (`default_profile`의 경우 기본 profile 이름, `key`의 경우 Store Key 메타데이터, `version`의 경우 스키마 버전) |
 
 ### profiles 테이블
-- `id`: Profile ID (BIGSERIAL/INTEGER)
-- `name`: Profile 이름 (TEXT, UNIQUE)
-- `profile_key`: 암호화된 Profile Key (BYTEA/BLOB)
-- `reference`: 참조 정보 (선택적)
+
+| 컬럼명 | 타입 | 설명 |
+|--------|------|------|
+| `id` | BIGSERIAL/INTEGER | Profile ID (PK) |
+| `name` | TEXT | Profile 이름 (UNIQUE) |
+| `profile_key` | BYTEA/BLOB | 암호화된 Profile Key |
+| `reference` | string | 참조 정보 (선택적) |
 
 ### items 테이블
-- `id`: Item ID
-- `profile_id`: Profile ID (외래키)
-- `kind`: KMS (1) 또는 Item (2)
-- `category`: 암호화된 Category (BYTEA)
-- `name`: 암호화된 Name (BYTEA)
-- `value`: 암호화된 Value (BYTEA)
-- `expiry`: 만료 시간 (TIMESTAMP/DATETIME)
+
+| 컬럼명 | 타입 | 설명 |
+|--------|------|------|
+| `id` | BIGSERIAL/INTEGER | Item ID (PK) |
+| `profile_id` | BIGINT | Profile ID (FK) |
+| `kind` | SMALLINT | KMS (1) 또는 Item (2) |
+| `category` | BYTEA | 암호화된 Category |
+| `name` | BYTEA | 암호화된 Name |
+| `value` | BYTEA | 암호화된 Value |
+| `expiry` | TIMESTAMP/DATETIME | 만료 시간 |
 
 ### items_tags 테이블
-- `id`: Tag ID
-- `item_id`: Item ID (외래키)
-- `name`: 암호화된 Tag Name (BYTEA)
-- `value`: 암호화된 Tag Value (BYTEA)
-- `plaintext`: 평문 여부 (BOOLEAN/SMALLINT)
+
+| 컬럼명 | 타입 | 설명 |
+|--------|------|------|
+| `id` | BIGSERIAL/INTEGER | Tag ID (PK) |
+| `item_id` | BIGINT | Item ID (FK) |
+| `name` | BYTEA | 암호화된 Tag Name |
+| `value` | BYTEA | 암호화된 Tag Value |
+| `plaintext` | BOOLEAN/SMALLINT | 평문 여부 |
 
 ## 복호화 과정
 
