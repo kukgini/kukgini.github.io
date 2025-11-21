@@ -18,7 +18,7 @@ Knowledge Utility Kit
    :caption: Open Wallet Foundation
    :numbered: 2
 
-   owf/sckar_multitenancy_encryption_ko.md
+   owf/askar_multitenancy_encryption_ko.md
 
 .. .. toctree::
 ..    :maxdepth: 2

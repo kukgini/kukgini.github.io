@@ -52,9 +52,9 @@ source_suffix = {
 master_doc = 'index'
 
 # General information about the project.
-project = u'Knowledge Utility Kit for Global Intelligence Integration'
-copyright = u'2017-2025, Gini'
-author = u'Gini'
+project = u'Knowledge Utility Kit'
+copyright = u'2017-2025, kukini@gmail.com'
+author = u'kukgini@gmail.com'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
