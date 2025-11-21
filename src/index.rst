@@ -15,10 +15,10 @@ Knowledge Utility Kit
 
 .. toctree::
    :maxdepth: 2
-   :caption: Open Wallet Foundation
+   :caption: Digital Credential
    :numbered: 2
 
-   owf/askar_multitenancy_encryption_ko.md
+   dc/askar_multitenancy_encryption_ko.md
 
 .. .. toctree::
 ..    :maxdepth: 2
