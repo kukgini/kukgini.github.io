@@ -21,7 +21,7 @@ W3C Verifiable Credentials 데이터 모델에 BBS+ 서명을 결합한 방식�
 | 선택적 공개 | 서명된 속성 중 일부만 공개하면서 서명 유효성 증명 |
 | 영지식 증명 | 원본 서명 없이 유효한 서명 보유 사실만 증명 |
 | 비연결성 | 동일 자격증명의 반복 사용 간 연결 불가 |
-| 술어 증명 | 값 자체를 공개하지 않고 조건 증명 (예: 나이 ≥ 19) |
+| Predicate Evaluation | 값 자체를 공개하지 않고 조건 증명 (예: 나이 ≥ 19) |
 
 #### 선택적 공개 동작 원리
 
@@ -59,7 +59,7 @@ Verify(π, m₂) → true/false
 | 선택적 공개 | 해시+솔트 방식으로 속성별 공개 여부 결정 |
 | 영지식 증명 | 미지원 |
 | 비연결성 | 미지원 (Key Binding 시 동일 공개키 재사용) |
-| 술어 증명 | 미지원 |
+| Predicate Evaluation | 미지원 |
 
 #### 선택적 공개 동작 원리
 
@@ -106,7 +106,7 @@ SD-JWT는 **해시 프리이미지 공개** 방식을 사용한다.
 | 선택적 공개 | MSO(Mobile Security Object) 내 Digest 대조 방식 |
 | 영지식 증명 | 미지원 |
 | 비연결성 | 제한적 (Batch Issuance로 완화 가능) |
-| 술어 증명 | 미지원 (age_over_NN 같은 사전 계산된 속성으로 대체) |
+| Predicate Evaluation | 미지원 (age_over_NN 같은 사전 계산된 속성으로 대체) |
 
 #### 선택적 공개 동작 원리
 
@@ -158,7 +158,7 @@ A = (a₀ · a₁^m₁ · a₂^m₂ · ... · aₙ^mₙ · v^vₑ)^(1/e) mod n
 
 #### 특성
 
-BBS+와 유사하게 선택적 공개, 영지식 증명, 술어 증명을 지원한다. 다만 서명 크기가 크고 연산이 느리다는 단점이 있어, 최근에는 BBS+로 대체되는 추세이다.
+BBS+와 유사하게 선택적 공개, 영지식 증명, Predicate Evaluation을 지원한다. 다만 서명 크기가 크고 연산이 느리다는 단점이 있어, 최근에는 BBS+로 대체되는 추세이다.
 
 ---
 
@@ -403,16 +403,16 @@ Holder Binding은 오직 Link Secret으로만 이루어진다.
 제시 시: id는 숨기고 필요한 속성만 공개, Link Secret으로 소유권 증명
 ```
 
-### 5.3 술어 증명 활용
+### 5.3 Predicate Evaluation 활용
 
-나이 확인이 필요한 경우, 실제 나이 대신 술어 증명을 사용한다.
+나이 확인이 필요한 경우, 실제 나이 대신 Predicate Evaluation을 사용한다.
 
 ```
 ❌ 좋지 않은 방식: age = 25 공개
-✅ 좋은 방식: "age ≥ 19" 술어 증명 (실제 나이 비공개)
+✅ 좋은 방식: "age ≥ 19" Predicate Evaluation (실제 나이 비공개)
 ```
 
-단, 술어 증명은 BBS+/CL-Signature에서만 가능하다. SD-JWT와 mDoc에서는 age_over_19 같은 **사전 계산된 속성**을 별도로 발급해야 한다.
+단, Predicate Evaluation은 BBS+/CL-Signature에서만 가능하다. SD-JWT와 mDoc에서는 age_over_19 같은 **사전 계산된 속성**을 별도로 발급해야 한다.
 
 ---
 
@@ -426,7 +426,7 @@ Holder Binding은 오직 Link Secret으로만 이루어진다.
 | 서명 방식 | BBS+ (페어링) | ECDSA/EdDSA | ECDSA/EdDSA (COSE) |
 | 선택적 공개 | ZKP 기반 | 해시+솔트 | Digest 대조 |
 | 영지식 증명 | 지원 | 미지원 | 미지원 |
-| 술어 증명 | 지원 | 미지원 | 미지원 |
+| Predicate Evaluation | 지원 | 미지원 | 미지원 |
 | 비연결성 | 수학적 보장 | 없음 | 제한적 |
 | Holder Binding | Link Secret | Key Binding JWT | Device Binding |
 
@@ -435,7 +435,7 @@ Holder Binding은 오직 Link Secret으로만 이루어진다.
 | 요구사항 | 권장 기술 |
 |----------|----------|
 | 높은 프라이버시 (비연결성 필수) | W3C VC (BBS+) |
-| 술어 증명 필요 (예: 나이 ≥ 19) | W3C VC (BBS+) |
+| Predicate Evaluation 필요 (예: 나이 ≥ 19) | W3C VC (BBS+) |
 | JWT 생태계 호환성 중시 | SD-JWT |
 | 하드웨어 보안 및 오프라인 검증 | ISO mDoc |
 | 구현 단순성 우선 | SD-JWT |
