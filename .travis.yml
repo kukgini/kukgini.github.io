@@ -1,0 +1,17 @@
+install:
+  - pip install --upgrade pip
+  - pip install sphinx
+  - pip install sphinx_rtd_theme
+  - pip install recommonmark
+script:
+  - git config push.default simple
+  - git config push.recurseSubmodules on-demand
+  - git config user.mail "kukgini@gmail.com"
+  - git config user.name "kukgini"
+  - git submodule update --init --remote --force
+  - make html
+  - git submodule foreach git add -A
+  - git submodule foreach git commit -m 'SNAPSHOT'
+  - git submodule foreach git push
+language: python
+os: linux

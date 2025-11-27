@@ -1,0 +1,36 @@
+#!/usr/bin/env python3
+"""
+Clean build artifacts and virtual environment.
+"""
+import shutil
+import sys
+from pathlib import Path
+
+
+def main():
+    # Get project root directory (parent of bin/)
+    project_root = Path(__file__).parent.parent
+    
+    # Directories to clean
+    dirs_to_clean = [
+        project_root / "docs",
+        project_root / "_build",
+        project_root / ".venv",
+    ]
+    
+    print("🧹 Cleaning build artifacts...")
+    
+    for dir_path in dirs_to_clean:
+        if dir_path.exists():
+            print(f"  Removing {dir_path.name}/")
+            shutil.rmtree(dir_path)
+        else:
+            print(f"  Skipping {dir_path.name}/ (not found)")
+    
+    print("\n✅ Clean complete!")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
+

@@ -1,0 +1,283 @@
+# ps -ef | grep garden
+root        5802       1  0 Apr07 ?        00:00:00 /bin/sh -c /var/vcap/jobs/garden/bin/garden_ctl start
+root        5803    5802  1 Apr07 ?        00:52:59 /var/vcap/packages/guardian/bin/gdn server --skip-setup --bind-ip=0.0.0.0 --bind-port=7777 --depot=/var/vcap/data/garden/depot --graph=/var/vcap/data/garden/graph --properties-path=/var/vcap/data/garden/props.json --port-pool-properties-path=/var/vcap/data/garden/port-pool-props.json --runc-bin=/var/vcap/packages/runc/bin/runc --iptables-bin=/var/vcap/packages/iptables/sbin/iptables --iptables-restore-bin=/var/vcap/packages/iptables/sbin/iptables-restore --init-bin=/var/vcap/packages/guardian/bin/init --dadoo-bin=/var/vcap/packages/guardian/bin/dadoo --nstar-bin=/var/vcap/packages/guardian/bin/nstar --tar-bin=/var/vcap/packages/tar/tar --log-level=debug --mtu=0 --network-pool=10.254.0.0/22 --deny-network=0.0.0.0/0 --destroy-containers-on-startup --default-rootfs=/var/vcap/packages/busybox --default-grace-time=0 --default-container-blockio-weight=0 --graph-cleanup-threshold-in-megabytes=0 --max-containers=250 --cpu-quota-per-share=0 --persistent-image=/var/vcap/packages/cflinuxfs2/rootfs --apparmor=garden-default
+root        6098    5803  0 Apr07 ?        00:00:00 /bin/bash -e /var/vcap/jobs/garden/bin/garden_ctl start
+root        6099    5803  0 Apr07 ?        00:00:00 /bin/bash -e /var/vcap/jobs/garden/bin/garden_ctl start
+root        6100    6098  0 Apr07 ?        00:00:36 tee -a /var/vcap/sys/log/garden/garden.stdout.log
+root        6102    6099  0 Apr07 ?        00:00:00 tee -a /var/vcap/sys/log/garden/garden.stderr.log
+root        6103    6098  0 Apr07 ?        00:00:46 logger -p user.info -t vcap.garden
+root        6104    6099  0 Apr07 ?        00:00:00 logger -p user.error -t vcap.garden
+root        7229    5803  0 Apr07 ?        00:00:00 /var/vcap/packages/guardian/bin/dadoo exec /var/vcap/packages/runc/bin/runc /var/vcap/data/garden/depot/3cb958eb-409a-4aa9-48f1-41bb6573ebc6/processes/917004dd-06b3-4bfd-7109-a4d4af17d039 3cb958eb-409a-4aa9-48f1-41bb6573ebc6
+root        7230    5803  0 Apr07 ?        00:00:00 /var/vcap/packages/guardian/bin/dadoo exec /var/vcap/packages/runc/bin/runc /var/vcap/data/garden/depot/3cb958eb-409a-4aa9-48f1-41bb6573ebc6/processes/23d0930f-46fd-4714-76ae-15920ab8acc8 3cb958eb-409a-4aa9-48f1-41bb6573ebc6
+root       41741    5803  0 Apr07 ?        00:00:01 /var/vcap/packages/guardian/bin/dadoo exec /var/vcap/packages/runc/bin/runc /var/vcap/data/garden/depot/763a8367-d7d8-4248-45ea-07448ca40dec/processes/4a2548e6-a284-4e2e-5c2c-25beb0051f47 763a8367-d7d8-4248-45ea-07448ca40dec
+root       41742    5803  0 Apr07 ?        00:00:00 /var/vcap/packages/guardian/bin/dadoo exec /var/vcap/packages/runc/bin/runc /var/vcap/data/garden/depot/763a8367-d7d8-4248-45ea-07448ca40dec/processes/147ddfcc-dca0-40b2-7cd5-1b58de92b6e2 763a8367-d7d8-4248-45ea-07448ca40dec
+root       44182    5803  0 Apr07 ?        00:00:00 /var/vcap/packages/guardian/bin/dadoo exec /var/vcap/packages/runc/bin/runc /var/vcap/data/garden/depot/7406f49c-bb96-4ec9-4cca-95fb910ff80e/processes/4456c089-5f51-4e16-47c4-2c1f57cee164 7406f49c-bb96-4ec9-4cca-95fb910ff80e
+root       44183    5803  0 Apr07 ?        00:00:00 /var/vcap/packages/guardian/bin/dadoo exec /var/vcap/packages/runc/bin/runc /var/vcap/data/garden/depot/7406f49c-bb96-4ec9-4cca-95fb910ff80e/processes/5cdb99ef-6483-4528-4fb1-8195d2741677 7406f49c-bb96-4ec9-4cca-95fb910ff80e
+root       52236    5803  0 Apr07 ?        00:00:00 /var/vcap/packages/guardian/bin/dadoo exec /var/vcap/packages/runc/bin/runc /var/vcap/data/garden/depot/552d04e6-23d4-40fc-4223-2f58ef004c63/processes/c5f7b089-2874-4eab-5b19-647423752496 552d04e6-23d4-40fc-4223-2f58ef004c63
+root       52239    5803  0 Apr07 ?        00:00:00 /var/vcap/packages/guardian/bin/dadoo exec /var/vcap/packages/runc/bin/runc /var/vcap/data/garden/depot/552d04e6-23d4-40fc-4223-2f58ef004c63/processes/dd9dd59e-bb77-4822-5019-5da7b56fda13 552d04e6-23d4-40fc-4223-2f58ef004c63
+
+$ sudo iptables -t nat -L
+Chain PREROUTING (policy ACCEPT)
+target     prot opt source               destination
+w--prerouting  all  --  anywhere             anywhere
+
+Chain INPUT (policy ACCEPT)
+target     prot opt source               destination
+
+Chain OUTPUT (policy ACCEPT)
+target     prot opt source               destination
+w--prerouting  all  --  anywhere             anywhere
+
+Chain POSTROUTING (policy ACCEPT)
+target     prot opt source               destination
+w--postrouting  all  --  anywhere             anywhere
+
+Chain w--instance-coiaggg2s3f (1 references)
+target     prot opt source               destination
+DNAT       tcp  --  anywhere             cell-z1-0.node.dc1.cf.internal  tcp dpt:60036 /* ac4154dd-a2bd-41d8-46bb-c5dfa3c8bfb2 */ to:10.254.0.6:8080
+DNAT       tcp  --  anywhere             cell-z1-0.node.dc1.cf.internal  tcp dpt:60037 /* ac4154dd-a2bd-41d8-46bb-c5dfa3c8bfb2 */ to:10.254.0.6:2222
+
+Chain w--instance-coiaggg2s3l (1 references)
+target     prot opt source               destination
+DNAT       tcp  --  anywhere             cell-z1-0.node.dc1.cf.internal  tcp dpt:60040 /* 74ab1082-7eca-4a09-7364-b266a23a7fdf */ to:10.254.0.2:8080
+DNAT       tcp  --  anywhere             cell-z1-0.node.dc1.cf.internal  tcp dpt:60041 /* 74ab1082-7eca-4a09-7364-b266a23a7fdf */ to:10.254.0.2:2222
+
+Chain w--postrouting (1 references)
+target     prot opt source               destination
+MASQUERADE  all  --  10.254.0.0/30       !10.254.0.0/30        /* executor-healthcheck-8946f5d6-063c-4bae-474d-0032f72b8fcb */
+MASQUERADE  all  --  10.254.0.4/30       !10.254.0.4/30        /* ef658bba-214d-4eef-5228-410e8e8aeb69 */
+MASQUERADE  all  --  10.254.0.8/30       !10.254.0.8/30        /* 3cb958eb-409a-4aa9-48f1-41bb6573ebc6 */
+MASQUERADE  all  --  10.254.0.12/30      !10.254.0.12/30       /* 9600ee8c-9e63-4682-bed3-b14767ea46d3 */
+MASQUERADE  all  --  10.254.0.16/30      !10.254.0.16/30       /* executor-healthcheck-eda5cee2-81be-4890-6d67-2a9f108d6dda */
+
+Chain w--prerouting (2 references)
+target     prot opt source               destination
+w--instance-coiaggg2s3f  all  --  anywhere             anywhere             /* ac4154dd-a2bd-41d8-46bb-c5dfa3c8bfb2 */
+w--instance-coiaggg2s3l  all  --  anywhere             anywhere             /* 74ab1082-7eca-4a09-7364-b266a23a7fdf */
+
+07:49:31.393539 IP (tos 0x0, ttl 63, id 14526, offset 0, flags [DF], proto TCP (6), length 60)
+    10.244.0.22.50958 > 10.244.16.4.60040: Flags [S], seq 2900748470, win 29200, options [mss 1460,sackOK,TS val 92524805 ecr 0,nop,wscale 7], length 0
+07:49:31.393553 IP (tos 0x0, ttl 62, id 14526, offset 0, flags [DF], proto TCP (6), length 60)
+    10.244.0.22.50958 > 10.254.0.2.8080: Flags [S], seq 2900748470, win 29200, options [mss 1460,sackOK,TS val 92524805 ecr 0,nop,wscale 7], length 0
+
+08:13:44.648444 IP (tos 0x0, ttl 63, id 13763, offset 0, flags [DF], proto TCP (6), length 60)
+    10.244.0.22.52922 > 10.244.16.4.60036: Flags [S], seq 729442805, win 29200, options [mss 1460,sackOK,TS val 92888118 ecr 0,nop,wscale 7], length 0
+08:13:44.649227 IP (tos 0x0, ttl 63, id 0, offset 0, flags [DF], proto TCP (6), length 60)
+    10.244.16.4.60036 > 10.244.0.22.52922: Flags [S.], seq 2437756596, ack 729442806, win 28960, options [mss 1460,sackOK,TS val 92888118 ecr 92888118,nop,wscale 7], length 0
+08:13:44.649256 IP (tos 0x0, ttl 63, id 13764, offset 0, flags [DF], proto TCP (6), length 52)
+    10.244.0.22.52922 > 10.244.16.4.60036: Flags [.], seq 1, ack 1, win 229, options [nop,nop,TS val 92888118 ecr 92888118], length 0
+08:13:44.651254 IP (tos 0x0, ttl 63, id 13765, offset 0, flags [DF], proto TCP (6), length 410)
+    10.244.0.22.52922 > 10.244.16.4.60036: Flags [P.], seq 1:359, ack 1, win 229, options [nop,nop,TS val 92888119 ecr 92888118], length 358
+08:13:44.651627 IP (tos 0x0, ttl 63, id 27267, offset 0, flags [DF], proto TCP (6), length 52)
+    10.244.16.4.60036 > 10.244.0.22.52922: Flags [.], seq 1, ack 359, win 235, options [nop,nop,TS val 92888119 ecr 92888119], length 0
+08:13:44.654737 IP (tos 0x0, ttl 63, id 27268, offset 0, flags [DF], proto TCP (6), length 1141)
+    10.244.16.4.60036 > 10.244.0.22.52922: Flags [P.], seq 1:1090, ack 359, win 235, options [nop,nop,TS val 92888120 ecr 92888119], length 1089
+08:13:44.655155 IP (tos 0x0, ttl 63, id 13766, offset 0, flags [DF], proto TCP (6), length 52)
+    10.244.0.22.52922 > 10.244.16.4.60036: Flags [.], seq 359, ack 1090, win 246, options [nop,nop,TS val 92888120 ecr 92888120], length 0
+08:13:47.806685 IP (tos 0x0, ttl 64, id 35651, offset 0, flags [DF], proto UDP (17), length 87)
+    10.244.16.4.8301 > 10.244.0.22.8301: UDP, length 59
+08:13:47.808105 IP (tos 0x0, ttl 63, id 32396, offset 0, flags [DF], proto UDP (17), length 211)
+    10.244.0.22.8301 > 10.244.16.4.8301: UDP, length 183
+
+	$ sudo iptables -t nat -L
+
+	Chain PREROUTING (policy ACCEPT)
+	target     prot opt source               destination
+	w--prerouting  all  --  anywhere             anywhere
+
+	Chain INPUT (policy ACCEPT)
+	target     prot opt source               destination
+
+	Chain OUTPUT (policy ACCEPT)
+	target     prot opt source               destination
+	w--prerouting  all  --  anywhere             anywhere
+
+	Chain POSTROUTING (policy ACCEPT)
+	target     prot opt source               destination
+	w--postrouting  all  --  anywhere             anywhere
+
+	Chain w--instance-coiaggg2s3f (1 references)
+	target     prot opt source               destination
+	DNAT       tcp  --  anywhere             cell-z1-0.node.dc1.cf.internal  tcp dpt:60036 /* ac4154dd-a2bd-41d8-46bb-c5dfa3c8bfb2 */ to:10.254.0.6:8080
+	DNAT       tcp  --  anywhere             cell-z1-0.node.dc1.cf.internal  tcp dpt:60037 /* ac4154dd-a2bd-41d8-46bb-c5dfa3c8bfb2 */ to:10.254.0.6:2222
+
+	Chain w--instance-coiaggg2s3l (1 references)
+	target     prot opt source               destination
+	DNAT       tcp  --  anywhere             cell-z1-0.node.dc1.cf.internal  tcp dpt:60040 /* 74ab1082-7eca-4a09-7364-b266a23a7fdf */ to:10.254.0.2:8080
+	DNAT       tcp  --  anywhere             cell-z1-0.node.dc1.cf.internal  tcp dpt:60041 /* 74ab1082-7eca-4a09-7364-b266a23a7fdf */ to:10.254.0.2:2222
+
+	Chain w--postrouting (1 references)
+	target     prot opt source               destination
+	MASQUERADE  all  --  10.254.0.0/30       !10.254.0.0/30        /* executor-healthcheck-8946f5d6-063c-4bae-474d-0032f72b8fcb */
+	MASQUERADE  all  --  10.254.0.4/30       !10.254.0.4/30        /* ef658bba-214d-4eef-5228-410e8e8aeb69 */
+	MASQUERADE  all  --  10.254.0.8/30       !10.254.0.8/30        /* 3cb958eb-409a-4aa9-48f1-41bb6573ebc6 */
+	MASQUERADE  all  --  10.254.0.12/30      !10.254.0.12/30       /* 9600ee8c-9e63-4682-bed3-b14767ea46d3 */
+	MASQUERADE  all  --  10.254.0.16/30      !10.254.0.16/30       /* executor-healthcheck-eda5cee2-81be-4890-6d67-2a9f108d6dda */
+
+	Chain w--prerouting (2 references)
+	target     prot opt source               destination
+	w--instance-coiaggg2s3f  all  --  anywhere             anywhere             /* ac4154dd-a2bd-41d8-46bb-c5dfa3c8bfb2 */
+	w--instance-coiaggg2s3l  all  --  anywhere             anywhere             /* 74ab1082-7eca-4a09-7364-b266a23a7fdf */
+
+Every 2.0s: route                                                                       Wed Apr 12 01:06:11 2017
+
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+default         10.244.16.1     0.0.0.0         UG    0      0        0 wcl8gbnff7q4-1
+10.244.16.0     *               255.255.255.0   U     0      0        0 wcl8gbnff7q4-1
+10.254.0.0      *               255.255.255.252 U     0      0        0 wbrdg-0afe0000
+10.254.0.4      *               255.255.255.252 U     0      0        0 wbrdg-0afe0004
+10.254.0.8      *               255.255.255.252 U     0      0        0 wbrdg-0afe0008
+10.254.0.12     *               255.255.255.252 U     0      0        0 wbrdg-0afe000c
+10.254.0.16     *               255.255.255.252 U     0      0        0 wbrdg-0afe0010
+10.254.0.20     *               255.255.255.252 U     0      0        0 wbrdg-0afe0014
+
+
+Every 3.0s: iptables -t nat -L                                                                                                                                                     Wed Apr 12 01:06:25 2017
+
+Chain PREROUTING (policy ACCEPT)
+target     prot opt source               destination
+w--prerouting  all  --  anywhere             anywhere
+
+Chain INPUT (policy ACCEPT)
+target     prot opt source               destination
+
+Chain OUTPUT (policy ACCEPT)
+target     prot opt source               destination
+w--prerouting  all  --  anywhere             anywhere
+
+Chain POSTROUTING (policy ACCEPT)
+target     prot opt source               destination
+w--postrouting  all  --  anywhere             anywhere
+
+Chain w--instance-coiaggg2s77 (1 references)
+target     prot opt source               destination
+DNAT       tcp  --  anywhere             cell-z1-0.node.dc1.cf.internal  tcp dpt:60048 /* 0f88d42e-5fcb-49c6-755c-5334d7af3f4b */ to:10.254.0.2:8080
+DNAT       tcp  --  anywhere             cell-z1-0.node.dc1.cf.internal  tcp dpt:60049 /* 0f88d42e-5fcb-49c6-755c-5334d7af3f4b */ to:10.254.0.2:2222
+
+Chain w--instance-coiaggg2s79 (1 references)
+target     prot opt source               destination
+DNAT       tcp  --  anywhere             cell-z1-0.node.dc1.cf.internal  tcp dpt:60050 /* 920ed88f-86f1-4c59-572b-956782cb56f3 */ to:10.254.0.6:8080
+DNAT       tcp  --  anywhere             cell-z1-0.node.dc1.cf.internal  tcp dpt:60051 /* 920ed88f-86f1-4c59-572b-956782cb56f3 */ to:10.254.0.6:2222
+
+Chain w--instance-coiaggg2s7b (1 references)
+target     prot opt source               destination
+DNAT       tcp  --  anywhere             cell-z1-0.node.dc1.cf.internal  tcp dpt:60052 /* bd7b040d-c05e-4be6-671a-82f83a870d81 */ to:10.254.0.10:8080
+DNAT       tcp  --  anywhere             cell-z1-0.node.dc1.cf.internal  tcp dpt:60053 /* bd7b040d-c05e-4be6-671a-82f83a870d81 */ to:10.254.0.10:2222
+
+Chain w--instance-coiaggg2s7f (1 references)
+target     prot opt source               destination
+DNAT       tcp  --  anywhere             cell-z1-0.node.dc1.cf.internal  tcp dpt:60056 /* 90e538b6-ed1d-43bf-6c0b-9daf29c22612 */ to:10.254.0.14:8080
+DNAT       tcp  --  anywhere             cell-z1-0.node.dc1.cf.internal  tcp dpt:60057 /* 90e538b6-ed1d-43bf-6c0b-9daf29c22612 */ to:10.254.0.14:2222
+
+Chain w--instance-coiaggg2s7h (1 references)
+target     prot opt source               destination
+DNAT       tcp  --  anywhere             cell-z1-0.node.dc1.cf.internal  tcp dpt:60058 /* 694b770d-ef7f-4b89-5b48-787ab6f51b33 */ to:10.254.0.18:8080
+DNAT       tcp  --  anywhere             cell-z1-0.node.dc1.cf.internal  tcp dpt:60059 /* 694b770d-ef7f-4b89-5b48-787ab6f51b33 */ to:10.254.0.18:2222
+
+Chain w--instance-coiaggg2scp (1 references)
+target     prot opt source               destination
+DNAT       tcp  --  anywhere             cell-z1-0.node.dc1.cf.internal  tcp dpt:60082 /* 56952bdf-f277-45d8-4baf-f21d24a13a0e */ to:10.254.0.22:8080
+DNAT       tcp  --  anywhere             cell-z1-0.node.dc1.cf.internal  tcp dpt:60083 /* 56952bdf-f277-45d8-4baf-f21d24a13a0e */ to:10.254.0.22:2222
+
+Chain w--postrouting (1 references)
+target     prot opt source               destination
+MASQUERADE  all  --  10.254.0.0/30       !10.254.0.0/30        /* executor-healthcheck-8946f5d6-063c-4bae-474d-0032f72b8fcb */
+MASQUERADE  all  --  10.254.0.4/30       !10.254.0.4/30        /* ef658bba-214d-4eef-5228-410e8e8aeb69 */
+MASQUERADE  all  --  10.254.0.8/30       !10.254.0.8/30        /* 3cb958eb-409a-4aa9-48f1-41bb6573ebc6 */
+MASQUERADE  all  --  10.254.0.12/30      !10.254.0.12/30       /* 9600ee8c-9e63-4682-bed3-b14767ea46d3 */
+MASQUERADE  all  --  10.254.0.16/30      !10.254.0.16/30       /* executor-healthcheck-eda5cee2-81be-4890-6d67-2a9f108d6dda */
+MASQUERADE  all  --  10.254.0.20/30      !10.254.0.20/30       /* executor-healthcheck-f8390a35-10bc-492c-632f-166c30260bc7 */
+MASQUERADE  all  --  10.254.0.24/30      !10.254.0.24/30       /* executor-healthcheck-ea450387-991b-40b5-6e05-1c26cff36878 */
+
+Chain w--prerouting (2 references)
+target     prot opt source               destination
+w--instance-coiaggg2s77  all  --  anywhere             anywhere             /* 0f88d42e-5fcb-49c6-755c-5334d7af3f4b */
+w--instance-coiaggg2s79  all  --  anywhere             anywhere             /* 920ed88f-86f1-4c59-572b-956782cb56f3 */
+w--instance-coiaggg2s7b  all  --  anywhere             anywhere             /* bd7b040d-c05e-4be6-671a-82f83a870d81 */
+w--instance-coiaggg2s7f  all  --  anywhere             anywhere             /* 90e538b6-ed1d-43bf-6c0b-9daf29c22612 */
+w--instance-coiaggg2s7h  all  --  anywhere             anywhere             /* 694b770d-ef7f-4b89-5b48-787ab6f51b33 */
+w--instance-coiaggg2scp  all  --  anywhere             anywhere             /* 56952bdf-f277-45d8-4baf-f21d24a13a0e */
+```
+
+
+```bash
+$ sudo su -
+cell_z1/1f42b1d1-0a0c-4706-8dfc-ab9fd20fa935:~# monit summary
+The Monit daemon 5.2.5 uptime: 3h 18m
+
+Process 'consul_agent'              running
+Process 'rep'                       running
+Process 'garden'                    Connection failed
+Process 'metron_agent'              running
+System 'system_localhost'           running
+
+SIGQUIT: quit
+cell_z1/1f42b1d1-0a0c-4706-8dfc-ab9fd20fa935:/var/vcap/sys/log/garden$ tail -f garden.stderr.log
+
+PC=0x45ca23 m=2 sigcode=0
+
+goroutine 0 [idle]:
+runtime.futex(0xfd4a78, 0x0, 0x7fe8fd055d88, 0x0, 0x7fe800000000, 0x45c6b6, 0x3c, 0x0, 0x7fe8fd055dd0, 0x40fe50, ...)
+	/var/vcap/data/packages/golang/dea2930bf96d2fec32aceb2df845be37b5f058a2/src/runtime/sys_linux_amd64.s:423 +0x23
+runtime.futexsleep(0xfd4a78, 0x7fe800000000, 0xdf8475800)
+	/var/vcap/data/packages/golang/dea2930bf96d2fec32aceb2df845be37b5f058a2/src/runtime/os_linux.go:62 +0xd7
+runtime.notetsleep_internal(0xfd4a78, 0xdf8475800, 0x0)
+	/var/vcap/data/packages/golang/dea2930bf96d2fec32aceb2df845be37b5f058a2/src/runtime/lock_futex.go:174 +0xd0
+runtime.notetsleep(0xfd4a78, 0xdf8475800, 0x1)
+	/var/vcap/data/packages/golang/dea2930bf96d2fec32aceb2df845be37b5f058a2/src/runtime/lock_futex.go:194 +0x56
+runtime.sysmon()
+	/var/vcap/data/packages/golang/dea2930bf96d2fec32aceb2df845be37b5f058a2/src/runtime/proc.go:3805 +0x135
+runtime.mstart1()
+	/var/vcap/data/packages/golang/dea2930bf96d2fec32aceb2df845be37b5f058a2/src/runtime/proc.go:1179 +0x11e
+runtime.mstart()
+	/var/vcap/data/packages/golang/dea2930bf96d2fec32aceb2df845be37b5f058a2/src/runtime/proc.go:1149 +0x64
+
+goroutine 1 [select]:
+github.com/tedsuo/ifrit.Invoke(0xfa3b60, 0xc42020e810, 0xc420199d40, 0x2)
+	/var/vcap/packages/guardian/src/github.com/tedsuo/ifrit/process.go:29 +0x15b
+code.cloudfoundry.org/guardian/guardiancmd.(*ServerCommand).Execute(0xc420200000, 0xc4201048c0, 0x0, 0x1c, 0xc420200000, 0x1)
+	/var/vcap/packages/guardian/src/code.cloudfoundry.org/guardian/guardiancmd/command.go:293 +0x6e
+github.com/jessevdk/go-flags.(*Parser).ParseArgs(0xc4201f6180, 0xc4200101f0, 0x1c, 0x1d, 0xc4200ee240, 0xc4201f6180, 0x7ffc4ae8fa3c, 0x0, 0x0)
+	/var/vcap/packages/guardian/src/github.com/jessevdk/go-flags/parser.go:316 +0x893
+github.com/jessevdk/go-flags.(*Parser).Parse(0xc4201f6180, 0xc4201f0630, 0x16, 0xc4201f6180, 0x0, 0x0)
+	/var/vcap/packages/guardian/src/github.com/jessevdk/go-flags/parser.go:186 +0x73
+main.main()
+	/var/vcap/packages/guardian/src/code.cloudfoundry.org/guardian/cmd/gdn/main.go:18 +0x9b
+
+goroutine 17 [syscall, locked to thread]:
+runtime.goexit()
+	/var/vcap/data/packages/golang/dea2930bf96d2fec32aceb2df845be37b5f058a2/src/runtime/asm_amd64.s:2197 +0x1
+
+goroutine 5 [syscall]:
+os/signal.signal_recv(0xfaa8e0)
+	/var/vcap/data/packages/golang/dea2930bf96d2fec32aceb2df845be37b5f058a2/src/runtime/sigqueue.go:116 +0x104
+os/signal.loop()
+	/var/vcap/data/packages/golang/dea2930bf96d2fec32aceb2df845be37b5f058a2/src/os/signal/signal_unix.go:22 +0x22
+created by os/signal.init.1
+	/var/vcap/data/packages/golang/dea2930bf96d2fec32aceb2df845be37b5f058a2/src/os/signal/signal_unix.go:28 +0x41
+
+goroutine 67 [select]:
+github.com/tedsuo/ifrit.(*process).Signal.func1(0xc420220000, 0xfaa8e0, 0xc420308ff8)
+	/var/vcap/packages/guardian/src/github.com/tedsuo/ifrit/process.go:92 +0x112
+created by github.com/tedsuo/ifrit.(*process).Signal
+	/var/vcap/packages/guardian/src/github.com/tedsuo/ifrit/process.go:96 +0x53
+
+goroutine 7 [select]:
+github.com/tedsuo/ifrit/sigmon.sigmon.Run(0xc420199d40, 0x2, 0x2, 0xfa2760, 0xc420200000, 0xc4201f61e0, 0xc4201f6240, 0x0, 0x0)
+	/var/vcap/packages/guardian/src/github.com/tedsuo/ifrit/sigmon/sigmon.go:35 +0x317
+github.com/tedsuo/ifrit/sigmon.(*sigmon).Run(0xc42020e810, 0xc4201f61e0, 0xc4201f6240, 0x0, 0x0)
+	<autogenerated>:1 +0x7d
+github.com/tedsuo/ifrit.(*process).run(0xc4201cb2c0)
+	/var/vcap/packages/guardian/src/github.com/tedsuo/ifrit/process.go:71 +0x49
+created by github.com/tedsuo/ifrit.Background
+	/var/vcap/packages/guardian/src/github.com/tedsuo/ifrit/process.go:49 +0x12f
+
+goroutine 8 [chan receive]:
+github.com/tedsuo/ifrit.(*process).Wait.func1(0xc4201cb2c0, 0xc4201f6300)
+	/var/vcap/packages/guardian/src/github.com/tedsuo/ifrit/process.go:83 +0x44
+created by github.com/tedsuo/ifrit.(*process).Wait
+	/var/vcap/packages/guardian/src/github.com/tedsuo/ifrit/process.go:85 +0x67
+
+goroutine 9 [select, locked to thread]:
+runtime.gopark(0xadcf08, 0x0, 0xab2847, 0x6, 0x18, 0x2)

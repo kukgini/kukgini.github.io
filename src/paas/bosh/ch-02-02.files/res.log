@@ -1,0 +1,43 @@
+Deployment manifest: '/../../bosh.yml'
+Deployment state: './state.json'
+
+Started validating
+Downloading release 'bosh'... Skipped [Found in local cache] (00:00:00)
+Validating release 'bosh'... Finished (00:00:00)
+Downloading release 'bosh-openstack-cpi'... Skipped [Found in local cache] (00:00:00)
+Validating release 'bosh-openstack-cpi'... Finished (00:00:00)
+Validating cpi release... Finished (00:00:00)
+Validating deployment manifest... Finished (00:00:00)
+Downloading stemcell... Skipped [Found in local cache] (00:00:00)
+Validating stemcell... Finished (00:00:02)
+Finished validating (00:00:03)
+
+Started installing CPI
+Compiling package 'ruby_openstack_cpi/9485b5753d4609e92e1491ff991cb28fbde81445'... Finished (00:00:00)
+Compiling package 'bosh_openstack_cpi/dd0bab98dbb820af3ec59b364badfed02ffe3f3b'... Finished (00:00:00)
+Installing packages... Finished (00:00:00)
+Rendering job templates... Finished (00:00:00)
+Installing job 'openstack_cpi'... Finished (00:00:00)
+Finished installing CPI (00:00:00)
+
+Starting registry... Finished (00:00:00)
+Uploading stemcell 'bosh-openstack-kvm-ubuntu-trusty-go_agent-raw/3363.20'... Skipped [Stemcell already uploaded] (00:00:00)
+
+Started deploying
+Deleting VM 'a4a8113d-9f30-4908-891d-b82a705e260d'... Finished (00:00:00)
+Creating VM for instance 'bosh/0' from stemcell 'df4a4001-3334-4d28-8172-6966033250d1'... Finished (00:00:39)
+Waiting for the agent on VM 'b9f59d2d-fa97-4e6c-a48f-94b522b59bbf' to be ready... Failed (00:02:01)
+Failed deploying (00:02:42)
+
+Stopping registry... Finished (00:00:00)
+Cleaning up rendered CPI jobs... Finished (00:00:00)
+
+Deploying:
+Creating instance 'bosh/0':
+    Waiting until instance is ready:
+    Starting SSH tunnel:
+        Starting SSH tunnel:
+        Failed to connect to remote server:
+            ssh: handshake failed: ssh: unable to authenticate, attempted methods [none publickey], no supported methods remain
+
+Exit code 1

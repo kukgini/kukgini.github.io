@@ -1,0 +1,310 @@
+# Agent Payment Protocol Samples
+
+```{warning}
+**문서 작성 중**
+
+이 문서와 하위 문서들은 현재 작성 중이며, 부정확하거나 불완전한 정보를 포함할 수 있습니다. 
+프로덕션 환경에서 사용하기 전에 반드시 공식 문서와 표준을 참조하시기 바랍니다.
+```
+
+## 개요
+
+AP2(Agent to Payment)는 Google이 제안한 AI 에이전트 시대의 결제 프로토콜입니다. AI 에이전트가 사용자를 대신하여 자율적으로 상품을 구매하고 서비스에 가입하는 미래를 대비하여, 안전하고 효율적인 결제 방법을 정의합니다.
+
+AP2 샘플은 서로 다른 특성을 가진 다음 시나리오들을 제공합니다.
+
+- [Cards 시나리오](ap2-sample-cards.md) - 전통적인 신용카드 결제 네트워크를 통한 AI 에이전트 자동 결제
+- [DPC 시나리오](ap2-sample-dpc.md) - 디지털 자격증명 기반 차세대 결제 방식
+- [x402 시나리오](ap2-sample-x402.md) - HTTP 402 상태 코드 및 암호화폐를 활용한 결제
+
+## 시나리오
+
+### Cards: 기존 인프라 활용
+
+Cards 시나리오는 기존의 **카드 결제 네트워크**(Visa, Mastercard 등)를 통해 AI 에이전트가 자동으로 결제를 수행하는 방식입니다. AP2의 세 가지 시나리오 중 **가장 현실적이고 즉시 도입 가능한** 접근 방식으로, **이미 검증된 기존 카드 결제 인프라**를 그대로 활용하여 빠른 도입과 높은 호환성을 제공합니다.
+
+```{mermaid}
+sequenceDiagram
+    participant User
+    participant ShoppingAgent
+    participant MerchantAgent
+    participant CredentialsProvider
+    participant PaymentProcessor
+
+    User->>ShoppingAgent: 상품 탐색 및 구매 요청
+    ShoppingAgent->>MerchantAgent: A2A: 상품/장바구니 조회
+    MerchantAgent-->>ShoppingAgent: CartMandate (장바구니 정보)
+    ShoppingAgent-->>User: 상품/가격 제시 및 확인
+
+    ShoppingAgent->>CredentialsProvider: 결제수단 목록 요청
+    CredentialsProvider-->>ShoppingAgent: 토큰화된 카드 목록(DPAN)
+    ShoppingAgent-->>User: 결제수단 선택 UI
+    User->>ShoppingAgent: 결제수단 선택 및 최종 승인
+
+    ShoppingAgent->>PaymentProcessor: PaymentMandate 전송
+    PaymentProcessor->>CredentialsProvider: 결제 토큰 검증/복호화
+    PaymentProcessor->>PaymentProcessor: OTP 등 추가 인증 처리
+    PaymentProcessor-->>MerchantAgent: 결제 성공/실패 결과
+    MerchantAgent-->>ShoppingAgent: 결제 결과 전달
+    ShoppingAgent-->>User: 영수증/결제 완료 표시
+````
+
+#### 주요 특징
+
+1. **기존 인프라 활용**: Visa, Mastercard, AMEX 등 전 세계적으로 구축된 카드 네트워크 사용
+2. **즉시 적용 가능**: 새로운 표준이나 프로토콜 도입 없이 기존 시스템과 호환
+3. **높은 신뢰성**: 수십 년간 검증된 보안 및 사기 방지 시스템
+4. **PCI DSS 준수**: 카드 산업 데이터 보안 표준을 따르는 안전한 처리
+5. **광범위한 수용성**: 대부분의 가맹점에서 이미 지원하는 결제 수단
+
+#### 사용 사례
+
+- **구독 서비스 자동 결제**: AI 에이전트가 필요한 서비스를 자동으로 구독하고 결제
+- **일상 구매**: 온라인 쇼핑에서 에이전트가 가격 비교 후 자동 구매
+- **B2B 거래**: 기업용 카드를 통한 자동 발주 및 결제
+- **동적 예산 관리**: 설정된 예산 범위 내에서 최적의 구매 결정
+
+#### 한계점 및 고려사항
+
+- **수수료**: 카드 네트워크 수수료 (보통 2-3%) 존재
+- **보안 요구사항**: PCI DSS 준수를 위한 추가 보안 조치 필요
+- **지역별 제약**: 일부 국가에서는 카드 사용 제한 또는 높은 수수료
+- **개인정보**: 카드 정보 저장 및 관리에 대한 규제 준수 필요
+
+### DPC: 디지털 자격증명 기반 결제
+
+DPC(Digital Payment Credential) 시나리오는 **암호학적으로 검증 가능한 디지털 자격증명**을 결제 수단으로 활용하는 접근 방식입니다. Cards가 기존 카드 네트워크에 기반한다면, DPC는 **EUDI Wallet과 같은 디지털 신원 표준**을 결제 영역으로 확장한 것입니다.
+
+샘플 시나리오는 Android 앱이므로 Android Credential Manager API를 통해 상호작용하며, 사용자는 암호학적으로 서명된 증명(cryptographic proof)을 제시하여 결제를 완료합니다. 이는 단순히 카드 정보를 전달하는 것이 아니라, **사용자가 결제카드 소유자이며 이 거래을 승인했음을 증명**하는 방식입니다.
+
+```{mermaid}
+sequenceDiagram
+    participant User
+    participant ShoppingAgent
+    participant MerchantAgent
+    participant CredentialProvider as Credential Provider<br/>(CMWallet)
+    participant TrustedUI
+    participant PaymentProcessor
+
+    User->>ShoppingAgent: 상품 탐색 및 구매 요청
+    ShoppingAgent->>MerchantAgent: A2A: 장바구니/결제 조건 조회
+    MerchantAgent-->>ShoppingAgent: CartMandate (가격·상품 정보)
+    ShoppingAgent-->>User: 최종 주문 정보 표시
+
+    ShoppingAgent->>ShoppingAgent: DPC(OpenID4VP) 요청 생성
+    ShoppingAgent->>CredentialProvider: DPC 요청 전달(Android Credential Manager)
+
+    CredentialProvider->>TrustedUI: 결제 요약 표시
+    TrustedUI-->>User: 가맹점·금액·세부정보 확인
+    User->>TrustedUI: 결제 승인(생체/PIN)
+    TrustedUI-->>CredentialProvider: 사용자 동의
+    CredentialProvider->>CredentialProvider: transaction_data 서명 + VP 토큰 생성
+    CredentialProvider-->>ShoppingAgent: vp_token 반환
+
+    ShoppingAgent->>MerchantAgent: vp_token 포함 결제 검증 요청
+
+    Note over MerchantAgent,PaymentProcessor: 이하 단계는 샘플에서는 시뮬레이션/생략, 프로덕션에서 구현 필요
+    
+    MerchantAgent->>PaymentProcessor: 결제 처리 위임
+    PaymentProcessor->>PaymentProcessor: VP/서명 검증 및 실제 결제 처리
+    PaymentProcessor-->>MerchantAgent: 결제 결과
+    MerchantAgent-->>ShoppingAgent: 결제 성공/실패 응답
+    ShoppingAgent-->>User: 결제 완료 표시
+````
+
+#### 주요 특징
+
+1. **암호학적 보안**: 공개키 암호화 기반의 서명으로 위변조 불가능
+2. **프라이버시 보호**: Selective Disclosure 로 필요한 정보만 선택적으로 공개
+3. **사용자 통제**: 모든 거래에서 사용자가 명시적으로 승인
+5. **신원 검증 연계**: 결제 시 연령 확인이나 자격 증명 등 추가 신원 검증을 같은 지갑/자격증명으로 연계하기 용이함
+
+#### 사용 사례
+
+- **프라이버시 중심 결제**: 최소한의 개인정보만 공개하면서 결제
+- **규제 준수 환경**: GDPR, EUDI Wallet 등 엄격한 프라이버시 규제가 있는 EU 시장
+- **신원 연계 결제**: 결제와 동시에 연령 확인이나 자격 증명이 필요한 경우
+- **크로스보더 거래**: 국제 표준 기반으로 국경을 넘는 거래에 적합
+
+#### 한계점 및 고려사항
+
+- **플랫폼 한정**: 현재 Android 에만 구현, iOS 지원 제한적
+- **생태계 미성숙**: 모바일 지갑 생태계가 아직 초기 단계
+- **사용자 교육**: 새로운 개념으로 사용자 이해와 신뢰 구축 필요
+- **표준/규제 정렬 진행 중**: EUDI Wallet·eIDAS2, OpenID4VP, ISO 18013-5 등 관련 표준이 아직 파일럿/제정 단계에 있어, 실제 서비스 간 상호운용성은 향후 검증이 필요함
+- **프라이버시 이슈**: 추적 방지 메커니즘, 로그 관리 등 세부 프라이버시 설계 이슈가 남아 있음
+
+### x402: HTTP 네이티브 결제
+
+x402는 1997년 HTTP/1.1 표준에 정의되었지만 거의 사용되지 않았던 **HTTP 402 상태 코드**를 현대적인 AI 에이전트 생태계에 맞게 재해석한 프로토콜입니다. AI 에이전트들이 웹 리소스나 서비스에 접근할 때 자동으로 결제를 처리할 수 있도록 합니다.
+
+```{mermaid}
+sequenceDiagram
+    participant User
+    participant ShoppingAgent
+    participant MerchantAgent
+    participant CredentialsProvider
+    participant PaymentProcessor
+    participant Blockchain
+
+    User->>ShoppingAgent: 웹 리소스/서비스 구매 요청
+    ShoppingAgent->>MerchantAgent: A2A: x402 지원 상품 조회
+    MerchantAgent-->>ShoppingAgent: CartMandate (x402 결제 옵션 포함)
+    ShoppingAgent-->>User: 디지털 자산/요금 제시
+
+    ShoppingAgent->>CredentialsProvider: x402 결제수단 조회
+    CredentialsProvider-->>ShoppingAgent: 지원 디지털 화폐 목록
+    ShoppingAgent-->>User: 통화·가스비 포함 결제 UI
+    User->>ShoppingAgent: 통화 선택 및 승인
+
+    ShoppingAgent->>ShoppingAgent: PaymentMandate 생성·서명
+    ShoppingAgent->>PaymentProcessor: x402 PaymentMandate 전송
+    PaymentProcessor->>CredentialsProvider: 지갑 주소/서명 키 조회
+    PaymentProcessor->>Blockchain: 트랜잭션 생성 및 제출
+    Blockchain->>Blockchain: 트랜잭션 검증·블록 포함
+    Blockchain-->>PaymentProcessor: 확정(confirmation)
+    PaymentProcessor-->>MerchantAgent: 결제 성공
+    MerchantAgent-->>ShoppingAgent: 접근 권한/콘텐츠 제공
+    ShoppingAgent-->>User: 결제 완료 및 리소스 접근
+````
+
+#### 주요 특징
+
+1. **AI 에이전트 친화적**: 사람의 개입 없이 에이전트가 자율적으로 결제 결정
+2. **프로토콜 독립적**: 특정 결제 수단이나 통화에 종속되지 않음
+3. **표준 기반**: HTTP 표준을 확장하여 웹 생태계와 자연스럽게 통합
+4. **마이크로 페이먼트**: 소액 결제 특히 사용량 기반 결제에 유리함. 
+5. **중개자 불필요**: 판매자와 구매자 간 직거래로, 상대적으로 낮은 수수료 가능.
+
+#### 사용 사례
+
+- **AI 에이전트 모니터링 서비스**: 에이전트의 활동 추적 및 성능 분석에 대한 결제
+- **프리미엄 API 접근**: 유료 API나 데이터셋에 대한 자동 결제
+- **컴퓨팅 리소스**: 필요한 만큼만 사용하고 즉시 결제하는 온디맨드 서비스
+- **콘텐츠 마이크로 페이먼트**: 뉴스 기사, 연구 논문 등 개별 콘텐츠에 대한 소액 결제
+
+#### 한계점 및 고려사항
+
+- **표준 부재**: HTTP 402는 1997년부터 정의되었으나 실제 구현 사례 거의 없음
+- **생태계 부재**: 결제 프로세서, 가맹점, 클라이언트 모두 새로 구축 필요
+- **보안 표준**: 아직 확립된 보안 표준이나 모범 사례 부족
+- **채택 장벽**: 기존 시스템과의 호환성 없어 전면적인 생태계 전환 필요
+- **불확실성**: 실험적 단계로 장기적 실용화 여부 불확실
+
+## 결론
+
+### 시나리오 비교
+
+AP2 프로토콜은 AI 에이전트 시대의 다양한 결제 요구사항을 충족하기 위해 세 가지 차별화된 접근 방식을 제시합니다.
+
+#### 도입 타임라인
+
+```
+현재 (2025)          중기 (2027-2030)         장기 (2030+)
+    │                      │                      │
+  Cards ━━━━━━━━━━━━━━━━> DPC ━━━━━━━━━━━━━━━━━> x402
+ (즉시 가능)            (표준화 진행 중)            (실험적 개념)
+```
+
+#### 비즈니스 관점
+
+| 특징 | Cards | DPC | x402 |
+|------|-------|-----|------|
+| **기반 기술** | 카드 네트워크 (Visa, Mastercard) | Digital Credentials (ISO mDOC) | HTTP 402 + Blockchain |
+| **도입 시기** | 즉시 가능 (2025) | 중기 (2027-2030) | 장기 (2030+) |
+| **도입 난이도** | 낮음 (기존 인프라) | 중간 (새로운 API) | 높음 (신규 표준) |
+| **적용 범위** | 전통적 커머스 | 모바일 중심 | 웹 리소스/API |
+| **국제 표준** | 확립됨 (PCI DSS) | 표준화 진행 중 (EUDI, OpenID4VP) | 제안 단계 (실험적) |
+| **미래 전망** | 안정적 유지 | 성장 가능성 높음 | 실험적, 불확실 |
+
+#### 기술 구현 관점
+
+| 특징 | Cards | DPC | x402 |
+|------|-------|-----|------|
+| **결제 수단** | 토큰화된 카드 (DPAN) | Digital (Payment) Credential | 암호 화폐 |
+| **통신 프로토콜** | A2A + ISO 8583 (카드 네트워크 프로토콜) | A2A + OpenID4VP | A2A + HTTP 402 & 블록체인 결제 프로토콜 |
+| **Mandate** | Intent → Cart → Payment | Cart | Intent → Cart → Payment |
+| **플랫폼 지원** | 범용 (웹/모바일) | 모바일 | 범용 (웹 우선) |
+
+*CMWallet은 Android Credential Manager를 통한 Credential Provider 역할  
+**Payment Processor는 현재 데모에서 시뮬레이션됨, 프로덕션 환경에서 필수
+
+#### 보안 및 사용자 경험
+
+| 특징 | Cards | DPC | x402 |
+|------|-------|-----|------|
+| **보안 수준** | PCI DSS 표준 | 암호학적 증명 (전자 서명) | 토큰 기반 + 블록체인 검증 |
+| **프라이버시** | 낮음 (카드사 추적 가능) | 매우 높음 (Selective Disclosure) | 중간 (퍼블릭 블록체인) |
+| **사용자 인증** | PaymentMandate 해시 서명 + OTP | transaction_data 서명 (Trusted UI) | 트랜잭션 서명 (Wallet) |
+| **추가 인증** | OTP 챌린지 | 기기 생체인증 | 없음 (서명으로 충분) |
+| **사용자 개입** | 초기 설정 후 최소화 | 매 거래마다 명시적 승인 | 거래 확인 (Wallet UI) |
+| **사용자 경험** | 익숙함 (기존 카드 결제) | 학습 필요 (새로운 개념) | 학습 필요 (암호화폐) |
+| **오프라인 지원** | 제한적 | 가능 (오프라인 서명 검증) | 불가능 (네트워크 필수) |
+
+### 각 시나리오의 포지셔닝
+
+**1. Cards - 현재의 실용적 해결책**
+- ✅ 즉시 도입 가능
+- ✅ 전 세계 인프라 구축 완료
+- ✅ 검증된 보안 및 규제 준수
+- ⚠️ 높은 수수료
+- ⚠️ 프라이버시 제한
+
+**2. DPC - 균형잡힌 미래**
+- ✅ 실행 가능한 기술 (Android Credential Manager API 존재)
+- ✅ 국제 표준화 진행 중 (EUDI Wallet)
+- ✅ 프라이버시와 보안 최우선
+- ⚠️ 플랫폼별 지원 차이
+- ⚠️ 생태계 미성숙
+
+**3. x402 - 혁신적 비전**
+- ✅ 인터넷 네이티브 결제의 이상적 모델
+- ✅ M2M 결제에 유리함
+- ✅ 낮은 비용
+- ❌ 표준 부재
+- ❌ 생태계 미구축
+- ❌ 채택 불확실성
+
+### 권장 도입 전략
+
+**단계별 접근:**
+
+1. **현재 (2025)**: Cards 기반 구현
+   - AI 에이전트에 카드 결제 통합
+   - 빠른 시장 진입 및 사용자 확보
+
+2. **중기 (2027-2030)**: DPC 준비 및 전환
+   - EUDI Wallet 표준 확립 대기
+   - iOS 지원 추가
+   - 프라이버시 중시 시장 진출
+
+3. **장기 (2030+)**: x402 모니터링
+   - 표준화 진행 상황 추적
+   - 실험적 파일럿 프로젝트
+   - M2M 거래 특화 영역 탐색
+
+### 결론
+
+AP2 프로토콜의 세 가지 시나리오는 AI 에이전트 결제의 진화 경로를 보여줍니다:
+
+현명한 전략은 Cards로 시작하여 즉시 가치를 제공하면서, DPC 표준 성숙을 추적하고, x402의 장기적 잠재력을 모니터링하는 것입니다. 각 시나리오는 상호 배타적이지 않으며, 사용 사례와 시장 상황에 따라 적절히 조합할 수 있습니다.
+
+특히 DPC는 EUDI Wallet과 같은 대규모 정부 주도 이니셔티브의 지원을 받고 있어, **중기적으로 가장 유망한 선택지**로 평가됩니다. 프라이버시와 보안이 점점 더 중요해지는 디지털 시대에, DPC는 사용자 통제와 검증 가능성을 제공하는 차세대 표준이 될 것입니다.
+
+## References
+
+- [Official Documentation](https://cloud.google.com/blog/products/ai-machine-learning/announcing-agents-to-payments-ap2-protocol)
+- [GitHub Repository](https://github.com/google-agentic-commerce/AP2)
+- [EU Digital Identity Wallet ARF overview](https://en.wikipedia.org/wiki/EU_Digital_Identity_Wallet)
+
+## 하위 문서
+
+```{toctree}
+:maxdepth: 2
+:caption: 시나리오 상세 분석
+:numbered: 2
+
+ap2-sample-cards
+ap2-sample-dpc
+ap2-sample-x402
+```
