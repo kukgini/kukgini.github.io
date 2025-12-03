@@ -1,11 +1,9 @@
 # DPC 시나리오
 
-```{warning}
-**문서 작성 중**
+!!! warning "문서 작성 중"
 
-이 문서와 하위 문서들은 현재 작성 중이며, 부정확하거나 불완전한 정보를 포함할 수 있습니다. 
-프로덕션 환경에서 사용하기 전에 반드시 공식 문서와 표준을 참조하시기 바랍니다.
-```
+    이 문서와 하위 문서들은 현재 작성 중이며, 부정확하거나 불완전한 정보를 포함할 수 있습니다.
+    프로덕션 환경에서 사용하기 전에 반드시 공식 문서와 표준을 참조하시기 바랍니다.
 
 This illustrates the complete flow of the Digital Payment Credentials scenario using the AP2 framework with the A2A protocol.
 
@@ -16,9 +14,8 @@ sequenceDiagram
     participant User
     participant ShoppingAgent
     participant MerchantAgent
-    participant CredentialProvider as Credential Provider<br/>(CMWallet)
+    participant CMWallet
     participant TrustedUI
-    participant PaymentProcessor
 
     Note right of User: Phase 1: Product Discovery
 
@@ -41,38 +38,24 @@ sequenceDiagram
 
     Note right of User: Phase 3: Credential Manager
 
-    ShoppingAgent->>CredentialProvider: GetDigitalCredentialOption<br/>(via Android Credential Manager API)
-    CredentialProvider->>CredentialProvider: Validate request
-    CredentialProvider->>TrustedUI: Show payment confirmation
+    ShoppingAgent->>CMWallet: GetDigitalCredentialOption
+    CMWallet->>CMWallet: Validate request
+    CMWallet->>TrustedUI: Show payment confirmation
     TrustedUI-->>User: Display merchant, amount, details
     User->>TrustedUI: Approve payment
-    TrustedUI-->>CredentialProvider: User consent
-    CredentialProvider->>CredentialProvider: Sign transaction_data
-    CredentialProvider->>CredentialProvider: Generate VP Token
-    CredentialProvider-->>ShoppingAgent: vp_token
+    TrustedUI-->>CMWallet: User consent
+    CMWallet->>CMWallet: Sign transaction_data
+    CMWallet->>CMWallet: Generate VP Token
+    CMWallet-->>ShoppingAgent: vp_token
 
-    Note right of User: Phase 4: DPC Validation & Payment Processing
+    Note right of User: Phase 4: DPC Validation
 
     ShoppingAgent->>MerchantAgent: A2A Message: Validate DPC
     MerchantAgent->>MerchantAgent: dpc_finish()
     MerchantAgent->>MerchantAgent: Verify nonce and signature
     MerchantAgent->>MerchantAgent: Validate transaction_data hash
-    
-    rect rgb(240, 240, 240)
-        Note over MerchantAgent,PaymentProcessor: Production Implementation (Currently Simulated)
-        MerchantAgent->>PaymentProcessor: A2A Message: Process DPC payment
-        activate PaymentProcessor
-        PaymentProcessor->>PaymentProcessor: Validate VP token
-        PaymentProcessor->>PaymentProcessor: Verify cryptographic signatures
-        PaymentProcessor->>PaymentProcessor: Check issuer certificate chain
-        PaymentProcessor->>PaymentProcessor: Process payment transaction
-        Note over PaymentProcessor: Actual payment processing via network
-        PaymentProcessor->>PaymentProcessor: Generate transaction ID
-        PaymentProcessor-->>MerchantAgent: Payment SUCCESS
-        deactivate PaymentProcessor
-    end
-    
-    MerchantAgent-->>ShoppingAgent: Payment confirmation
+    MerchantAgent->>MerchantAgent: Simulate payment processing
+    MerchantAgent-->>ShoppingAgent: Payment status: SUCCESS
     ShoppingAgent-->>User: Payment successful!
 ```
 
@@ -195,11 +178,9 @@ This implementation follows several key standards:
 
 DPC 시나리오는 EUID Wallet 표준과 여러 측면에서 밀접하게 연관되어 있습니다
 
-### OID4VP (OpenID for Verifiable Presentaiton) 프로토콜 사용
+### OID4VP (OpenID for Verifiable Presentation) 프로토콜 사용
 
-```{code-block} kotlin
-:caption: DpcHelper.kt:110~120
-
+```kotlin title="DpcHelper.kt:110~120"
 val dcRequest =
   Request(
     responseType = "vp_token",
@@ -217,11 +198,9 @@ val dpcRequest = DpcRequest(protocol = "openid4vp-v1-unsigned", request = dcRequ
 * Protocol = "openid4vp-v1-unsigned" - EUDI Wallet 도 동일한 프로토콜을 사용하여 Verifiable Presentation 을 요청합니다
 * responseType = "vp_token"
 
-### ISO/IEC 18013-5 mode 형식 지원
+### ISO/IEC 18013-5 mdoc 형식 지원
 
-```{code-block} kotlin
-:caption: DpcHelper.kt:85~91
-
+```kotlin title="DpcHelper.kt:85~91"
 val credentialQuery =
     CredentialQuery(
         id = credId,
@@ -231,9 +210,7 @@ val credentialQuery =
 )
 ```
 
-```{code-block} kotlin
-:caption: DpcHelper.kt:96~100
-
+```kotlin title="DpcHelper.kt:96~100"
 val mdocFormatsSupported =
     MdocFormatsSupported(
         issuerauthAlgValues = listOf(-7), // ES256
@@ -247,25 +224,23 @@ val mdocFormatsSupported =
 
 ### DCQL (Digital Credentials Query Language) 사용
 
-```{code-block} kotlin
-:caption: DpcHelper.kt:78~93
+```kotlin title="DpcHelper.kt:78~93"
+// Build the DCQL query to request specific credential claims.
+val claims =
+  listOf(
+    Claim(path = listOf("com.emvco.payment_card.1", "card_number")),
+    Claim(path = listOf("com.emvco.payment_card.1", "holder_name")),
+  )
 
-  // Build the DCQL query to request specific credential claims.
-  val claims =
-    listOf(
-      Claim(path = listOf("com.emvco.payment_card.1", "card_number")),
-      Claim(path = listOf("com.emvco.payment_card.1", "holder_name")),
-    )
+val credentialQuery =
+  CredentialQuery(
+    id = credId,
+    format = mdocIdentifier,
+    meta = Meta(doctypeValue = "com.emvco.payment_card"),
+    claims = claims,
+  )
 
-  val credentialQuery =
-    CredentialQuery(
-      id = credId,
-      format = mdocIdentifier,
-      meta = Meta(doctypeValue = "com.emvco.payment_card"),
-      claims = claims,
-    )
-
-  val dcqlQuery = DcqlQuery(credentials = listOf(credentialQuery))
+val dcqlQuery = DcqlQuery(credentials = listOf(credentialQuery))
 ```
 
 * 선택적 공개 (Selective Disclosure) - EUDI Wallet 의 핵심 원칙입니다
@@ -274,34 +249,31 @@ val mdocFormatsSupported =
 
 ### Android Credential Manager API 통합
 
-```{code-block} kotlin
-:caption: DpcHelpper.kt:67~76
-
-  // Build transaction_data payload.
-  val transactionData =
-    TransactionData(
-      type = "payment_card",
-      credentialIds = listOf(credId),
-      transactionDataHashesAlg = listOf("sha-256"),
-      merchantName = merchantName,
-      amount = "US ${String.format("%.2f", totalValue)}",
-      additionalInfo = json.encodeToString(additionalInfo), // Serialize the inner object
-    )
+```kotlin title="DpcHelper.kt:67~76"
+// Build transaction_data payload.
+val transactionData =
+  TransactionData(
+    type = "payment_card",
+    credentialIds = listOf(credId),
+    transactionDataHashesAlg = listOf("sha-256"),
+    merchantName = merchantName,
+    amount = "US ${String.format("%.2f", totalValue)}",
+    additionalInfo = json.encodeToString(additionalInfo), // Serialize the inner object
+  )
 ```
 
 * Android Credential Manager API 는 EUDI Wallet 의 구현 플랫폼 중 하나입니다
 * Transaction Data 에 대한 서명 - EUDI Wallet 에서도 중요한 보안 메커니즘입니다
 * transactionDataHashesAlg = "sha-256" - 거래 무결성을 보장합니다
 
-```{code-block} kotlin
-:caption: DpcHelper.kt:59~65
-  val additionalInfo =
-    AdditionalInfo(
-      title = "Please confirm your purchase details...",
-      tableHeader = listOf("Name", "Qty", "Price", "Total"),
-      tableRows = tableRows,
-      footer = footerText,
-    )
+```kotlin title="DpcHelper.kt:59~65"
+val additionalInfo =
+  AdditionalInfo(
+    title = "Please confirm your purchase details...",
+    tableHeader = listOf("Name", "Qty", "Price", "Total"),
+    tableRows = tableRows,
+    footer = footerText,
+  )
 ```
 
 * EUID Wallet 의 핵심 원칙: 사용자가 공유하는 정보를 명확히 보고 동의해야 합니다
@@ -312,7 +284,7 @@ val mdocFormatsSupported =
 > **Reference:** ARF v2.4.0 Section 5.6.2 "Transactional data using ISO/IEC 18013-5 and OpenID4VP"
 
 
-```{mermaid}
+```mermaid
 sequenceDiagram
     autonumber
     participant User as 사용자
@@ -339,9 +311,7 @@ sequenceDiagram
     Note over Wallet,Issuer: (옵션) 영수증/트랜잭션 증명(VC/Verifiable Receipt) 발행
 ```
 
-<div style="width: 60%; margin: 0 auto;">
-
-```{mermaid}
+```mermaid
 flowchart TD
     A["가맹점: 결제요청 생성"] --> B["사용자: EUDI Wallet 호출"]
     B --> C{"사용자 인증 필요?"}
@@ -359,8 +329,6 @@ flowchart TD
     L --> M["PSP가 가맹점을 통해 사용자에게 결제결과 반환"]
     M --> N["옵션: 영수증 발행/보관"]
 ```
-
-</div>
 
 -	Selective Disclosure: EUDI Wallet은 필요한 최소 정보만 선택적으로 제공(예: "성인임"만 증명) — 프라이버시 보호.
 -	디지털 서명 / VP (Verifiable Presentation): 결제 승인 메시지는 사용자의 서명(혹은 지갑의 결제 토큰)으로 무결성/비부인성 보장.
