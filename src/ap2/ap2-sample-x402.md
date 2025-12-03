@@ -1,17 +1,15 @@
 # x402 시나리오
 
-```{warning}
-**문서 작성 중**
+!!! warning "문서 작성 중"
 
-이 문서와 하위 문서들은 현재 작성 중이며, 부정확하거나 불완전한 정보를 포함할 수 있습니다. 
-프로덕션 환경에서 사용하기 전에 반드시 공식 문서와 표준을 참조하시기 바랍니다.
-```
+    이 문서와 하위 문서들은 현재 작성 중이며, 부정확하거나 불완전한 정보를 포함할 수 있습니다.
+    프로덕션 환경에서 사용하기 전에 반드시 공식 문서와 표준을 참조하시기 바랍니다.
 
-This illustrates the complete flow of the Human Present x402 Payment scenario using the AP2 framework with the A2A protocol and x402 payment standard.
+This document illustrates the complete flow of the Human Present x402 Payment scenario using the AP2 framework with the A2A protocol and x402 payment standard.
 
 ## Sequence Diagram
 
-```{mermaid}
+```mermaid
 sequenceDiagram
     participant User
     participant ShoppingAgent
@@ -93,93 +91,67 @@ sequenceDiagram
 ## Key Components
 
 ### 1. IntentMandate Structure
+
 The IntentMandate captures the user's shopping intent:
 
 ```json
 {
-  "user_cart_confirmation_required": true,
+  "intent_mandate_id": "uuid",
   "natural_language_description": "I want to buy a coffee maker",
+  "user_prompt_required": true,
   "merchants": ["merchant_agent"],
   "skus": ["coffee-maker-001"],
-  "requires_refundability": false,
-  "intent_expiry": "2025-11-18T10:00:00Z"
+  "intent_expiry": "2025-11-18T10:00:00Z",
+  "requires_refundability": false
 }
 ```
 
-**Key Fields:**
-- `user_cart_confirmation_required`: If false, the agent can make purchases automatically once conditions are satisfied
-- `natural_language_description`: User's intent in natural language, confirmed by the user
-- `merchants`: Optional list of allowed merchants (null = any merchant)
-- `skus`: Optional list of specific product SKUs (null = any SKU)
-- `requires_refundability`: Whether items must be refundable
-- `intent_expiry`: Expiration time in ISO 8601 format
-
-**Note:** In actual A2A messages, the IntentMandate is wrapped in a Message structure that includes additional metadata:
-- `contextId` (shopping context identifier)
-- `messageId`, `taskId`, `role` (A2A protocol fields)
-- `risk_data` (optional, sent as a separate DataPart for fraud prevention)
-
 ### 2. CartMandate Structure with x402 Support
-The CartMandate is a merchant-signed cart for x402 blockchain payments:
+
+The CartMandate contains product and x402 payment request details:
 
 ```json
 {
-  "contents": {
-    "id": "cart_x402_123",
-    "user_cart_confirmation_required": true,
-    "merchant_name": "Example Merchant",
-    "cart_expiry": "2025-11-18T10:00:00Z",
-    "payment_request": {
-      "method_data": [{
-        "supported_methods": "x402",
-        "data": {
-          "supported_chains": ["ethereum", "polygon", "base"],
-          "supported_currencies": ["USDC", "USDT", "DAI"],
-          "merchant_wallet_address": "0x1234567890abcdef..."
-        }
-      }],
-      "details": {
-        "id": "order-123",
-        "total": {
-          "label": "Total",
-          "amount": {"currency": "USDC", "value": "79.99"}
-        },
-        "display_items": [
-          {
-            "label": "Coffee Maker",
-            "amount": {"currency": "USDC", "value": "69.99"},
-            "refund_period": 30
-          },
-          {"label": "Shipping", "amount": {"currency": "USDC", "value": "5.00"}},
-          {"label": "Tax", "amount": {"currency": "USDC", "value": "5.00"}},
-          {"label": "Estimated Gas Fee", "amount": {"currency": "USDC", "value": "0.50"}}
-        ]
+  "cart_mandate_id": "uuid",
+  "merchant_name": "Example Merchant",
+  "cart_expiry": "2025-11-18T10:00:00Z",
+  "refund_period": "P30D",
+  "payment_request": {
+    "method_data": [{
+      "supported_methods": ["x402"],
+      "data": {
+        "supported_chains": ["ethereum", "polygon", "base"],
+        "supported_currencies": ["USDC", "USDT", "DAI"],
+        "merchant_wallet_address": "0x1234567890abcdef..."
       }
+    }],
+    "details": {
+      "id": "order-123",
+      "total": {
+        "label": "Total",
+        "amount": {"currency": "USDC", "value": "79.99"}
+      },
+      "displayItems": [
+        {"label": "Coffee Maker", "amount": {"value": "69.99"}},
+        {"label": "Shipping", "amount": {"value": "5.00"}},
+        {"label": "Tax", "amount": {"value": "5.00"}},
+        {"label": "Estimated Gas Fee", "amount": {"value": "0.50"}}
+      ]
     }
   },
-  "merchant_authorization": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjIwMjQwOTA..."
+  "merchant_signature": "signature_by_merchant"
 }
 ```
 
-**Key Fields:**
-- `contents`: The CartContents object containing cart details
-  - `id`: Unique cart identifier
-  - `user_cart_confirmation_required`: Whether user must confirm before purchase
-  - `merchant_name`: Name of the merchant
-  - `cart_expiry`: Expiration time in ISO 8601 format
-  - `payment_request`: W3C PaymentRequest with x402-specific data
-    - `supported_chains`: Blockchain networks accepted
-    - `supported_currencies`: Cryptocurrencies accepted
-    - `merchant_wallet_address`: Merchant's blockchain wallet address
-- `merchant_authorization`: Optional JWT (base64url-encoded) signing the cart contents
-
 ### 3. PaymentMandate Structure for x402
-The PaymentMandate contains user's x402 payment authorization:
+
+The PaymentMandate authorizes the x402 payment:
 
 ```json
 {
   "payment_mandate_contents": {
-    "payment_mandate_id": "pm_x402_123",
+    "payment_mandate_id": "uuid",
+    "timestamp": "2025-11-17T12:00:00Z",
     "payment_details_id": "order-123",
     "payment_details_total": {
       "label": "Total",
@@ -198,36 +170,21 @@ The PaymentMandate contains user's x402 payment authorization:
         "contract_address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
       },
       "shipping_address": {
-        "street_address": "123 Main St",
+        "streetAddress": "123 Main St",
         "city": "San Francisco",
         "state": "CA",
-        "zip_code": "94102"
+        "zipCode": "94102"
       },
       "payer_email": "user@example.com"
     },
-    "merchant_agent": "merchant_agent",
-    "timestamp": "2025-11-17T12:00:00Z"
+    "merchant_agent": "merchant_agent"
   },
-  "user_authorization": "eyJhbGciOiJFUzI1NksiLCJraWQiOiJkaWQ6ZXhhbXBsZ..."
+  "user_authorization": "cart_hash_payment_hash_signature"
 }
 ```
 
-**Key Fields:**
-- `payment_mandate_contents`: Core payment data
-  - `payment_mandate_id`: Unique payment mandate identifier
-  - `payment_details_id`: Payment request identifier
-  - `payment_details_total`: Total payment amount (PaymentItem)
-  - `payment_response`: PaymentResponse with x402-specific details
-    - `chain_id`: Blockchain network identifier
-    - `currency`: Cryptocurrency used (e.g., USDC, USDT, DAI)
-    - `contract_address`: Token contract address on the blockchain
-  - `merchant_agent`: Merchant identifier
-  - `timestamp`: Mandate creation time (ISO 8601)
-- `user_authorization`: Optional base64url-encoded verifiable presentation
-  - Contains secure hashes of CartMandate and PaymentMandateContents
-  - Used by blockchain payment processor to verify transaction authenticity
-
 ### 4. x402 Payment Credential Token
+
 The token contains blockchain wallet credentials:
 
 ```json
@@ -251,6 +208,7 @@ The Credentials Provider decrypts this to reveal:
 ```
 
 ### 5. Blockchain Transaction Structure
+
 The transaction submitted to the blockchain:
 
 ```json
@@ -268,6 +226,7 @@ The transaction submitted to the blockchain:
 ```
 
 ### 6. Transaction Receipt
+
 The blockchain receipt confirming the transaction:
 
 ```json
@@ -283,64 +242,140 @@ The blockchain receipt confirming the transaction:
 }
 ```
 
-## 기술 상세
+## Protocol Flow Details
 
-### HTTP 402 상태 코드
+### Mandate Lifecycle
 
-```http
-HTTP/1.1 402 Payment Required
-Content-Type: application/json
-WWW-Authenticate: Bearer realm="payment-api"
+1. **IntentMandate**: Created by Shopping Agent to express user's shopping intent
+2. **CartMandate**: Created by Merchant Agent with product details and x402 payment options
+3. **PaymentMandate**: Created by Shopping Agent with selected x402 payment method
 
-{
-  "amount": "0.01",
-  "currency": "USD",
-  "payment_methods": ["crypto", "micropayment", "card"],
-  "payment_endpoint": "https://payment.example.com/pay",
-  "resource_id": "api-call-12345"
-}
-```
+### x402 Payment Flow
 
-### 에이전트 자동 결제 로직
+1. **Merchant advertises x402 support**: Includes supported chains and currencies
+2. **User selects digital currency**: Choose from available stablecoins (USDC, USDT, DAI)
+3. **Credentials Provider issues token**: Contains wallet address and signing authority
+4. **Transaction preparation**: Build blockchain transaction with proper gas settings
+5. **Transaction submission**: Submit to blockchain network
+6. **Confirmation waiting**: Wait for required number of block confirmations
+7. **Receipt generation**: Record transaction hash and on-chain proof
 
-```python
-async def fetch_with_payment(url: str, agent_wallet):
-    response = await http_client.get(url)
-    
-    if response.status_code == 402:
-        payment_info = response.json()
-        
-        # 자동 결제 판단 로직
-        if agent_wallet.can_afford(payment_info['amount']):
-            # 결제 실행
-            payment_token = await agent_wallet.pay(
-                amount=payment_info['amount'],
-                endpoint=payment_info['payment_endpoint']
-            )
-            
-            # 결제 증명과 함께 재요청
-            response = await http_client.get(
-                url,
-                headers={'Authorization': f'Bearer {payment_token}'}
-            )
-    
-    return response
-```
+### Security Features
 
-### 결제 토큰 검증
+- **Merchant Signature**: CartMandate is signed by merchant to ensure authenticity
+- **User Authorization**: PaymentMandate is signed by user to authorize purchase
+- **Hash Binding**: User signature includes hashes of both CartMandate and PaymentMandate
+- **Smart Wallet Support**: Can use account abstraction for enhanced security
+- **On-Chain Verification**: All transactions are verifiable on blockchain
+- **Cryptographic Signatures**: Transaction signed with private key
+- **Gas Fee Transparency**: Estimated and actual gas fees are disclosed
 
-```python
-def verify_payment_token(token: str, resource_id: str):
-    try:
-        decoded = jwt.decode(token, public_key, algorithms=['RS256'])
-        
-        # 토큰 유효성 확인
-        assert decoded['resource_id'] == resource_id
-        assert decoded['exp'] > time.time()
-        assert decoded['amount_paid'] >= required_amount
-        
-        return True
-    except:
-        return False
-```
+### Agent Responsibilities
 
+| Agent | Responsibilities |
+|-------|-----------------|
+| **Shopping Agent** | Orchestrates flow, manages user interaction, creates IntentMandate and PaymentMandate |
+| **Merchant Agent** | Product catalog, creates and signs CartMandate, advertises x402 support |
+| **Credentials Provider** | Manages digital wallets, provides signing authority, validates balances |
+| **Payment Processor** | Builds and submits blockchain transactions, verifies confirmations |
+| **Blockchain Network** | Executes transactions, maintains distributed ledger |
+
+## x402 Protocol Integration
+
+### HTTP Payment Flow
+
+The x402 protocol integrates payment into HTTP:
+
+1. **402 Payment Required**: Server responds with x402 payment details
+2. **Payment Negotiation**: Client and server agree on payment terms
+3. **Transaction Execution**: Payment is processed on blockchain
+4. **Service Delivery**: Server delivers requested resource after confirmation
+
+### Key x402 Features
+
+- **Programmable Payments**: AI agents can pay automatically
+- **Microtransaction Support**: Efficient for small amounts
+- **Multi-Currency**: Support for various stablecoins and cryptocurrencies
+- **Cross-Chain**: Can work across different blockchain networks
+- **Instant Settlement**: Faster than traditional payment rails
+- **No KYC Required**: Permissionless for AI agents
+
+## Comparison with Card Payments
+
+| Aspect | x402 Payment | Card Payment |
+|--------|--------------|--------------|
+| **Payment Method** | Digital currency (stablecoins) | Tokenized card (DPAN) |
+| **Settlement** | On-chain, instant | Traditional payment network |
+| **Fees** | Gas fees (blockchain) | Processing fees |
+| **Verification** | Blockchain confirmations | OTP challenge |
+| **Refunds** | Smart contract or manual | Chargeback system |
+| **Cross-Border** | Native support | Currency conversion |
+| **Programmability** | Smart contracts | Limited |
+| **Transparency** | Fully transparent on-chain | Private transactions |
+| **Custody** | Self-custody or delegated | Issuer holds funds |
+
+## Protocol Standards
+
+This implementation follows several key standards:
+
+1. **A2A (Agent-to-Agent)**: Communication protocol between agents
+2. **AP2 (Agent Payments Protocol)**: Payment-specific extension to A2A
+3. **x402**: HTTP payment protocol for digital currencies
+4. **ERC-20**: Token standard for stablecoins on Ethereum
+5. **EIP-1559**: Gas fee mechanism for Ethereum transactions
+6. **EIP-4337**: Account abstraction for smart wallets
+7. **Mandate Pattern**: Structured, signed data objects for cart and payment
+
+## Benefits of x402 in AP2 Context
+
+1. **Payment Agnosticism**: AP2 supports both traditional and digital currencies
+2. **AI-Native**: Designed for autonomous agent transactions
+3. **Interoperability**: Works across different blockchain networks
+4. **Verifiable Credentials**: On-chain proof of all transactions
+5. **Future-Proof**: Ready for emerging payment methods
+6. **Cost Efficient**: Lower fees for microtransactions
+7. **Global Access**: No geographic restrictions
+
+## Implementation Notes
+
+### Current Status
+
+- **AP2 x402 Extension**: Under development
+- **Reference Implementation**: Available at [a2a-x402](https://github.com/google-agentic-commerce/a2a-x402/)
+- **Alignment with AP2**: In progress to ensure mandate compatibility
+
+### Development Partners
+
+Working with leading Web3 and payment ecosystem partners:
+
+- Coinbase
+- CrossMint
+- EigenLayer
+- Ethereum Foundation
+- Mesh
+- Metamask
+- Mysten Labs
+
+### Coming Soon
+
+- Full mandate lifecycle support in x402 extension
+- Smart contract integration examples
+- Multi-chain payment routing
+- Gas optimization strategies
+- Refund and dispute resolution mechanisms
+
+## Notes
+
+- This is a conceptual implementation showing the x402 payment flow
+- The actual x402 extension is being developed in collaboration with Web3 partners
+- Production implementations should:
+  - Implement proper wallet security (hardware wallets, MPC)
+  - Handle chain reorganizations and transaction failures
+  - Optimize gas fees with batch transactions
+  - Implement slippage protection for token swaps
+  - Add proper error handling and retry logic
+  - Monitor transaction status and confirmations
+  - Implement fallback to alternative chains if needed
+  - Store private keys securely (never in plain text)
+  - Use secure communication channels (TLS/HTTPS)
+  - Implement rate limiting and fraud detection
