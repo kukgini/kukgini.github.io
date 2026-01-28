@@ -46,7 +46,7 @@ This sample consists of:
 
 ## Sequence Diagram
 
-```{mermaid}
+```mermaid
 sequenceDiagram
     participant User
     participant ShoppingAgent as Shopping Agent
