@@ -140,11 +140,16 @@ The `transaction_data` contains payment details that get signed:
 
 This implementation follows several key standards:
 
-1. **OpenID4VP**: OpenID for Verifiable Presentations protocol
-2. **ISO/IEC 18013-5**: Mobile driver's license (mdoc) format
-3. **DCQL**: Digital Credentials Query Language for selective disclosure
-4. **A2A**: Agent-to-Agent communication protocol (AP2 extension)
-5. **Android Credential Manager**: Platform API for credential access
+1. **OpenID4VP 1.0**: OpenID for Verifiable Presentations protocol (Final 스펙 - 2025년 7월)
+2. **ISO/IEC 18013-5/7**: Mobile driver's license (mdoc) format 및 온라인 검증 프로토콜
+3. **DCQL**: Digital Credentials Query Language for selective disclosure (OID4VP 1.0 핵심 컴포넌트)
+4. **W3C Digital Credentials API**: 웹 브라우저 기반 credential 요청 API (Chrome 141+, Safari 26+ 지원)
+5. **A2A**: Agent-to-Agent communication protocol (AP2 extension)
+6. **Android Credential Manager / iOS IdentityCredential**: 플랫폼 API for credential access
+
+> [!NOTE]
+> **2025년 주요 마일스톤**: EU는 eIDAS 2.0을 통해 2026년 12월까지 모든 디지털 ID 지갑에 OpenID4VP 사용을 의무화했습니다.
+> OpenID Foundation의 2025년 7월 상호운용성 이벤트에서 87%의 성공률을 달성했습니다.
 
 ## Comparison with EUDI Wallet
 
@@ -281,7 +286,13 @@ val additionalInfo =
 
 ### Payment process in a EUID Wallet
 
-> **Reference:** ARF v2.4.0 Section 5.6.2 "Transactional data using ISO/IEC 18013-5 and OpenID4VP"
+> **Reference:** ARF v2.2.0 (2025년 11월) - Wallet Unit Attestations(WUA), Pseudonyms, Zero-Knowledge Proofs(ZKP), W3C Digital Credentials API 관련 업데이트 포함
+>
+> **2025년 주요 CIR(Commission Implementing Regulations):**
+> - CIR 2025/846: 국경 간 신원 매칭
+> - CIR 2025/847: EUDI Wallet 보안 침해 대응
+> - CIR 2025/848: Wallet Relying Party 등록
+> - CIR 2025/849: 인증된 EUDI Wallet 목록
 
 
 ```mermaid
@@ -344,17 +355,17 @@ flowchart TD
 
 ### DPC 한계점 및 고려사항
 
-**현재의 제약사항:**
-- **플랫폼 한정**: 현재 Android에만 구현, iOS 지원 제한적
-- **생태계 미성숙**: CMWallet 등 credential provider가 아직 초기 단계
+**현재의 제약사항 (2025년 1월 기준):**
+- **iOS 지원 진행 중**: WWDC25에서 W3C Digital Credentials API 지원 발표, iOS/macOS 26부터 Safari에서 지원
+- **생태계 성장 중**: Chrome 141에서 Digital Credentials API 기본 활성화, 크로스 디바이스 presentation 지원 (Chrome 136+)
 - **사용자 교육**: 새로운 개념으로 사용자 이해와 신뢰 구축 필요
-- **표준화 진행 중**: OpenID4VP, mDOC 등이 아직 완전히 확립되지 않음
+- **표준화 안정화**: OpenID4VP 1.0 Final (2025년 7월), W3C Digital Credentials API Working Draft (2025년 7월)
 
 **보안 및 개인정보:**
 - **검증 메커니즘**: 현재 샘플은 unsigned 버전, 실제 운영에서는 완전한 서명 검증 필수
 - **키 관리**: 사용자 기기에서의 안전한 키 저장 및 관리 중요
 - **재생 공격 방지**: Nonce 및 타임스탬프 검증 필요
-- **프라이버시 역설**: 강력한 인증이 익명성과 상충될 수 있음
+- **프라이버시 역설**: 강력한 인증이 익명성과 상충될 수 있음 (Google Wallet은 Zero Knowledge Proofs 도입 예정)
 
 **기술적 고려사항:**
 - **성능**: 암호학적 연산으로 인한 지연 시간 (일반적으로 1-2초)
@@ -388,14 +399,32 @@ flowchart TD
 - **거래 영수증**: Merchant Agent 가 검증 결과와 고객 동의 evidence를 보관해 non-repudiation을 달성합니다.
 - **Fallback 흐름**: 증명 실패 시 기존 카드 결제 혹은 스텝업 인증으로 전환하는 사용자 경험을 설계합니다.
 
-### iOS 및 기타 플랫폼 정합성
+### iOS 및 기타 플랫폼 정합성 (2025년 업데이트)
 
-- **iOS 지원 현실화**: WWDC24에서 공개된 IdentityCredential / Digital Credentials API는 개발자 프리뷰 수준이므로, Apple의 Public Release 일정을 추적하고 베타 프레임워크 실험을 병행합니다.
-- **프로토콜 정렬**: 현재 iOS 프레임워크는 ISO 18013-5/7 기반 mdoc 흐름만 공식 지원 예정으로 알려져 있으므로, OpenID4VP support roadmap 공개 시까지는 SD-JWT VC 또는 web-based bridge 방식을 병행합니다.
-- **플랫폼 추상화**: Credential Manager (Android)·IdentityCredential(iOS)·WebAuthn 기반 브라우저 API를 아우르는 공통 추상화 레이어를 설계하여, 지갑/발급자/검증자 역할을 ARF와 동일한 구조로 매핑합니다.
+- **iOS 지원 공식화 (WWDC25)**: Apple은 WWDC25에서 W3C Digital Credentials API 지원을 발표했습니다. Safari 26 (macOS 26, iOS 26, iPadOS 26)부터 웹사이트가 Apple Wallet 및 서드파티 지갑에서 모바일 ID를 직접 요청할 수 있습니다.
+- **프로토콜 정렬**: iOS는 "org-iso-mdoc" 프로토콜만 지원하며 ISO/IEC 18013-7 Annex C 표준을 따릅니다. OpenID4VP는 Chrome/Android에서 지원되며, 플랫폼별 프로토콜 차이를 고려한 설계가 필요합니다.
+- **Digital ID 기능**: Apple Wallet에서 미국 여권을 사용한 Digital ID 생성 기능이 2025년 후반 출시 예정이며, 일부 TSA 체크포인트에서 국내선 여행 시 사용 가능합니다.
+- **서드파티 앱 통합**: IdentityDocumentServices 프레임워크와 앱 확장을 구현하여 서드파티 앱도 문서 제공자로 기능할 수 있습니다.
+- **플랫폼 추상화**: Credential Manager (Android)·IdentityCredential/Digital Credentials API (iOS)·WebAuthn 기반 브라우저 API를 아우르는 공통 추상화 레이어를 설계합니다.
+- **Verify with Wallet API**: iOS 앱 개발자는 Apple Wallet에 저장된 디지털 운전면허증이나 주 ID를 사용하여 연령 또는 신원 확인이 가능합니다 (일본 국민 ID는 iOS 18.5+ 필요).
 
-### 생태계 및 규제 대응
+### 생태계 및 규제 대응 (2025년 업데이트)
 
-- **규제 일치**: EMVCo DC-API, ETSI TS 119 495(수신자 서명) 등 결제용 표준을 모니터링하고, EUDI Wallet 시행규정(2024/1183)에서 요구하는 PID/EAA(전자 속성) 처리 절차를 문서화합니다.
-- **인증 준비**: 지갑·검증자 모듈을 EUDI Wallet Conformity Assessment (BR-EL, DR-EL) 요구사항에 맞춰 테스트하고, 파일럿 참여국(예: EWC, NOBCCS)에서 공개한 상호운용성 체크리스트를 반영합니다.
+- **규제 준수**: EU는 eIDAS 2.0을 통해 2026년 12월까지 모든 디지털 ID 지갑에 OpenID4VP 사용을 의무화했으며, 이는 약 4억 5천만 EU 시민에게 영향을 미칩니다.
+- **EMVCo-EUDI Wallet 통합**: EMVCo는 European Identity Wallet Consortium(EWC)과 협력하여 EUDI Wallet이 EMV 3DS 거래에서 카드 소유자 인증을 어떻게 촉진할 수 있는지 평가 중입니다 (2025년 7월 결과 예상).
+- **Implementing Acts**: EU 위원회는 2024년 11월, 2025년 3월, 2025년 5월 세 차례에 걸쳐 Implementing Acts를 발표했습니다.
+- **연령 확인 블루프린트**: 2025년 7월 EU 위원회는 EUDI Wallet과 상호운용 가능한 화이트라벨 연령 확인 블루프린트를 파일럿 프로젝트로 발표했습니다.
+- **기업 도입 준비**: 기업들은 2026-2027년 EUDI Wallet 수용을 위해 2025년에 조달 및 기술 매핑을 계획해야 합니다.
+- **인증 준비**: 지갑·검증자 모듈을 EUDI Wallet Conformity Assessment (BR-EL, DR-EL) 요구사항에 맞춰 테스트하고, 파일럿 참여국(예: EWC)에서 공개한 상호운용성 체크리스트를 반영합니다.
 
+## 2025년 주요 업데이트 요약
+
+| 항목 | 상태 (2025년 1월 기준) |
+|------|------------------------|
+| **OpenID4VP** | 1.0 Final (2025년 7월), EU 2026년 12월 의무화 |
+| **W3C Digital Credentials API** | Working Draft (2025년 7월), Chrome 141+에서 기본 활성화 |
+| **EUDI Wallet ARF** | v2.2.0 (2025년 11월), ZKP/WUA/Pseudonyms 지원 |
+| **iOS 지원** | WWDC25 발표, Safari 26+ Digital Credentials API 지원 |
+| **Android 지원** | Chrome 136+ 크로스 디바이스, Chrome 143+ credential 발급 지원 |
+| **EMVCo 통합** | EWC와 협력하여 EMV 3DS + EUDI Wallet 통합 평가 중 |
+| **상호운용성** | OpenID Foundation 이벤트 87% 성공률 (2025년 7월) |
