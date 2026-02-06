@@ -1,946 +1,365 @@
-# ChameleonUltra Firmware Analysis & BLE→RFID Bridge Design
+ ChameleonUltra & 스마트카드 비접촉 프로토콜 분석 정리
 
-## Step 1: Firmware Architecture Reconnaissance
+## 1. ChameleonUltra 개요
 
-### MCU / SoC and SDK
+ChameleonUltra는 **듀얼 모드 RFID 디바이스**로, Tag Emulation과 Reader 두 가지 모드를 지원한다.
+(단, Reader 모드는 **ChameleonUltra 전용** — Chameleon Lite는 미지원)
 
-| Component | Details |
-|-----------|---------|
-| **MCU** | Nordic Semiconductor **nRF52840** (ARM Cortex-M4F @ 64MHz) |
-| **SDK** | Nordic nRF5 SDK v17.x |
-| **SoftDevice** | S140 v7.2.0 (BLE protocol stack) |
-| **Build System** | GNU Make + ARM GCC toolchain |
+### 1.1 동작 모드
 
-### RTOS / Scheduling Model
+| 모드 | 기능 | 비고 |
+|------|------|------|
+| Tag Emulation | RFID 카드를 에뮬레이션 | HF + LF 동시 에뮬레이션 가능 |
+| Reader | RFID 태그를 읽기/쓰기/공격 | Ultra 전용, HF/LF 순차 전환 |
 
-**No traditional RTOS** - Uses cooperative bare-metal scheduling:
+### 1.2 지원 주파수 및 프로토콜
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                    EXECUTION MODEL                              │
-├─────────────────────────────────────────────────────────────────┤
-│  SoftDevice S140 (BLE stack - highest priority, interrupt-driven)│
-│  ────────────────────────────────────────────────────────────── │
-│  Application main loop (cooperative polling)                     │
-│  ────────────────────────────────────────────────────────────── │
-│  App Timer (RTC-based soft timers)                              │
-│  App Scheduler (deferred event processing)                      │
-│  Power Management (sleep between events)                        │
-└─────────────────────────────────────────────────────────────────┘
-```
+#### HF (13.56 MHz) Reader
 
-### Entry Point and Initialization Flow
+| 프로토콜 | 읽기 | 쓰기 | 공격 | CLI 명령어 |
+|----------|------|------|------|-----------|
+| ISO14443A | O | O | - | `hf 14a scan` |
+| MIFARE Classic 1K/4K | O | O | O | `hf mf ...` |
+| MIFARE Ultralight | O | - | - | `hf mfu ...` |
+| NTAG (213/215/216) | O | - | - | `hf mfu ...` |
 
-**Main entry**: `firmware/application/src/app_main.c:main()` (line 849)
+MIFARE Classic 공격: Darkside, Nested, Static Nested, Hard Nested
 
-```
-main()
-  ├── hw_connect_init()         // GPIO/pin configuration
-  ├── fds_util_init()           // Flash Data Storage
-  ├── settings_load_config()    // NV settings
-  ├── init_leds()               // LED subsystem
-  ├── gpio_te_init()            // GPIO Task/Event
-  ├── app_timers_init()         // Soft timer framework
-  ├── power_management_init()   // Power mgmt
-  ├── usb_cdc_init()            // USB serial
-  ├── ble_slave_init()          // ◄── BLE INITIALIZATION
-  ├── bsp_timer_init/start()    // BSP timers
-  ├── button_init()             // Button handling
-  ├── tag_emulation_init()      // ◄── RFID INITIALIZATION
-  ├── rgb_marquee_init()        // LED animations
-  └── Main Loop:
-      while(1) {
-          lesc_event_process();
-          button_press_process();
-          data_frame_process();
-          NRF_LOG_PROCESS();
-          app_usbd_event_queue_process();
-          bsp_wdt_feed();
-          sleep_system_run();    // Enter low-power when idle
-      }
-```
+#### LF (125 kHz) Reader
 
-### High-Level Architecture Diagram
+| 태그 타입 | 읽기 | T55xx 쓰기 | CLI 명령어 |
+|-----------|------|-----------|-----------|
+| EM410x | O | O | `lf em 410x read` |
+| HID Prox | O | O | `lf hid prox read` |
+| Viking | O | O | `lf viking read` |
 
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                         CHAMELEON ULTRA FIRMWARE                            │
-├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                             │
-│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────────────────┐ │
-│  │   USB CDC       │  │   BLE NUS       │  │     Command Protocol        │ │
-│  │   (Serial)      │  │   (Peripheral)  │  │     (dataframe.c)           │ │
-│  └────────┬────────┘  └────────┬────────┘  └──────────────┬──────────────┘ │
-│           │                    │                          │                 │
-│           └────────────────────┴──────────────────────────┘                 │
-│                                │                                            │
-│                    ┌───────────┴───────────┐                                │
-│                    │     app_cmd.c         │                                │
-│                    │  (Command Handlers)   │                                │
-│                    └───────────┬───────────┘                                │
-│                                │                                            │
-│     ┌──────────────────────────┼──────────────────────────┐                 │
-│     │                          │                          │                 │
-│     ▼                          ▼                          ▼                 │
-│  ┌──────────────┐    ┌──────────────────┐    ┌─────────────────────────┐   │
-│  │ Tag Emulation│    │  Reader Mode     │    │    Settings/Config      │   │
-│  │ (HF + LF)    │    │  (HF + LF)       │    │    (Flash storage)      │   │
-│  └──────┬───────┘    └────────┬─────────┘    └─────────────────────────┘   │
-│         │                     │                                             │
-│  ┌──────┴──────────────┬──────┴─────────────────┐                          │
-│  │                     │                        │                          │
-│  ▼                     ▼                        ▼                          │
-│ ┌────────────┐  ┌────────────┐  ┌───────────────────┐  ┌────────────────┐  │
-│ │  HF Stack  │  │  LF Stack  │  │  RC522 (HF Reader)│  │  LF Reader     │  │
-│ │ (NFCT HW)  │  │ (PWM/ADC)  │  │   (SPI)           │  │  (ADC/GPIO)    │  │
-│ └────────────┘  └────────────┘  └───────────────────┘  └────────────────┘  │
-│                                                                             │
-│  ┌──────────────────────────────────────────────────────────────────────┐  │
-│  │                      NORDIC SOFTDEVICE S140                          │  │
-│  │                   (BLE Stack + Radio Scheduler)                      │  │
-│  └──────────────────────────────────────────────────────────────────────┘  │
-│                                                                             │
-│  ┌──────────────────────────────────────────────────────────────────────┐  │
-│  │                      nRF52840 HARDWARE                               │  │
-│  │   NFCT │ PWM │ SAADC │ SPI │ GPIO │ LPCOMP │ RTC │ Radio             │  │
-│  └──────────────────────────────────────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
+### 1.3 동시 동작 제약
 
-### Key Subsystems
+| 동작 조합 | 가능 | 원인 |
+|-----------|------|------|
+| HF Reader 단독 | O | - |
+| LF Reader 단독 | O | - |
+| HF + LF 동시 읽기 | X | 명령별 순차 전환 |
+| HF + LF 동시 에뮬레이션 | O | 별도 안테나/페리퍼럴 |
+| Reader + Tag Emulation 동시 | X | HF 안테나 스위치 제약 |
 
-| Subsystem | File(s) | Responsibility |
-|-----------|---------|----------------|
-| **BLE Communication** | `ble_main.c` | BLE peripheral, NUS service, pairing |
-| **USB Communication** | `usb_main.c` | CDC ACM serial emulation |
-| **Command Protocol** | `dataframe.c`, `app_cmd.c` | Frame parsing, command dispatch |
-| **Tag Emulation** | `tag_emulation.c` | Slot management, data loading |
-| **HF Protocols** | `nfc_14a.c`, `nfc_mf1.c` | ISO14443A, MIFARE Classic |
-| **LF Protocols** | `lf_tag_em.c`, `em410x.c` | EM410x, HID Prox |
-| **Settings** | `settings.c`, `fds_util.c` | Flash persistence |
+**하드웨어 원인**: HF 안테나가 RF 스위치(`HF_ANT_SEL`, GPIO P1.10)로 RC522(Reader) 또는 nRF52840 NFCT(Tag Emulation) 중 하나에만 연결된다.
 
----
+```mermaid
+graph LR
+    ANT[HF 안테나 코일] --> SW{RF 스위치<br/>HF_ANT_SEL}
+    SW -->|LOW| RC[RC522<br/>Reader 칩]
+    SW -->|HIGH| NFC[nRF52840<br/>NFCT 페리퍼럴]
+    RC --> RM[Reader 모드]
+    NFC --> TM[Tag Emulation 모드]
 
-## Step 2: BLE Stack Analysis
-
-### BLE Initialization Location
-
-**File**: `firmware/application/src/ble_main.c`
-
-```c
-// ble_main.c:770-780
-void ble_slave_init(void) {
-    adc_configure();           // ADC for battery
-    create_battery_timer();    // Battery update timer
-    ble_stack_init();          // ◄── SoftDevice enable + BLE config
-    gap_params_init();         // Device name, connection params
-    gatt_init();               // GATT module
-    services_init();           // NUS + Battery services
-    advertising_init();        // Advertising setup
-    conn_params_init();        // Connection parameter module
-    peer_manager_init();       // Bonding/pairing
-}
-```
-
-### BLE Role Configuration (CRITICAL FINDING)
-
-**Current configuration in `sdk_config.h`**:
-
-```c
-// sdk_config.h:11441-11454
-#define NRF_SDH_BLE_PERIPHERAL_LINK_COUNT 1  // ◄── Peripheral only
-#define NRF_SDH_BLE_CENTRAL_LINK_COUNT    0  // ◄── NO CENTRAL/SCANNER
-#define NRF_SDH_BLE_TOTAL_LINK_COUNT      1
-```
-
-**Conclusion**: **BLE Central (Scanner) role is NOT currently implemented.**
-
-The device operates exclusively as a BLE **Peripheral** (advertising, accepting connections). No scanning or observer functionality exists.
-
-### BLE Event Handler
-
-```c
-// ble_main.c:405-483
-static void ble_evt_handler(ble_evt_t const *p_ble_evt, void *p_context) {
-    switch (p_ble_evt->header.evt_id) {
-        case BLE_GAP_EVT_CONNECTED:        // Connection established
-        case BLE_GAP_EVT_DISCONNECTED:     // Connection terminated
-        case BLE_GAP_EVT_PHY_UPDATE_REQUEST:
-        case BLE_GAP_EVT_SEC_PARAMS_REQUEST:
-        case BLE_GAP_EVT_PASSKEY_DISPLAY:
-        // ... no scanning events handled
-    }
-}
-```
-
-**Missing Events for Scanning** (would need to be added):
-- `BLE_GAP_EVT_ADV_REPORT` - Advertisement report
-- `BLE_GAP_EVT_SCAN_REQ_REPORT` - Scan request received
-- `BLE_GAP_EVT_TIMEOUT` with `BLE_GAP_TIMEOUT_SRC_SCAN`
-
-### Is Passive/Active Scanning Implemented?
-
-| Feature | Status |
-|---------|--------|
-| Passive Scanning | **NOT implemented** |
-| Active Scanning | **NOT implemented** |
-| BLE Observer | **NOT implemented** |
-| ADV parsing | **NOT implemented** |
-
-### Files That Must Be Modified for Scanner Support
-
-| File | Required Changes |
-|------|------------------|
-| `sdk_config.h` | Set `NRF_SDH_BLE_CENTRAL_LINK_COUNT >= 1` |
-| `ble_main.c` | Add scan init, start/stop functions, ADV report handler |
-| `ble_main.h` | Export scan control functions |
-| **NEW**: `ble_scan.c/.h` | (Recommended) Dedicated scanner module |
-
-### Where RSSI, MAC, ADV Payload Are Accessible
-
-When scanning is implemented, data arrives via `BLE_GAP_EVT_ADV_REPORT`:
-
-```c
-// From SoftDevice headers
-typedef struct {
-    ble_gap_addr_t peer_addr;           // MAC address
-    ble_gap_addr_t direct_addr;         // Direct advertising address
-    int8_t         rssi;                // RSSI in dBm
-    uint8_t        type;                // ADV type (connectable, scannable, etc.)
-    ble_data_t     data;                // ◄── Raw ADV payload (31 bytes max)
-} ble_gap_evt_adv_report_t;
+    style SW fill:#f9f,stroke:#333
+    style RM fill:#cfc,stroke:#333
+    style TM fill:#ccf,stroke:#333
 ```
 
 ---
 
-## Step 3: BLE Advertisement Parsing Strategy
+## 2. 스마트카드 인터페이스 규격
 
-### Hook Point for ADV Receive Path
+### 2.1 접촉식 (Contact) — ISO/IEC 7816
 
-**Recommended approach**: Create a new module `ble_scanner.c` that:
-1. Configures and starts scanning
-2. Receives `BLE_GAP_EVT_ADV_REPORT` events
-3. Parses AD structures
-4. Filters by criteria
-5. Forwards matching data to RFID bridge
+카드 표면에 **금색 접점(8핀 금속 패드)** 이 있는 방식.
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                    BLE ADV RECEIVE PATH                         │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│   SoftDevice Radio                                              │
-│        │                                                        │
-│        ▼                                                        │
-│   BLE_GAP_EVT_ADV_REPORT                                        │
-│        │                                                        │
-│        ▼                                                        │
-│   ┌─────────────────────────────────┐                          │
-│   │  ble_scanner_on_adv_report()    │  ◄── NEW HOOK POINT      │
-│   │  (ble_scanner.c)                │                          │
-│   └───────────────┬─────────────────┘                          │
-│                   │                                             │
-│                   ▼                                             │
-│   ┌─────────────────────────────────┐                          │
-│   │  parse_adv_data()               │  AD structure parser     │
-│   │  - Extract AD Types             │                          │
-│   │  - Filter by UUID/MfgData       │                          │
-│   └───────────────┬─────────────────┘                          │
-│                   │                                             │
-│                   ▼                                             │
-│   ┌─────────────────────────────────┐                          │
-│   │  ble_rfid_bridge_enqueue()      │  Queue for RFID TX       │
-│   └─────────────────────────────────┘                          │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
-```
+| 핀 | 이름 | 기능 | 핀 | 이름 | 기능 |
+|----|------|------|----|------|------|
+| C1 | VCC | 전원 | C5 | GND | 접지 |
+| C2 | RST | 리셋 | C6 | VPP | 프로그래밍 전압 |
+| C3 | CLK | 클럭 | C7 | I/O | 데이터 |
+| C4 | RFU | 예약 | C8 | RFU | 예약 |
 
-### Non-Invasive Parsing Layer Design
+| 표준 | 내용 |
+|------|------|
+| ISO 7816-1 | 물리적 특성 (카드 크기, 강도) |
+| ISO 7816-2 | 접점 위치 및 크기 |
+| ISO 7816-3 | 전기 인터페이스, 전송 프로토콜 (T=0, T=1) |
+| ISO 7816-4 | 명령어 체계 (APDU 명령/응답) |
 
-**Proposed data structures**:
+**RF 주파수 없음** — 금속 접점으로 직접 전기 신호 전달
 
-```c
-// ble_adv_parser.h
+### 2.2 비접촉식 (Contactless) — ISO 14443
 
-#include <stdint.h>
-#include <stdbool.h>
+13.56 MHz 무선 RF를 사용하는 방식.
 
-// BLE AD Type definitions (Bluetooth SIG)
-#define AD_TYPE_FLAGS                    0x01
-#define AD_TYPE_INCOMPLETE_16BIT_UUID    0x02
-#define AD_TYPE_COMPLETE_16BIT_UUID      0x03
-#define AD_TYPE_INCOMPLETE_32BIT_UUID    0x04
-#define AD_TYPE_COMPLETE_32BIT_UUID      0x05
-#define AD_TYPE_INCOMPLETE_128BIT_UUID   0x06
-#define AD_TYPE_COMPLETE_128BIT_UUID     0x07
-#define AD_TYPE_SHORT_LOCAL_NAME         0x08
-#define AD_TYPE_COMPLETE_LOCAL_NAME      0x09
-#define AD_TYPE_TX_POWER_LEVEL           0x0A
-#define AD_TYPE_SERVICE_DATA_16BIT       0x16
-#define AD_TYPE_SERVICE_DATA_32BIT       0x20
-#define AD_TYPE_SERVICE_DATA_128BIT      0x21
-#define AD_TYPE_MANUFACTURER_DATA        0xFF
+| 표준 | 내용 |
+|------|------|
+| ISO 14443-1 | 물리적 특성 |
+| ISO 14443-2 | RF 전력 및 변조 (Type A / Type B) |
+| ISO 14443-3 | 초기화, 안티콜리전, UID 선택 |
+| ISO 14443-4 | 전송 프로토콜 (T=CL), RATS/ATS |
 
-// Parsed AD element
-typedef struct {
-    uint8_t  type;
-    uint8_t  length;
-    uint8_t *data;
-} ble_ad_element_t;
+### 2.3 프로토콜 스택 비교
 
-// Parsed ADV packet structure
-typedef struct {
-    uint8_t           mac[6];
-    int8_t            rssi;
-    uint8_t           adv_type;
+ISO 14443과 ISO 7816은 선택지가 아니라 **계층적으로 쌓이는 레이어**이다.
 
-    // Parsed elements (up to 8 AD structures typical)
-    ble_ad_element_t  elements[8];
-    uint8_t           element_count;
+```mermaid
+graph TB
+    subgraph 접촉식["접촉식 (금색 칩 꽂기)"]
+        CA[ISO 7816-4 APDU<br/>SELECT AID, READ RECORD]
+        CB[ISO 7816-3<br/>T=0 또는 T=1 직렬 전송]
+        CC[ISO 7816-1,2<br/>금속 접점 8핀]
+        CD[물리 접촉]
+        CA --> CB --> CC --> CD
+    end
 
-    // Quick-access pointers (NULL if not present)
-    uint8_t          *manufacturer_data;
-    uint8_t           manufacturer_data_len;
-    uint16_t          manufacturer_id;
+    subgraph 비접촉식["비접촉식 (NFC 탭)"]
+        NA[ISO 7816-4 APDU<br/>SELECT AID, READ RECORD]
+        NB[ISO 14443-4<br/>T=CL 비접촉 전송]
+        NC[ISO 14443A-3<br/>ATQA / SAK / UID]
+        ND[RF 13.56 MHz]
+        NA --> NB --> NC --> ND
+    end
 
-    uint8_t          *service_data;
-    uint8_t           service_data_len;
-    uint16_t          service_uuid;
+    CA -.-|동일한 APDU| NA
 
-    uint8_t          *local_name;
-    uint8_t           local_name_len;
-} ble_parsed_adv_t;
-
-// Filter configuration
-typedef struct {
-    bool     filter_by_uuid;
-    uint16_t target_uuid_16;
-
-    bool     filter_by_manufacturer_id;
-    uint16_t target_manufacturer_id;
-
-    bool     filter_by_name_prefix;
-    char     name_prefix[16];
-
-    int8_t   min_rssi;  // Minimum RSSI threshold
-} ble_adv_filter_t;
+    style CA fill:#ffe0b2,stroke:#e65100
+    style NA fill:#ffe0b2,stroke:#e65100
 ```
 
-### TLV Parsing Implementation
+**핵심**: 맨 위의 APDU 명령어(ISO 7816-4)는 동일하고, 전달 방법만 다르다.
 
-```c
-// ble_adv_parser.c
+### 2.4 듀얼 인터페이스 카드
 
-/**
- * Parse BLE Advertisement data (Type-Length-Value format)
- *
- * ADV data format:
- *   [Length1][Type1][Data1...][Length2][Type2][Data2...]...
- *
- * Where Length = sizeof(Type) + sizeof(Data) = 1 + DataLen
- */
-bool ble_adv_parse(const uint8_t *adv_data, uint8_t adv_len,
-                   ble_parsed_adv_t *parsed) {
+하나의 칩이 접촉식(ISO 7816)과 비접촉식(ISO 14443) 인터페이스를 모두 탑재한다.
 
-    memset(parsed, 0, sizeof(ble_parsed_adv_t));
+```mermaid
+graph TB
+    subgraph CARD["스마트카드 IC 칩"]
+        SE["Secure Element<br/>(애플리케이션)"]
+        APDU["ISO 7816-4 APDU 처리"]
+        SE --> APDU
+        APDU --> C_IF["ISO 7816-3<br/>접촉 T=1"]
+        APDU --> N_IF["ISO 14443-4<br/>비접촉 T=CL"]
+        C_IF --> PAD["금속 접점<br/>8핀 패드"]
+        N_IF --> COIL["안테나 코일"]
+    end
 
-    uint8_t offset = 0;
-
-    while (offset < adv_len && parsed->element_count < 8) {
-        uint8_t field_len = adv_data[offset];
-
-        if (field_len == 0) {
-            break;  // End of meaningful data
-        }
-
-        if (offset + field_len >= adv_len) {
-            break;  // Malformed data
-        }
-
-        uint8_t ad_type = adv_data[offset + 1];
-        uint8_t data_len = field_len - 1;
-        const uint8_t *data = &adv_data[offset + 2];
-
-        // Store in elements array
-        ble_ad_element_t *elem = &parsed->elements[parsed->element_count];
-        elem->type = ad_type;
-        elem->length = data_len;
-        elem->data = (uint8_t *)data;
-        parsed->element_count++;
-
-        // Quick-access shortcuts
-        switch (ad_type) {
-            case AD_TYPE_MANUFACTURER_DATA:
-                if (data_len >= 2) {
-                    parsed->manufacturer_id = data[0] | (data[1] << 8);
-                    parsed->manufacturer_data = (uint8_t *)&data[2];
-                    parsed->manufacturer_data_len = data_len - 2;
-                }
-                break;
-
-            case AD_TYPE_SERVICE_DATA_16BIT:
-                if (data_len >= 2) {
-                    parsed->service_uuid = data[0] | (data[1] << 8);
-                    parsed->service_data = (uint8_t *)&data[2];
-                    parsed->service_data_len = data_len - 2;
-                }
-                break;
-
-            case AD_TYPE_COMPLETE_LOCAL_NAME:
-            case AD_TYPE_SHORT_LOCAL_NAME:
-                parsed->local_name = (uint8_t *)data;
-                parsed->local_name_len = data_len;
-                break;
-        }
-
-        offset += field_len + 1;
-    }
-
-    return (parsed->element_count > 0);
-}
-
-/**
- * Filter ADV packet against criteria
- */
-bool ble_adv_filter_match(const ble_parsed_adv_t *parsed,
-                          const ble_adv_filter_t *filter) {
-
-    // RSSI threshold
-    if (parsed->rssi < filter->min_rssi) {
-        return false;
-    }
-
-    // Manufacturer ID filter
-    if (filter->filter_by_manufacturer_id) {
-        if (parsed->manufacturer_data == NULL ||
-            parsed->manufacturer_id != filter->target_manufacturer_id) {
-            return false;
-        }
-    }
-
-    // Service UUID filter
-    if (filter->filter_by_uuid) {
-        if (parsed->service_uuid != filter->target_uuid_16) {
-            return false;
-        }
-    }
-
-    // Name prefix filter
-    if (filter->filter_by_name_prefix) {
-        if (parsed->local_name == NULL) {
-            return false;
-        }
-        size_t prefix_len = strlen(filter->name_prefix);
-        if (parsed->local_name_len < prefix_len ||
-            memcmp(parsed->local_name, filter->name_prefix, prefix_len) != 0) {
-            return false;
-        }
-    }
-
-    return true;
-}
+    style SE fill:#fff9c4,stroke:#f57f17
+    style C_IF fill:#c8e6c9,stroke:#2e7d32
+    style N_IF fill:#bbdefb,stroke:#1565c0
 ```
 
-### Mobile Phone Advertisement Filtering Examples
-
-```c
-// Example: Filter for Apple devices (iBeacon, AirDrop, etc.)
-ble_adv_filter_t apple_filter = {
-    .filter_by_manufacturer_id = true,
-    .target_manufacturer_id = 0x004C,  // Apple Inc.
-    .min_rssi = -80
-};
-
-// Example: Filter for specific custom service UUID
-ble_adv_filter_t custom_filter = {
-    .filter_by_uuid = true,
-    .target_uuid_16 = 0xFFF0,  // Custom service
-    .min_rssi = -70
-};
-
-// Example: Filter by device name prefix
-ble_adv_filter_t name_filter = {
-    .filter_by_name_prefix = true,
-    .name_prefix = "MyPhone",
-    .min_rssi = -90
-};
-```
+**하나의 칩, 하나의 앱, 두 개의 통로** — 꽂든 탭하든 같은 SE의 같은 애플리케이션에 접근한다.
 
 ---
 
-## Step 4: RFID Transmission Path Analysis
+## 3. Android HCE vs 물리 카드
 
-### Supported RFID/NFC Protocols
+### 3.1 비교
 
-| Frequency | Protocol | Implementation |
-|-----------|----------|----------------|
-| **HF (13.56 MHz)** | ISO14443-A | `nfc_14a.c` - Full state machine |
-| | MIFARE Classic | `nfc_mf1.c` - Crypto1, key auth |
-| | MIFARE Ultralight/NTAG | `nfc_mf0_ntag.c` |
-| **LF (125 kHz)** | EM410x | `em410x.c` - Manchester encoding |
-| | HID Prox | `hidprox.c` - FSK modulation |
-| | Viking | `viking.c` - ASK protocol |
+| 항목 | 물리 카드 (SE) | Android HCE |
+|------|---------------|-------------|
+| APDU 처리 위치 | 카드 내부 Secure Element | Android 앱 (HostApduService) |
+| 보안 수준 | 하드웨어 보안칩 (탬퍼 방지) | 소프트웨어 기반 (루팅 시 노출) |
+| 전원 필요 | 불필요 (리더 RF 전력 사용) | 필요 (폰 배터리) |
+| UID | 고정 또는 랜덤 | 보통 랜덤 UID (보안 목적) |
+| AID 라우팅 | 카드 자체가 AID 처리 | Android OS가 AID별로 앱에 라우팅 |
+| 유연성 | 고정 (발급 후 변경 어려움) | 앱 업데이트로 자유롭게 변경 |
+| 오프라인 동작 | 항상 가능 | 폰 꺼지면 불가능 |
 
-### Raw RFID Frame Generation
+### 3.2 에뮬레이션 범위 비교
 
-**HF Frame Generation** (`nfc_14a.c`):
+```mermaid
+graph LR
+    subgraph 프로토콜 스택
+        L1["ISO 14443A-3<br/>UID, MIFARE Classic, NTAG"]
+        L2["ISO 14443-4<br/>+ ISO 7816 APDU"]
+    end
 
-```c
-// nfc_14a.c - Core TX macros
+    CU["ChameleonUltra"] -->|지원| L1
+    CU -.->|미지원| L2
+    HCE["Android HCE"] -.->|미지원| L1
+    HCE -->|지원| L2
+    PC["물리 카드"] -->|지원| L1
+    PC -->|지원| L2
 
-// Transmit complete bytes with CRC
-#define NFC_14A_TX_BYTE_CORE(data, bytes, appendCrc, delayMode) {
-    NRF_NFCT->PACKETPTR = (uint32_t)(data);
-    NRF_NFCT->TXD.AMOUNT = (bytes << NFCT_TXD_AMOUNT_TXDATABYTES_Pos);
-    NRF_NFCT->TXD.FRAMECONFIG =
-        NFCT_TXD_FRAMECONFIG_PARITY_Msk |      // Add parity bits
-        (appendCrc ? NFCT_TXD_FRAMECONFIG_CRCMODETX_Msk : 0) |
-        NFCT_TXD_FRAMECONFIG_SOF_Msk;          // Add Start-of-Frame
-    NRF_NFCT->TASKS_STARTTX = 1;               // Trigger TX
-}
-
-// Key TX functions:
-void nfc_tag_14a_tx_bytes(uint8_t *data, uint32_t bytes, bool appendCrc);
-void nfc_tag_14a_tx_bits(uint8_t *data, uint32_t bits);
-void nfc_tag_14a_tx_nbit(uint8_t data, uint32_t bits);
+    style CU fill:#c8e6c9,stroke:#2e7d32
+    style HCE fill:#bbdefb,stroke:#1565c0
+    style PC fill:#ffe0b2,stroke:#e65100
 ```
 
-**LF Frame Generation** (`em410x.c`):
+### 3.3 Android HCE 동작 구조
 
-```c
-// em410x.c - Manchester-encoded EM410x transmission
+```mermaid
+sequenceDiagram
+    participant R as NFC 리더
+    participant CLF as NFC Controller (CLF)
+    participant OS as Android NFC Service
+    participant APP as HostApduService 앱
 
-// EM410x data format:
-// - 9-bit header (0x1FF)
-// - 64 bits of data (10 rows x 5 bits, last bit is row parity)
-// - Column parity + stop bit
-
-// Modulation via PWM sequences
-static void em410x_generate_pwm_sequence(uint8_t *id_bytes,
-                                          nrf_pwm_values_common_t *seq);
+    R->>CLF: RF 필드 활성화 (13.56MHz)
+    CLF->>R: ATQA, UID, SAK (ISO 14443A-3)
+    R->>CLF: RATS (ISO 14443-4)
+    CLF->>R: ATS
+    R->>CLF: SELECT AID (APDU)
+    CLF->>OS: AID 라우팅
+    OS->>APP: processCommandApdu()
+    APP->>OS: Response APDU
+    OS->>CLF: Response APDU
+    CLF->>R: Response APDU
 ```
 
-**LF Modulation Hardware** (`lf_125khz_radio.c`):
-
-```c
-// PWM configuration for 125 kHz carrier
-static nrfx_pwm_config_t pwm_config = {
-    .output_pins = { LF_ANT_DRIVER, ... },
-    .base_clock  = NRF_PWM_CLK_500kHz,
-    .count_mode  = NRF_PWM_MODE_UP,
-    .top_value   = 4,                    // 500kHz / 4 = 125 kHz
-    .load_mode   = NRF_PWM_LOAD_INDIVIDUAL,
-};
-```
-
-### Timing Constraints
-
-| Protocol | Timing Requirement | Context |
-|----------|-------------------|---------|
-| ISO14443A | FDT (Frame Delay Time) ~86.4us | NFCT hardware handles automatically |
-| MIFARE Auth | Crypto timing windows | Interrupt context |
-| EM410x | 64 RF cycles per bit @ 125kHz | PWM + PPI driven |
-| HID Prox | FSK modulation timing | PWM sequence playback |
-
-### RFID Subsystem Data Flow
-
-```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                      RFID DATA FLOW                                     │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│   ┌─────────────────────────────────────────────────────────────┐      │
-│   │                     tag_emulation.c                         │      │
-│   │   - Slot management (8 slots, HF+LF per slot)               │      │
-│   │   - Data loading from Flash to RAM                          │      │
-│   │   - tag_base_handler_map[] dispatch table                   │      │
-│   └───────────────────────┬─────────────────────────────────────┘      │
-│                           │                                             │
-│           ┌───────────────┴───────────────┐                            │
-│           ▼                               ▼                            │
-│   ┌───────────────┐               ┌───────────────┐                    │
-│   │   HF Path     │               │   LF Path     │                    │
-│   └───────┬───────┘               └───────┬───────┘                    │
-│           │                               │                            │
-│           ▼                               ▼                            │
-│   ┌───────────────────┐           ┌───────────────────┐                │
-│   │ nfc_14a.c         │           │ lf_tag_em.c       │                │
-│   │ - ISO14443A FSM   │           │ - Field detection │                │
-│   │ - REQA/WUPA/SEL   │           │ - Protocol select │                │
-│   └─────────┬─────────┘           └─────────┬─────────┘                │
-│             │                               │                          │
-│             ▼                               ▼                          │
-│   ┌───────────────────┐           ┌───────────────────┐                │
-│   │ Protocol Impl:    │           │ Protocol Impl:    │                │
-│   │ - nfc_mf1.c       │           │ - em410x.c        │                │
-│   │ - nfc_mf0_ntag.c  │           │ - hidprox.c       │                │
-│   └─────────┬─────────┘           └─────────┬─────────┘                │
-│             │                               │                          │
-│             ▼                               ▼                          │
-│   ┌───────────────────┐           ┌───────────────────┐                │
-│   │ NRF_NFCT          │           │ PWM + SAADC       │                │
-│   │ (HW Peripheral)   │           │ (via PPI)         │                │
-│   └───────────────────┘           └───────────────────┘                │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
-```
-
-### Input Format Expected by RFID Subsystem
-
-**For HF (MIFARE Classic)**:
-```c
-// From nfc_mf1.c - Block data structure
-typedef struct {
-    uint8_t data[16];  // 16 bytes per block
-} nfc_mf1_block_t;
-
-// Full 1K card = 64 blocks = 1024 bytes
-// UID is in Block 0, bytes 0-3 (single-size) or 0-6 (double-size)
-```
-
-**For LF (EM410x)**:
-```c
-// 5-byte ID (40 bits)
-uint8_t em410x_id[5];  // e.g., {0xDE, 0xAD, 0xBE, 0xEF, 0x12}
-
-// Loaded via lf_tag_data_loadcb()
-// Generates PWM sequences for Manchester modulation
-```
-
-**For LF (HID Prox)**:
-```c
-// HID Prox uses Wiegand data format
-typedef struct {
-    uint32_t facility_code;
-    uint32_t card_number;
-    uint8_t  format_idx;  // Index into wiegand_format table
-} hid_prox_data_t;
-```
+RF 프로토콜(L1~L3)은 동일하여 리더 입장에서 구분이 안 된다.
 
 ---
 
-## Step 5: BLE -> RFID Bridging Design
+## 4. ChameleonUltra CLI로 카드 분석하기
 
-### Internal Pipeline Architecture
+### 4.1 기본 스캔
 
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                    BLE -> RFID BRIDGE PIPELINE                              │
-├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                             │
-│  ┌────────────────────────────────────────────────────────────────────┐    │
-│  │  STAGE 1: BLE Scanner                                              │    │
-│  │  ┌──────────────────────────────────────────────────────────────┐  │    │
-│  │  │  ble_scanner.c                                               │  │    │
-│  │  │  - sd_ble_gap_scan_start() with scan params                  │  │    │
-│  │  │  - BLE_GAP_EVT_ADV_REPORT handler                            │  │    │
-│  │  │  - Configurable scan window/interval                         │  │    │
-│  │  └──────────────────────────────────────────────────────────────┘  │    │
-│  └─────────────────────────┬──────────────────────────────────────────┘    │
-│                            │ Raw ADV packet                                 │
-│                            ▼                                                │
-│  ┌────────────────────────────────────────────────────────────────────┐    │
-│  │  STAGE 2: ADV Parser & Filter                                      │    │
-│  │  ┌──────────────────────────────────────────────────────────────┐  │    │
-│  │  │  ble_adv_parser.c                                            │  │    │
-│  │  │  - TLV parsing of AD structures                              │  │    │
-│  │  │  - Extract: UUID, Mfg Data, Service Data, Name               │  │    │
-│  │  │  - Apply filter criteria                                     │  │    │
-│  │  └──────────────────────────────────────────────────────────────┘  │    │
-│  └─────────────────────────┬──────────────────────────────────────────┘    │
-│                            │ Parsed & filtered data                        │
-│                            ▼                                                │
-│  ┌────────────────────────────────────────────────────────────────────┐    │
-│  │  STAGE 3: Data Transform                                           │    │
-│  │  ┌──────────────────────────────────────────────────────────────┐  │    │
-│  │  │  ble_rfid_transform.c                                        │  │    │
-│  │  │  - Map BLE payload -> RFID format                            │  │    │
-│  │  │  - Options:                                                   │  │    │
-│  │  │    a) MAC -> EM410x ID (truncate/hash 6->5 bytes)            │  │    │
-│  │  │    b) Mfg Data -> MIFARE blocks                              │  │    │
-│  │  │    c) Service Data -> HID Wiegand                            │  │    │
-│  │  │    d) Custom mapping logic                                    │  │    │
-│  │  └──────────────────────────────────────────────────────────────┘  │    │
-│  └─────────────────────────┬──────────────────────────────────────────┘    │
-│                            │ RFID-ready data                               │
-│                            ▼                                                │
-│  ┌────────────────────────────────────────────────────────────────────┐    │
-│  │  STAGE 4: Queue & Scheduler                                        │    │
-│  │  ┌──────────────────────────────────────────────────────────────┐  │    │
-│  │  │  ble_rfid_bridge.c                                           │  │    │
-│  │  │  - Circular buffer for pending TX                            │  │    │
-│  │  │  - Rate limiting (avoid overwhelming RF)                     │  │    │
-│  │  │  - Priority handling                                         │  │    │
-│  │  │  - Coordinate with SoftDevice timeslots                      │  │    │
-│  │  └──────────────────────────────────────────────────────────────┘  │    │
-│  └─────────────────────────┬──────────────────────────────────────────┘    │
-│                            │ Scheduled TX                                  │
-│                            ▼                                                │
-│  ┌────────────────────────────────────────────────────────────────────┐    │
-│  │  STAGE 5: RFID Transmission                                        │    │
-│  │  ┌──────────────────────────────────────────────────────────────┐  │    │
-│  │  │  Existing RFID Stack                                         │  │    │
-│  │  │  - tag_emulation.c (update slot data dynamically)            │  │    │
-│  │  │  - nfc_14a.c / lf_tag_em.c (field-triggered TX)              │  │    │
-│  │  │                                                               │  │    │
-│  │  │  OR Direct TX (for active transmission):                      │  │    │
-│  │  │  - lf_125khz_radio.c (PWM sequence playback)                 │  │    │
-│  │  │  - rc522.c (HF reader TX via SPI)                            │  │    │
-│  │  └──────────────────────────────────────────────────────────────┘  │    │
-│  └────────────────────────────────────────────────────────────────────┘    │
-│                                                                             │
-└─────────────────────────────────────────────────────────────────────────────┘
+```bash
+hf 14a info
 ```
 
-### Module Interface Design
+출력 항목:
 
-```c
-// ble_rfid_bridge.h
+| 필드 | 설명 |
+|------|------|
+| UID | 카드 고유 식별자 (4/7/10 바이트) |
+| ATQA | Answer To Request Type A (2 바이트) |
+| SAK | Select Acknowledge (1 바이트) — **카드 타입 판별 핵심** |
+| ATS | Answer To Select (ISO 14443-4 지원 시에만 존재) |
 
-#ifndef BLE_RFID_BRIDGE_H
-#define BLE_RFID_BRIDGE_H
+### 4.2 SAK 값 해석표
 
-#include <stdint.h>
-#include <stdbool.h>
-#include "tag_emulation.h"
+| SAK | 카드 타입 | ISO 14443-4 | ChameleonUltra 에뮬레이션 |
+|-----|----------|-------------|--------------------------|
+| 0x00 | MIFARE Ultralight / NTAG 2xx | X | O |
+| 0x08 | MIFARE Classic 1K / Plus SE 1K | X | O |
+| 0x09 | MIFARE Mini 0.3K | X | O |
+| 0x10 | MIFARE Plus 2K | X | - |
+| 0x11 | MIFARE Plus 4K | X | - |
+| 0x18 | MIFARE Classic 4K / Plus S 4K | X | O |
+| 0x19 | MIFARE Classic 2K | X | O |
+| 0x20 | DESFire EV1/2/3 / MIFARE Plus EV1/2 / NTAG 4xx | O | X |
+| 0x28 | SmartMX + MIFARE Classic 1K | O | 부분적 (MF Classic 부분만) |
+| 0x38 | SmartMX + MIFARE Classic 4K | O | 부분적 (MF Classic 부분만) |
 
-// Bridge operating modes
-typedef enum {
-    BRIDGE_MODE_DISABLED,           // Bridge inactive
-    BRIDGE_MODE_PASSIVE_UPDATE,     // Update tag data, wait for reader
-    BRIDGE_MODE_ACTIVE_TX,          // Actively transmit on BLE trigger
-} ble_rfid_bridge_mode_t;
+#### SAK 비트 판별 기준
 
-// Target RFID protocol for conversion
-typedef enum {
-    RFID_TARGET_EM410X,             // LF 125kHz EM410x
-    RFID_TARGET_HID_PROX,           // LF 125kHz HID Prox
-    RFID_TARGET_MIFARE_UID,         // HF ISO14443A UID only
-    RFID_TARGET_MIFARE_BLOCK,       // HF MIFARE Classic block data
-    RFID_TARGET_NTAG,               // HF NTAG/Ultralight
-} rfid_target_protocol_t;
+| 비트 | 마스크 | 의미 |
+|------|--------|------|
+| bit 3 | 0x08 | MIFARE Classic 호환 |
+| bit 5 | 0x20 | ISO 14443-4 지원 (ATS 자동 수신) |
 
-// Mapping configuration
-typedef struct {
-    rfid_target_protocol_t target_protocol;
+### 4.3 SAK별 예상 결과
 
-    // Source field in ADV packet
-    enum {
-        MAP_SOURCE_MAC,             // Use BLE MAC address
-        MAP_SOURCE_MFG_DATA,        // Use Manufacturer Data
-        MAP_SOURCE_SERVICE_DATA,    // Use Service Data
-        MAP_SOURCE_CUSTOM,          // Custom extraction
-    } source_field;
-
-    // Byte offset within source field
-    uint8_t source_offset;
-    uint8_t source_length;
-
-    // Transform options
-    bool    reverse_bytes;          // Endianness swap
-    bool    truncate_to_fit;        // Truncate if too long
-    uint8_t xor_mask;               // Optional XOR transformation
-
-} ble_to_rfid_mapping_t;
-
-// Bridge configuration
-typedef struct {
-    ble_rfid_bridge_mode_t mode;
-    ble_adv_filter_t       adv_filter;
-    ble_to_rfid_mapping_t  mapping;
-    uint8_t                target_slot;      // Tag emulation slot to update
-    uint16_t               tx_delay_ms;      // Delay between TX events
-    uint16_t               scan_interval_ms; // BLE scan interval
-    uint16_t               scan_window_ms;   // BLE scan window
-} ble_rfid_bridge_config_t;
-
-// Initialize the bridge module
-void ble_rfid_bridge_init(void);
-
-// Configure bridge parameters
-bool ble_rfid_bridge_configure(const ble_rfid_bridge_config_t *config);
-
-// Start/stop bridge operation
-void ble_rfid_bridge_start(void);
-void ble_rfid_bridge_stop(void);
-
-// Get bridge status
-typedef struct {
-    bool     is_running;
-    uint32_t adv_received_count;
-    uint32_t adv_filtered_count;
-    uint32_t rfid_tx_count;
-    uint8_t  last_mac[6];
-    int8_t   last_rssi;
-} ble_rfid_bridge_status_t;
-
-void ble_rfid_bridge_get_status(ble_rfid_bridge_status_t *status);
-
-// Process function (call from main loop)
-void ble_rfid_bridge_process(void);
-
-#endif // BLE_RFID_BRIDGE_H
-```
-
-### Data Transform Examples
-
-```c
-// ble_rfid_transform.c
-
-/**
- * Transform BLE MAC (6 bytes) -> EM410x ID (5 bytes)
- * Strategy: XOR compression
- */
-void transform_mac_to_em410x(const uint8_t *mac, uint8_t *em410x_id) {
-    // XOR first byte with last byte for uniqueness
-    em410x_id[0] = mac[0] ^ mac[5];
-    em410x_id[1] = mac[1];
-    em410x_id[2] = mac[2];
-    em410x_id[3] = mac[3];
-    em410x_id[4] = mac[4];
-}
-
-/**
- * Transform Manufacturer Data -> MIFARE UID
- * Assumes first 4-7 bytes of mfg data contain ID
- */
-void transform_mfg_to_mifare_uid(const uint8_t *mfg_data, uint8_t mfg_len,
-                                  uint8_t *uid, uint8_t *uid_len) {
-    // MIFARE UID can be 4, 7, or 10 bytes
-    if (mfg_len >= 7) {
-        memcpy(uid, mfg_data, 7);
-        *uid_len = 7;
-    } else if (mfg_len >= 4) {
-        memcpy(uid, mfg_data, 4);
-        *uid_len = 4;
-    } else {
-        // Pad with zeros
-        memset(uid, 0, 4);
-        memcpy(uid, mfg_data, mfg_len);
-        *uid_len = 4;
-    }
-}
-
-/**
- * Transform Service Data -> HID Prox Wiegand
- * Expects: [facility_code_2bytes][card_number_2bytes]
- */
-void transform_service_to_hid(const uint8_t *service_data, uint8_t len,
-                               hid_prox_data_t *hid) {
-    if (len >= 4) {
-        hid->facility_code = (service_data[0] << 8) | service_data[1];
-        hid->card_number = (service_data[2] << 8) | service_data[3];
-        hid->format_idx = 0;  // H10301 standard 26-bit
-    }
-}
-```
-
-### SoftDevice Coordination (Critical)
-
-Since SoftDevice controls the radio, BLE scanning and RFID operations need coordination:
-
-```c
-// Timeslot-based approach for simultaneous BLE + LF
-
-// Option 1: Time-division multiplexing
-// - Scan BLE for X ms
-// - Stop scan, do RFID TX
-// - Resume scan
-
-void bridge_time_slice_handler(void *p_context) {
-    static bridge_state_t state = STATE_BLE_SCAN;
-
-    switch (state) {
-        case STATE_BLE_SCAN:
-            // Check if we have pending RFID data
-            if (bridge_has_pending_rfid_tx()) {
-                sd_ble_gap_scan_stop();
-                state = STATE_RFID_TX;
-                app_timer_start(m_slice_timer, RFID_TX_DURATION, NULL);
-            }
-            break;
-
-        case STATE_RFID_TX:
-            // TX complete, resume scanning
-            start_ble_scan();
-            state = STATE_BLE_SCAN;
-            app_timer_start(m_slice_timer, BLE_SCAN_DURATION, NULL);
-            break;
-    }
-}
-
-// Option 2: Radio timeslot API (for advanced scenarios)
-// Uses sd_radio_request() to get raw radio access
-// See: utils/timeslot.c for existing implementation
-```
-
-### Integration Points with Existing Code
-
-| Existing Module | Integration Point | Purpose |
-|-----------------|-------------------|---------|
-| `ble_main.c` | Add scanner init in `ble_slave_init()` | Initialize scanner module |
-| `sdk_config.h` | `NRF_SDH_BLE_CENTRAL_LINK_COUNT=1` | Enable Central/Observer role |
-| `tag_emulation.c` | `tag_emulation_load_by_buffer()` | Dynamic data update |
-| `app_cmd.c` | Add new command handlers | Bridge control via USB/BLE |
-| `app_main.c` | Add `ble_rfid_bridge_process()` to main loop | Periodic processing |
-| `settings.c` | Store bridge config | Persist configuration |
-
-### File Structure for New Modules
+#### SAK = 0x08/0x18 — MIFARE Classic
 
 ```
-firmware/application/src/
-├── ble_main.c              # Modify: add scanner integration
-├── ble_main.h
-├── ble_scanner.c           # NEW: BLE scanning implementation
-├── ble_scanner.h
-├── ble_adv_parser.c        # NEW: ADV TLV parsing
-├── ble_adv_parser.h
-├── ble_rfid_bridge.c       # NEW: Bridge pipeline
-├── ble_rfid_bridge.h
-├── ble_rfid_transform.c    # NEW: Data transformation
-├── ble_rfid_transform.h
-└── sdk_config.h            # Modify: enable Central links
+- UID  : A1B2C3D4
+- ATQA : 0004
+- SAK  : 08
+- ATS  : (없음)
+- Guessed type(s): MIFARE Classic 1K
+- Mifare Classic technology
+  # Prng: WEAK
 ```
 
----
+> ChameleonUltra로 **읽기/복제/에뮬레이션 가능**
 
-## Summary & Key Findings
+#### SAK = 0x20 — DESFire / MIFARE Plus
 
-### Critical Implementation Requirements
+```
+- UID  : 04A1B2C3D4E5F6
+- ATQA : 0344
+- SAK  : 20
+- ATS  : 0675338102806403
+- Guessed type(s): DESFire EV1/EV2/EV3 | ...
+```
 
-1. **SDK Configuration Change Required**:
-   ```c
-   // sdk_config.h - MUST CHANGE
-   #define NRF_SDH_BLE_CENTRAL_LINK_COUNT 1  // Was 0
-   #define NRF_SDH_BLE_TOTAL_LINK_COUNT   2  // Was 1 (peripheral + observer)
-   ```
+> ChameleonUltra로 **UID만 확인 가능**, 에뮬레이션 불가
 
-2. **RAM Allocation Increase**: Enabling Central/Observer will require additional RAM for scanning buffers (~1-2KB)
+#### SAK = 0x28 — SmartMX + MIFARE Classic 1K
 
-3. **Radio Time Sharing**: SoftDevice schedules both BLE (scanning/advertising) and you'll need to coordinate RFID TX during scan idle periods
+SAK 0x28 = `0010 1000` (2진수) — bit 3 (0x08)과 bit 5 (0x20) 모두 설정됨.
 
-### Risk Assessment
+비접촉 인터페이스 안에 **두 개의 프로토콜이 공존**하는 카드:
 
-| Risk | Impact | Mitigation |
-|------|--------|------------|
-| RAM overflow | High | Reduce scan buffer size, optimize existing allocations |
-| BLE/RFID timing conflicts | Medium | Use time-division scheduling |
-| SoftDevice API limitations | Low | Observer role is well-supported in S140 |
-| Power consumption increase | Medium | Implement duty-cycling for scan windows |
+```mermaid
+graph TB
+    subgraph SmartMX["SmartMX 칩 (SAK = 0x28)"]
+        subgraph MFC["MIFARE Classic 에뮬레이션"]
+            C1["Crypto1 (약한 보안)"]
+            C1A["구형 리더 접근"]
+        end
+        subgraph ISO["ISO 14443-4 + ISO 7816"]
+            C2["AES / 3DES / RSA (강한 보안)"]
+            C2A["신형 리더 접근"]
+        end
+    end
 
-### Recommended Implementation Order
+    style MFC fill:#ffcdd2,stroke:#c62828
+    style ISO fill:#c8e6c9,stroke:#2e7d32
+```
 
-1. **Phase 1**: Add BLE scanner module with basic ADV reception
-2. **Phase 2**: Implement TLV parser and filtering
-3. **Phase 3**: Add command interface for configuration
-4. **Phase 4**: Integrate with tag emulation for passive mode
-5. **Phase 5**: (Optional) Active TX mode with timeslot API
+대표 사용 사례: NXP JCOP (Java Card), 공공기관 ID, 교통+출입+결제 통합 카드
 
-### Architecture Decision: Passive vs Active TX
+| 영역 | ChameleonUltra | 설명 |
+|------|---------------|------|
+| MIFARE Classic 섹터 읽기 | O | Crypto1 인증, 키 크래킹 가능 |
+| MIFARE Classic 복제 | O | 키를 알면 에뮬레이션 가능 |
+| ISO 14443-4 APDU 통신 | X | ChameleonUltra 미지원 |
+| SmartMX 보안 앱 접근 | X | APDU + 강한 암호 필요 |
 
-| Mode | Description | Complexity | Use Case |
-|------|-------------|------------|----------|
-| **Passive Update** | BLE data updates tag emulation slot, waits for reader field | Low | Proxying phone -> reader |
-| **Active TX** | Actively transmit RFID when BLE ADV received | High | Autonomous triggering |
+#### SAK = 0x00 — MIFARE Ultralight / NTAG
 
-**Recommendation**: Start with Passive Update mode - it's simpler and leverages the existing tag emulation infrastructure without radio scheduling complexity.
+```
+- UID  : 04A1B2C3D4E5F6
+- ATQA : 0044
+- SAK  : 00
+- Guessed type(s): MIFARE Ultralight | NTAG 2xx
+```
+
+> `hf mfu version`으로 상세 확인 가능
+
+### 4.4 분석 플로우차트
+
+```mermaid
+flowchart TD
+    START["hf 14a info 실행"] --> SAK{"SAK bit 5<br/>(0x20) 설정?"}
+
+    SAK -->|YES| ATS["ATS 있음<br/>ISO 14443-4 지원"]
+    SAK -->|NO| MFC{"MIFARE Classic<br/>감지?"}
+
+    ATS --> BOTH{"bit 3 (0x08)<br/>도 설정?"}
+    BOTH -->|YES| SMX["SAK = 0x28/0x38<br/>SmartMX + MF Classic<br/>MF Classic 부분만 공격 가능"]
+    BOTH -->|NO| DES["SAK = 0x20<br/>DESFire / Plus EV / NTAG 4xx<br/>ChameleonUltra 에뮬레이션 불가"]
+
+    MFC -->|YES| CLASSIC["SAK = 0x08/0x18<br/>MIFARE Classic"]
+    MFC -->|NO| UL["SAK = 0x00<br/>Ultralight / NTAG"]
+
+    CLASSIC --> PRNG["PRNG 유형 확인<br/>키 공격 → 복제/에뮬 가능"]
+    UL --> VER["hf mfu version<br/>정확한 모델 확인"]
+
+    style START fill:#e1bee7,stroke:#6a1b9a
+    style SMX fill:#ffcdd2,stroke:#c62828
+    style DES fill:#ffcdd2,stroke:#c62828
+    style CLASSIC fill:#c8e6c9,stroke:#2e7d32
+    style UL fill:#c8e6c9,stroke:#2e7d32
+```
+
+### 4.5 추가 분석 명령어
+
+| 목적 | 명령어 | 설명 |
+|------|--------|------|
+| Ultralight/NTAG 모델 확인 | `hf mfu version` | GET_VERSION으로 칩 식별 |
+| NXP 정품 서명 확인 | `hf mfu signature` | ECC 서명 검증 |
+| 전체 데이터 덤프 | `hf mfu dump` | 모든 페이지 읽기 |
+| 수동 RATS 전송 | `hf 14a raw -sc -d E080` | ISO 14443-4 확인 |
+| RATS + 필드 유지 | `hf 14a raw -sc -d E080 -k` | 후속 APDU 전송용 |
+| SELECT AID 전송 | `hf 14a raw -c -d 00A40400 -k` | ISO 7816 APDU 테스트 |
+
+### 4.6 ChameleonUltra 비접촉 인터페이스 지원 요약
+
+| 인터페이스 | 지원 | 비고 |
+|-----------|------|------|
+| 접촉식 (ISO 7816) | X | 물리적 접점 없음 |
+| 비접촉식 HF (ISO 14443A-3) | O | 읽기/에뮬레이션 |
+| 비접촉식 LF (125kHz) | O | 읽기/에뮬레이션 |
+| ISO 14443-4 APDU | X | 상위 프로토콜 미지원 |
